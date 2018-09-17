@@ -1,76 +1,44 @@
-import { Component, Injector, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
-import { Position } from './../core/classes/position';
-import { DistanceUtils } from '../core/utils/business/distance-utils';
+import { Creature } from '../core/classes/creature';
+import { Tresor } from '../core/classes/tresor';
+import { Lieux } from '../core/classes/lieux';
+import { Plante } from '../core/classes/plante';
 
 @Component({
-    selector: 'app-root',
+    selector: 'view-component',
     templateUrl: './view.component.html'
 })
 export class ViewComponent {
 
     position: { posX: number, posY: number, posN: number, horiz: number, verti: number } = { posX: null, posY: null, posN: null, horiz: null, verti: null };
-
+    scale = 1;
     processed = false;
 
-    creatures: { dist: number, level: number, name: string, num: number, race: string, clan: string, posX: number, posY: number, posN: number }[] = [];
-    tresors: { dist: number, name: string, num: number, posX: number, posY: number, posN: number }[] = [];
-    lieux: { dist: number, name: string, num: number, type: string, posX: number, posY: number, posN: number }[] = [];
-    plantes: { dist: number, name: string, num: number, posX: number, posY: number, posN: number }[] = [];
+    creatures: Creature[] = [];
+    tresors: Tresor[] = [];
+    lieux: Lieux[] = [];
+    plantes: Plante[] = [];
 
-    @ViewChild("textarea") textarea: ElementRef ;
     @ViewChild("table") table: ElementRef ;
     @ViewChild("tooltip") tooltip: ElementRef ;
 
-    view(): void {
-        const lines = (this.textarea.nativeElement as HTMLTextAreaElement).value
-            // todo dev
-            .replace(/Ã©/g, "é")
-            .replace(/Ã/g, "à")
-            .split('\n');
+    renderView(
+        position: { posX: number, posY: number, posN: number, horiz: number, verti: number } = { posX: null, posY: null, posN: null, horiz: null, verti: null },
+        creatures: Creature[],
+        tresors: Tresor[],
+        lieux: Lieux[],
+        plantes: Plante[]) {
 
-        let current: string = null;
-        lines.forEach(line => {
-            // todo dev
-            line = line.trim();
-            let goOn = true;
-            if (line.indexOf("Créatures | Trésors | Lieux/Décors | Plantes") > 5) {
-                current = line.substr(0, line.indexOf("\t")).trim();
-                goOn = false;
-            }
-            if (goOn) {
-                switch (current) {
-                    case null:
-                        if (line.indexOf("Ma position actuelle est ") > -1) {
-                            line = line.substr(31, line.length);
-                            this.position.posX = parseInt(line.substr(0, line.indexOf(",")));
-                            line = line.substr(line.indexOf(",") + 6, line.length);
-                            this.position.posY = parseInt(line.substr(0, line.indexOf(",")));
-                            line = line.substr(line.indexOf(",") + 6, line.length);
-                            this.position.posN = parseInt(line.substr(0, line.length));
-                        } else if (line.indexOf("L'affichage est limité à ") > -1) {
-                            line = line.substr(25, line.length);
-                            this.position.horiz = parseInt(line.substr(0, line.indexOf("cases horizontalement") - 1));
-                            this.position.verti = parseInt(line.substr(line.indexOf("cases horizontalement") + 24, line.indexOf("verticalement") - 28));
-                        }
-                        break;
-                    case "Créatures":
-                        this.parseCreature(line);
-                        break;
-                    case "Trésors":
-                        this.parseTresor(line);
-                        break;
-                    case "Lieux/Décors":
-                        this.parseLieux(line);
-                        break;
-                    case "Plantes":
-                        this.parsePlantes(line);
-                        break;
-                }
-            }
-
-        });
-        this.processed = true;
+        this.position = position;
+        this.creatures = creatures;
+        this.tresors = tresors;
+        this.lieux = lieux;
+        this.plantes = plantes;
+        (this.table.nativeElement as HTMLDivElement).innerHTML = "";
+        (this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
+        (this.table.nativeElement as HTMLDivElement).style.width = "auto";
+        (this.table.nativeElement as HTMLDivElement).style.height = "auto";
 
         for (let y = this.position.posY + this.position.horiz; y >= this.position.posY - this.position.horiz; y--) {
             let row = document.createElement("div") as HTMLDivElement;
@@ -83,8 +51,13 @@ export class ViewComponent {
                 cell.style.display = "table-column";
                 cell.style.border = "1px solid white";
                 cell.style.width = "50px";
-                cell.style.position = "relative";
+                //cell.style.width = (this.table.nativeElement as HTMLDivElement).offsetWidth / (2 * this.position.horiz + 1) + "px";
+                //cell.style.width = 100 / (2 * this.position.horiz + 1) + "vw";
                 cell.style.height = "50px";
+                //cell.style.height = (this.table.nativeElement as HTMLDivElement).offsetWidth / (2 * this.position.horiz + 1) + "px";
+                //cell.style.height = 100 / (2 * this.position.horiz + 1) + "vw";
+                cell.style.position = "relative";
+                cell.style.boxSizing = "border-box";
                 if (x === this.position.posX && y === this.position.posY) {
                     cell.style.backgroundColor = "#666";
                 }
@@ -97,7 +70,7 @@ export class ViewComponent {
                         infoC.style.top = "0";
                         infoC.style.width = "20px";
                         infoC.style.height = "20px";
-                        if (this.creatureIsGob(this.creatures[k])) {
+                        if (this.creatures[k].type === 1) {
                             infoC.style.backgroundColor = "green";
                             infoC.style.left = "0";
                             infoC.addEventListener("mouseenter", (e: MouseEvent) => {
@@ -149,32 +122,47 @@ export class ViewComponent {
                 }
             }
         }
+
+
+        const viewWidth = this.position.horiz * 2 + 1;
+        if (viewWidth * 50 > (this.table.nativeElement as HTMLDivElement).clientWidth) {
+            (this.table.nativeElement as HTMLDivElement).style.transform = "scale(" + (this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50) + ")";
+            (this.table.nativeElement as HTMLDivElement).parentElement.style.height = (viewWidth * 50) * ((this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50)) + "px";
+        } else {
+            (this.table.nativeElement as HTMLDivElement).style.transform = "scale(1))";
+            (this.table.nativeElement as HTMLDivElement).parentElement.style.height = viewWidth * 50 + "px";
+        }
+        (this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
+        (this.table.nativeElement as HTMLDivElement).style.height = viewWidth * 50 + "px";
+
+        this.processed = true;
     }
 
     showGobInfo(e: MouseEvent, x: number, y: number): void {
         let txt = "";
         for (let k = 0; k < this.creatures.length; k++) {
-            if (this.creatures[k].posX == x && this.creatures[k].posY == y && this.creatureIsGob(this.creatures[k])) {
+            if (this.creatures[k].posX == x && this.creatures[k].posY == y && this.creatures[k].type === 1) {
                 txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
             }
         }
         (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
         (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.y + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.x + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
+        console.log(e);
     }
 
     showMonsterInfo(e: MouseEvent, x: number, y: number): void {
         let txt = "";
         for (let k = 0; k < this.creatures.length; k++) {
-            if (this.creatures[k].posX == x && this.creatures[k].posY == y && !this.creatureIsGob(this.creatures[k])) {
+            if (this.creatures[k].posX == x && this.creatures[k].posY == y && this.creatures[k].type === 0) {
                 txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
             }
         }
         (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
         (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.y + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.x + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
     }
 
     showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
@@ -186,8 +174,8 @@ export class ViewComponent {
         }
         (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
         (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.y + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.x + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
     }
 
     showLieuxInfo(e: MouseEvent, x: number, y: number): void {
@@ -199,89 +187,11 @@ export class ViewComponent {
         }
         (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
         (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.y + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.x + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
     }
 
     hideInfo(e: MouseEvent): void {
         (this.tooltip.nativeElement as HTMLDivElement).style.display = "none";
-    }
-
-    private parseCreature(line: string): void {
-        try {
-            const cols = line.split("\t");
-            const id = this.getNameAndNum(cols[2]);
-            if (!id.num) {
-                return;
-            }
-            this.creatures.push({
-                dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, race: cols[4], clan: cols[5],
-                posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
-            });
-        } catch (e) {
-            return null;
-        }
-    }
-
-    private creatureIsGob(creature: { dist: number, level: number, name: string, num: number, race: string, clan: string, posX: number, posY: number, posN: number }): boolean {
-        if (creature.race === "Nodef"
-        ) {
-            return true;
-        }
-        return false;
-    }
-
-    private parseTresor(line: string): void {
-        try {
-            const cols = line.split("\t");
-            if (!parseInt(cols[1])) {
-                return;
-            }
-            this.tresors.push({
-                dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
-                posX: parseInt(cols[3]), posY: parseInt(cols[4]), posN: parseInt(cols[5])
-            });
-        } catch (e) {
-            return null;
-        }
-    }
-
-    private parseLieux(line: string): void {
-        try {
-            const cols = line.split("\t");
-            if (!parseInt(cols[1])) {
-                return;
-            }
-            this.lieux.push({
-                dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]), type: cols[3],
-                posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
-            });
-        } catch (e) {
-            return null;
-        }
-    }
-
-    private parsePlantes(line: string): void {
-        try {
-            const cols = line.split("\t");
-            if (!parseInt(cols[1])) {
-                return;
-            }
-            this.plantes.push({
-                dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
-                posX: parseInt(cols[3]), posY: parseInt(cols[4]), posN: parseInt(cols[5])
-            });
-        } catch (e) {
-            return null;
-        }
-    }
-
-    private getNameAndNum(str: string): { name: string, num: number } {
-        try {
-            const line = str.lastIndexOf("(") + 1;
-            return { name: str.substr(0, line - 2), num: parseInt(str.substr(line, str.lastIndexOf(")") - line)) };
-        } catch (e) {
-            return null;
-        }
     }
 }

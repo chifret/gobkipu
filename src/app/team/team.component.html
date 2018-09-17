@@ -1,0 +1,32 @@
+<h1>Meute</h1>
+<div *ngIf="teamMembers">
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Race / niveau</th>
+            <th>PV</th>
+            <th>Pos</th>
+            <th>PAs</th>
+            <th>DLA</th>
+            <th><a href="javascript:void(0)" (click)="refresh()">Refresh meute</a></th>
+        </tr>
+        <tr *ngFor="let teamMember of teamMembers">
+            <td>{{ teamMember.Id }}</td>
+            <td><b>{{ teamMember.Nom }}</b></td>
+            <td>{{ teamMember.Tribu }} - {{ teamMember.Niveau }}</td>
+            <td>{{ teamMember.PV }}</td>
+            <td>{{ teamMember.X }}/{{ teamMember.Y }}/{{ teamMember.N }}</td>
+            <td>{{ teamMember.PA }}</td>
+            <td>
+                {{ teamMember.DLA }}<br />
+                <small>{{ teamMember.DLA }}</small>
+            </td>
+            <td>
+                <a href="javascript:void(0)" (click)="view(teamMember.Id)">Voir la vue</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<view-component #viewComponent></view-component>
+<button *ngIf="lastId" (click)="refreshView()">Refresh vue</button>

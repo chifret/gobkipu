@@ -1,12 +1,4 @@
-<h4>Vue 2D</h4>
-<div *ngIf="!processed">
-    <textarea #textarea style="width: 600px; height: 300px;"></textarea>
-    <br/>
-    Clic dans la fenêtre de vue Gobland, Ctrl+A, Ctrl+C, et Ctrl+V dans la zone texte ci-dessus.
-    <br/>
-    <button (click)="view()">Voir</button>
-</div>
 <div style="width: 100%;">
-    <div #table style="width: auto; margin: 0px auto; display: table;" [ngStyle]="{'visibility':processed?'':'hidden'}"></div>
+    <div #table style="width: auto; margin: 0px auto; display: table;     transform-origin: 0 0;" [ngStyle]="{'visibility':processed?'':'hidden'}"></div>
 </div>
 <div #tooltip style="display: none; position: absolute; border: 1px solid white; background-color: #666; text-align: right;"></div>

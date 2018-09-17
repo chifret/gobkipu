@@ -1,13 +1,12 @@
 "use strict";
 
-import { Injector, EventEmitter, Output } from "@angular/core";
-import { Http, RequestOptions, URLSearchParams, Headers } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Injector } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 
 export class Service {
-    protected http: Http;
+    protected http: HttpClient;
     constructor(injector: Injector) {
-        this.http = injector.get(Http);
+        this.http = injector.get(HttpClient);
     }
 
     /*protected httpRequest(onlyName: boolean, filterDefinition: string = null): Observable<any> {

@@ -1,0 +1,10 @@
+<h1>Vue 2D</h1>
+<div *ngIf="!processed">
+    <h3>Copier-coller :</h3>
+    <textarea #textarea style="width: 600px; height: 300px;"></textarea>
+    <br />
+    <small class="form-text text-muted">Clic dans la fenêtre de vue Gobland, Ctrl+A, Ctrl+C, et Ctrl+V dans la zone texte ci-dessus.</small>
+    <br />
+    <button (click)="view()">Voir</button>
+</div>
+<view-component #viewComponent></view-component>

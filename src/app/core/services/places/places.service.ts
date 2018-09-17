@@ -17,7 +17,7 @@ export class PlacesService extends Service {
     public getJSON(): Observable<any> {
         return this.http.get("assets/places.json")
                         .map((res:any) => {
-                            return res.json();
+                            return res;
                         })
                         .catch((error:any) => {
                             return Observable.throw(error.statusText);
