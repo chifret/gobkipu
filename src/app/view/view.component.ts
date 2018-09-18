@@ -20,6 +20,25 @@ export class ViewComponent {
     lieux: Lieux[] = [];
     plantes: Plante[] = [];
 
+    values: { type: string, value: number }[] = [
+        { type: "Parchemin", value: 5 },
+        { type: "Outil", value: 4 },
+        { type: "Nourriture", value: 4 },
+        { type: "Anneau", value: 4 },
+        { type: "Bijou", value: 4 },
+        { type: "CT", value: 1 },
+        { type: "Potion", value: 1 },
+        { type: "Talisman", value: 1 },
+        { type: "Casque", value: 1 },
+        { type: "Armure", value: 3 },
+        { type: "Bottes", value: 3 },
+        { type: "Baguette", value: 3 },
+        { type: "Bouclier", value: 3 },
+        { type: "Arme 1 Main", value: 3 },
+        { type: "Arme 2 mains", value: 3 },
+
+    ];
+
     @ViewChild("table") table: ElementRef ;
     @ViewChild("tooltip") tooltip: ElementRef ;
 
@@ -63,62 +82,124 @@ export class ViewComponent {
                 }
                 row.appendChild(cell);
 
+                let infoC: HTMLDivElement = null;
+                let minDist: number = null;
                 for (let k = 0; k < this.creatures.length; k++) {
                     if (this.creatures[k].posX == x && this.creatures[k].posY == y) {
-                        let infoC = document.createElement("div") as HTMLDivElement;
-                        infoC.style.position = "absolute";
-                        infoC.style.top = "0";
-                        infoC.style.width = "20px";
-                        infoC.style.height = "20px";
-                        if (this.creatures[k].type === 1) {
-                            infoC.style.backgroundColor = "green";
-                            infoC.style.left = "0";
-                            infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-                                this.showGobInfo(e, x, y);
-                            });
-                        } else {
-                            infoC.style.backgroundColor = "red";
-                            infoC.style.right = "0";
-                            infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-                                this.showMonsterInfo(e, x, y);
+                        const diffLevel = Math.abs(this.position.posN - this.creatures[k].posN);
+                        if (!minDist || minDist > diffLevel) {
+                            minDist = diffLevel;
+                        }
+                        if (!infoC) {
+                            infoC = document.createElement("div") as HTMLDivElement;
+                            infoC.style.position = "absolute";
+                            infoC.style.top = "0";
+                            if (this.creatures[k].type === 1) {
+                                infoC.style.backgroundColor = "lightgreen";
+                                infoC.style.left = "0";
+                                infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+                                    this.showGobInfo(e, x, y);
+                                });
+                            } else {
+                                infoC.style.backgroundColor = "red";
+                                infoC.style.right = "0";
+                                infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+                                    this.showMonsterInfo(e, x, y);
+                                });
+                            }
+                            infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+                                this.hideInfo(e);
                             });
                         }
-                        infoC.addEventListener("mouseleave", (e: MouseEvent) => {
-                            this.hideInfo(e);
-                        });
-                        cell.appendChild(infoC);
                     }
                 }
+                if (infoC) {
+                    minDist = Math.min(4, Math.max(0, minDist - 3));
+                    infoC.style.width = 20 - minDist * 2 + "px";
+                    infoC.style.height = 20 - minDist * 2 + "px";
+                    cell.appendChild(infoC);
+                }
 
+                infoC = null;
+                minDist = null;
+                let maxValue: number = 0;
                 for (let k = 0; k < this.tresors.length; k++) {
                     if (this.tresors[k].posX == x && this.tresors[k].posY == y) {
-                        let infoC = document.createElement("div") as HTMLDivElement;
-                        infoC.style.position = "absolute";
-                        infoC.style.bottom = "0";
-                        infoC.style.left = "0";
-                        infoC.style.width = "20px";
-                        infoC.style.height = "20px";
-                        infoC.style.backgroundColor = "yellow";
-                        infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-                            this.showTreasorsInfo(e, x, y);
-                        });
-                        infoC.addEventListener("mouseleave", (e: MouseEvent) => {
-                            this.hideInfo(e);
-                        });
-                        cell.appendChild(infoC);
+                        const diffLevel = Math.abs(this.position.posN - this.tresors[k].posN);
+                        if (!minDist || minDist > diffLevel) {
+                            minDist = diffLevel;
+                        }
+                        let itemValue = 2;
+                        for (let v = 0; v < this.values.length; v++) {
+                            if (tresors[k].name === this.values[v].type) {
+                                itemValue = this.values[v].value;
+                                break;
+                            }
+                        }
+                        if (itemValue === 2) {
+                            console.log(tresors[k].name);
+                        }
+                        if (!maxValue || maxValue < itemValue) {
+                            maxValue = itemValue;
+                        }
+                        if (!infoC) {
+                            infoC = document.createElement("div") as HTMLDivElement;
+                            infoC.style.position = "absolute";
+                            infoC.style.bottom = "0";
+                            infoC.style.left = "0";
+                            infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+                                this.showTreasorsInfo(e, x, y);
+                            });
+                            infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+                                this.hideInfo(e);
+                            });
+                        }
                     }
                 }
+                if (infoC) {
+                    minDist = Math.min(4, Math.max(0, minDist - 3));
+                    infoC.style.width = 20 - minDist * 2 + "px";
+                    infoC.style.height = 20 - minDist * 2 + "px";
+                    switch (maxValue) {
+                        case 1:
+                            infoC.style.backgroundColor = "#a98600";
+                            break;
+                        case 2:
+                            infoC.style.backgroundColor = "#dab600";
+                            break;
+                        case 3:
+                            infoC.style.backgroundColor = "#e9d700";
+                            break;
+                        case 4:
+                            infoC.style.backgroundColor = "#f8ed62";
+                            infoC.style.boxShadow = "0px 0px 15px #fff9ae";
+                            break;
+                        case 5:
+                            infoC.style.backgroundColor = "#fff9ae";
+                            infoC.style.boxShadow = "0px 0px 40px white";
+                            break;
+                    }
+                    cell.appendChild(infoC);
+                }
 
+                let color: string = null;
                 for (let k = 0; k < this.lieux.length; k++) {
                     if (this.lieux[k].posX == x && this.lieux[k].posY == y) {
-                        cell.style.backgroundColor = "purple";
-                        cell.addEventListener("mouseenter", (e: MouseEvent) => {
-                            this.showLieuxInfo(e, x, y);
-                        });
-                        cell.addEventListener("mouseleave", (e: MouseEvent) => {
-                            this.hideInfo(e);
-                        });
+                        if (this.lieux[k].name === "Arbre" && !color) {
+                            color = "green";
+                        } else {
+                            color = "purple";
+                        }
                     }
+                }
+                if (color) {
+                    cell.style.backgroundColor = color;
+                    cell.addEventListener("mouseenter", (e: MouseEvent) => {
+                        this.showLieuxInfo(e, x, y);
+                    });
+                    cell.addEventListener("mouseleave", (e: MouseEvent) => {
+                        this.hideInfo(e);
+                    });
                 }
             }
         }
@@ -142,7 +223,7 @@ export class ViewComponent {
         let txt = "";
         for (let k = 0; k < this.creatures.length; k++) {
             if (this.creatures[k].posX == x && this.creatures[k].posY == y && this.creatures[k].type === 1) {
-                txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
+                txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " [" + this.creatures[k].level + "] " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
             }
         }
         (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
@@ -156,7 +237,7 @@ export class ViewComponent {
         let txt = "";
         for (let k = 0; k < this.creatures.length; k++) {
             if (this.creatures[k].posX == x && this.creatures[k].posY == y && this.creatures[k].type === 0) {
-                txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
+                txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " [" + this.creatures[k].level + "] " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
             }
         }
         (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
