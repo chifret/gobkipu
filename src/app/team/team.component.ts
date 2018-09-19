@@ -26,6 +26,7 @@ export class TeamComponent {
 
     position: { posX: number, posY: number, posN: number, horiz: number, verti: number } = { posX: null, posY: null, posN: null, horiz: null, verti: null };
     creatures: Creature[] = [];
+    gobelins: Creature[] = [];
     tresors: Tresor[] = [];
     lieux: Lieux[] = [];
     plantes: Plante[] = [];
@@ -59,6 +60,7 @@ export class TeamComponent {
 
             this.position = { posX: null, posY: null, posN: null, horiz: null, verti: null };
             this.creatures = [];
+            this.gobelins = [];
             this.tresors = [];
             this.lieux = [];
             this.plantes = [];
@@ -75,10 +77,18 @@ export class TeamComponent {
                             this.position.posY = line.Y;
                             this.position.posN = line.N;
                         } else {
-                            this.creatures.push({
-                                dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: this.creatureIsGob(line.Type), race: line.Type, clan: line.Clan,
-                                posX: line.X, posY: line.Y, posN: line.N
-                            });
+                            if (this.creatureIsGob(line.Type, line.Id)) {
+                                this.gobelins.push({
+                                    dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
+                                    posX: line.X, posY: line.Y, posN: line.N
+                                });
+                            }
+                            else {
+                                this.creatures.push({
+                                    dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
+                                    posX: line.X, posY: line.Y, posN: line.N
+                                });
+                            }
                         }
                         break;
                     case "T":
@@ -101,7 +111,7 @@ export class TeamComponent {
             this.position.horiz = maxDist;
             this.position.verti = maxDist;
 
-            this.viewComponent.renderView(this.position, this.creatures, this.tresors, this.lieux, this.plantes);
+            this.viewComponent.renderView(this.position, this.creatures, this.gobelins, this.tresors, this.lieux, this.plantes);
             this.processed = true;
 
             this.lastId = id;
@@ -112,10 +122,10 @@ export class TeamComponent {
         this.view(this.lastId, true);
     }
 
-    private creatureIsGob(race: string): number {
-        if (this.races.indexOf(race) >= 0) {
-            return 1;
+    private creatureIsGob(race: string, id: number): boolean {
+        if (id <= 14 || this.races.indexOf(race) >= 0) {
+            return true;
         }
-        return 0;
+        return false;
     }
 }

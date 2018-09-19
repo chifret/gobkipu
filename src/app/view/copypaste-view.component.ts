@@ -17,6 +17,7 @@ export class CopyPasteViewComponent {
 
     position: { posX: number, posY: number, posN: number, horiz: number, verti: number } = { posX: null, posY: null, posN: null, horiz: null, verti: null };
     creatures: Creature[] = [];
+    gobelins: Creature[] = [];
     tresors: Tresor[] = [];
     lieux: Lieux[] = [];
     plantes: Plante[] = [];
@@ -30,6 +31,15 @@ export class CopyPasteViewComponent {
             .replace(/Ã©/g, "é")
             .replace(/Ã/g, "à")
             .split('\n');
+
+
+
+        this.position = { posX: null, posY: null, posN: null, horiz: null, verti: null };
+        this.creatures = [];
+        this.gobelins = [];
+        this.tresors = [];
+        this.lieux = [];
+        this.plantes = [];
 
         let current: string = null;
         lines.forEach(line => {
@@ -71,7 +81,7 @@ export class CopyPasteViewComponent {
                 }
             }
         });
-        this.viewComponent.renderView(this.position, this.creatures, this.tresors, this.lieux, this.plantes);
+        this.viewComponent.renderView(this.position, this.creatures, this.gobelins, this.tresors, this.lieux, this.plantes);
         this.processed = true;
     }
 
@@ -82,20 +92,28 @@ export class CopyPasteViewComponent {
             if (!id.num) {
                 return;
             }
-            this.creatures.push({
-                dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: this.creatureIsGob(cols[4]), race: cols[4], clan: cols[5],
-                posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
-            });
+            if (this.creatureIsGob(cols[4], id.num)) {
+                console.log(cols);
+                this.gobelins.push({
+                    dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
+                    posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
+                })
+            } else {
+                this.creatures.push({
+                    dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
+                    posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
+                });
+            }
         } catch (e) {
             return null;
         }
     }
 
-    private creatureIsGob(race: string): number {
-        if (this.races.indexOf(race) >= 0) {
-            return 1;
+    private creatureIsGob(race: string, id: number): boolean {
+        if (id <= 14 || this.races.indexOf(race) >= 0) {
+            return true;
         }
-        return 0;
+        return false;
     }
 
     private parseTresor(line: string): void {
