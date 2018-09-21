@@ -72,17 +72,14 @@ export class ViewComponent {
                 let cell = document.createElement("div") as HTMLDivElement;
                 cell.style.cssFloat = "left";
                 cell.style.display = "table-column";
-                cell.style.border = "1px solid white";
+                cell.style.border = "1px solid #aaa";
                 cell.style.width = "50px";
-                //cell.style.width = (this.table.nativeElement as HTMLDivElement).offsetWidth / (2 * this.position.horiz + 1) + "px";
-                //cell.style.width = 100 / (2 * this.position.horiz + 1) + "vw";
                 cell.style.height = "50px";
-                //cell.style.height = (this.table.nativeElement as HTMLDivElement).offsetWidth / (2 * this.position.horiz + 1) + "px";
-                //cell.style.height = 100 / (2 * this.position.horiz + 1) + "vw";
                 cell.style.position = "relative";
                 cell.style.boxSizing = "border-box";
                 if (x === this.position.posX && y === this.position.posY) {
-                    cell.style.backgroundColor = "#666";
+                    cell.style.border = "1px solid white";
+                    cell.style.boxShadow = "0px 0px 15px white";
                 }
                 row.appendChild(cell);
 
@@ -91,6 +88,9 @@ export class ViewComponent {
                 let minDist: number = null;
                 let hasFollower = false;
                 let hasMonster = false;
+                if (x == 34 && y == 86) {
+                    console.log("ICI");
+                }
                 for (let k = 0; k < this.creatures.length; k++) {
                     if (this.creatures[k].posX == x && this.creatures[k].posY == y) {
                         const diffLevel = Math.abs(this.position.posN - this.creatures[k].posN);
@@ -99,7 +99,7 @@ export class ViewComponent {
                         } else {
                             hasMonster = true;
                         }
-                        if (!minDist || minDist > diffLevel) {
+                        if (minDist === null || minDist > diffLevel) {
                             minDist = diffLevel;
                         }
                         if (!infoC) {
@@ -137,7 +137,7 @@ export class ViewComponent {
                 for (let k = 0; k < this.gobelins.length; k++) {
                     if (this.gobelins[k].posX == x && this.gobelins[k].posY == y) {
                         const diffLevel = Math.abs(this.position.posN - this.gobelins[k].posN);
-                        if (!minDist || minDist > diffLevel) {
+                        if (minDist === null || minDist > diffLevel) {
                             minDist = diffLevel;
                         }
                         if (!infoC) {
@@ -167,7 +167,7 @@ export class ViewComponent {
                 for (let k = 0; k < this.tresors.length; k++) {
                     if (this.tresors[k].posX == x && this.tresors[k].posY == y) {
                         const diffLevel = Math.abs(this.position.posN - this.tresors[k].posN);
-                        if (!minDist || minDist > diffLevel) {
+                        if (minDist === null || minDist > diffLevel) {
                             minDist = diffLevel;
                         }
                         let itemValue = 2;
@@ -218,6 +218,35 @@ export class ViewComponent {
                             infoC.style.boxShadow = "0px 0px 40px white";
                             break;
                     }
+                    cell.appendChild(infoC);
+                }
+
+                // ------------------------------------------- plantes -------------------------------------------
+                infoC = null;
+                minDist = null;
+                for (let k = 0; k < this.plantes.length; k++) {
+                    if (this.plantes[k].posX == x && this.plantes[k].posY == y) {
+                        const diffLevel = Math.abs(this.position.posN - this.plantes[k].posN);
+                        if (minDist === null || minDist > diffLevel) {
+                            minDist = diffLevel;
+                        }
+                        if (!infoC) {
+                            infoC = document.createElement("div") as HTMLDivElement;
+                            infoC.style.position = "absolute";
+                            infoC.style.bottom = "0";
+                            infoC.style.backgroundColor = "green";
+                            infoC.style.right = "0";
+                            infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+                                this.showGobInfo(e, x, y);
+                            });
+                            infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+                                this.hideInfo(e);
+                            });
+                        }
+                    }
+                }
+                if (infoC) {
+                    this.setCellDist(infoC, minDist);
                     cell.appendChild(infoC);
                 }
 
@@ -273,11 +302,7 @@ export class ViewComponent {
                 txt += "(" + this.gobelins[k].num + ") " + this.gobelins[k].name + " [" + this.gobelins[k].level + "] " + this.gobelins[k].posX + "/" + this.gobelins[k].posY + "/" + this.gobelins[k].posN + "<br/>";
             }
         }
-        (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
-        (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
-        console.log(e);
+        this.setTooltip(e, txt);
     }
 
     showMonsterInfo(e: MouseEvent, x: number, y: number): void {
@@ -287,10 +312,7 @@ export class ViewComponent {
                 txt += "(" + this.creatures[k].num + ") " + this.creatures[k].name + " [" + this.creatures[k].level + "] " + this.creatures[k].posX + "/" + this.creatures[k].posY + "/" + this.creatures[k].posN + "<br/>";
             }
         }
-        (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
-        (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
+        this.setTooltip(e, txt);
     }
 
     showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
@@ -300,10 +322,17 @@ export class ViewComponent {
                 txt += "(" + this.tresors[k].num + ") " + this.tresors[k].name + " " + this.tresors[k].posX + "/" + this.tresors[k].posY + "/" + this.tresors[k].posN + "<br/>";
             }
         }
-        (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
-        (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
+        this.setTooltip(e, txt);
+    }
+
+    showPlantsInfo(e: MouseEvent, x: number, y: number): void {
+        let txt = "";
+        for (let k = 0; k < this.plantes.length; k++) {
+            if (this.plantes[k].posX == x && this.plantes[k].posY == y) {
+                txt += "(" + this.plantes[k].num + ") " + this.plantes[k].name + " " + this.plantes[k].posX + "/" + this.plantes[k].posY + "/" + this.plantes[k].posN + "<br/>";
+            }
+        }
+        this.setTooltip(e, txt);
     }
 
     showLieuxInfo(e: MouseEvent, x: number, y: number): void {
@@ -313,13 +342,17 @@ export class ViewComponent {
                 txt += "(" + this.lieux[k].num + ") " + this.lieux[k].name + " " + this.lieux[k].posX + "/" + this.lieux[k].posY + "/" + this.lieux[k].posN + "<br/>";
             }
         }
-        (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
-        (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
-        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
-        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
+        this.setTooltip(e, txt);
     }
 
     hideInfo(e: MouseEvent): void {
         (this.tooltip.nativeElement as HTMLDivElement).style.display = "none";
+    }
+
+    private setTooltip(e: MouseEvent, txt: string): void {
+        (this.tooltip.nativeElement as HTMLDivElement).innerHTML = txt;
+        (this.tooltip.nativeElement as HTMLDivElement).style.display = "";
+        (this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
+        (this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
     }
 }
