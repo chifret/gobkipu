@@ -1,7 +1,7 @@
 <h4>Pré-identitifieur de tanières</h4>
-<wj-flex-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()" style="font-size:11px!important;text-shadow:none!important;">
+<qeos-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()" style="font-size:11px!important;text-shadow:none!important;">
     <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="55"></wj-flex-grid-column>
-    <wj-flex-grid-column header="IdT" binding="Identifie" [width]="30"></wj-flex-grid-column>
+    <wj-flex-grid-column header="IdT" binding="Identifie" [width]="45"></wj-flex-grid-column>
     <wj-flex-grid-column header="Stars" binding="Stars" [width]="60"></wj-flex-grid-column>
     <wj-flex-grid-column header="Nom" binding="Nom" [width]="150">
         <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
@@ -21,5 +21,5 @@
     <wj-flex-grid-column header="Matière" binding="Matiere" [width]="60"></wj-flex-grid-column>
     <wj-flex-grid-column header="Qualité" binding="Qualite" [dataMap]="dtmQuality" [width]="90"></wj-flex-grid-column>
     <wj-flex-grid-column header="Taille" binding="Taille" [width]="55"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Carats" binding="Carats" [width]="55"></wj-flex-grid-column>
-</wj-flex-grid>
+    <wj-flex-grid-column header="Carats" binding="Carats" [width]="55" [aggregate]="1"></wj-flex-grid-column>
+</qeos-grid>

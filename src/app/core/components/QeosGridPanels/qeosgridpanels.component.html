@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <div class="row">
+        <div #collapseButtonsPanel *ngIf="hasCollapseButtons" style="height: 55px;" class="wj-grouppanel wj-control col-lg-2">
+            <div style="position: relative; cursor: default; height: 100%; width: 100%; min-height: 1em;">
+                <i class="fa fa-minus-circle" aria-hidden="true" (click)="collapse(true)" style="position:absolute; width: 20px; color: #004a43; top: 4px; left:0; cursor: pointer; font-size: 13px;"></i>
+                <i class="fa fa-plus-circle" aria-hidden="true" (click)="collapse(false)" style="position:absolute; right: 0; width: auto; color: #004a43; top: 4px; cursor: pointer; font-size: 13px;"></i>
+                <div style="width: 100%; padding: 0 30px;">
+                    <span i18n style="display: block; width: auto; overflow: hidden; text-align: center;">Collapse</span>
+                </div>
+            </div>
+        </div>
+        <wj-group-panel #groupPanel *ngIf="hasGroup" [ngClass]="{
+                            'col-lg-6': !hasCollapseButtons,
+                            'col-lg-5': hasCollapseButtons
+                        }"
+            [grid]="grid" [placeholder]="'Drag columns here to create groups.'" i18n-placeholder [hideGroupedColumns]="hideGroupedColumns"
+            style="padding:8px 15px!important;"></wj-group-panel>
+        <wj-filter-panel #filterPanel [ngClass]="{
+                            'col-lg-5': hasGroup && hasCollapseButtons,
+                            'col-lg-6': hasGroup && !hasCollapseButtons,
+                            'col-lg-10': !hasGroup && hasCollapseButtons,
+                            'col-lg-12': !hasGroup && !hasCollapseButtons
+                         }"
+            [filter]="filter" [placeholder]="'Active Filters'" i18n-placeholder style="padding:8px 15px!important;"></wj-filter-panel>
+    </div>
+</div>

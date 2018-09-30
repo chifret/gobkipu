@@ -1,4 +1,4 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild, OnInit } from '@angular/core';
 
 import { GuildplacesService } from './../core/services/identify/guildplaces.service';
 import { ItemsService } from '../core/services/identify/items.service';
@@ -6,12 +6,13 @@ import { CollectionView } from 'wijmo/wijmo';
 import { Subscription } from 'rxjs';
 import { WjFlexGrid } from 'wijmo/wijmo.angular2.grid';
 import { DataMap } from 'wijmo/wijmo.grid';
+import { QeosGridComponent } from '../core/components/QeosGrid/qeosgrid.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './identify.component.html'
 })
-export class IdentifyComponent {
+export class IdentifyComponent implements OnInit {
 
     cvMain: CollectionView = null;
     subsMain: Subscription;
@@ -26,7 +27,7 @@ export class IdentifyComponent {
         { key: 5, value: "Exceptionnelle" }
     ], "key", "value");
 
-    @ViewChild("flex") flex: WjFlexGrid;
+    @ViewChild("grid") grid: QeosGridComponent;
 
     constructor(protected injector: Injector,
         protected itemsService: ItemsService,
@@ -38,5 +39,12 @@ export class IdentifyComponent {
 
     initGrid() {
 
+    }
+
+    ngOnInit(): void {
+        this.grid.filter.filterColumns = [
+            "Identifie", "Category", "Type", "Matiere"
+        ];
+        this.grid.headersVisibility = 1;
     }
 }

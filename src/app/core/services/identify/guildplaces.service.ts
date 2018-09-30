@@ -130,6 +130,10 @@ export class GuildplacesService extends Service {
                 } else {
                     json[i].Category = "Équipement";
                     json[i].Taille = null;
+                    if (json[i].Matiere) {
+                        json[i].Nom = json[i].Nom + " en " + json[i].Matiere;
+                        json[i].Matiere = null;
+                    }
                 }
                 if (json[i].Poids) {
                     json[i].Poids = Math.round((json[i].Poids / 60) * 100) / 100;

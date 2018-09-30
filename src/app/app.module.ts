@@ -5,6 +5,10 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { WjGridModule } from "wijmo/wijmo.angular2.grid";
+import { WjCoreModule } from "wijmo/wijmo.angular2.core";
+import { WjGridGrouppanelModule } from "wijmo/wijmo.angular2.grid.grouppanel";
+import { WjGridFilterModule } from "wijmo/wijmo.angular2.grid.filter";
+import { WjFilterPanelComponent } from "./core/components/WjFilterPanel/WjFilterPanel";
 
 import { routes } from "./app.routing";
 
@@ -24,6 +28,8 @@ import { MeuteService } from './core/services/meute/meute.service';
 import { CopyPasteViewComponent } from './view/copypaste-view.component';
 import { ViewService } from './core/services/view/view.service';
 import { BabylonjsService } from './core/services/babylonjs.service';
+import { QeosGridComponent } from './core/components/QeosGrid/qeosgrid.component';
+import { QeosGridPanelsComponent } from './core/components/QeosGridPanels/qeosgridpanels.component';
 
 @NgModule({
   imports: [
@@ -31,6 +37,9 @@ import { BabylonjsService } from './core/services/babylonjs.service';
     HttpClientModule,
     FormsModule,
     WjGridModule,
+    WjCoreModule,
+    WjGridFilterModule,
+    WjGridGrouppanelModule,
     RouterModule.forRoot(routes),
   ],
   declarations: [
@@ -41,9 +50,10 @@ import { BabylonjsService } from './core/services/babylonjs.service';
     ViewComponent,
     CopyPasteViewComponent,
     IdentifyComponent,
-    LoginComponent
-    //WjFilterPanelComponent,
-    //WjGridFilterModule
+    LoginComponent,
+    WjFilterPanelComponent,
+    QeosGridComponent,
+    QeosGridPanelsComponent
   ],
   providers: [
     PlacesService,
@@ -53,6 +63,9 @@ import { BabylonjsService } from './core/services/babylonjs.service';
     LoginService,
     MeuteService,
     ViewService
+  ],
+  entryComponents: [
+    QeosGridPanelsComponent,
   ],
   bootstrap: [
     AppComponent
