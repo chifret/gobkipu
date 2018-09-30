@@ -4,18 +4,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { WjCoreModule } from "wijmo/wijmo.angular2.core";
 import { WjGridModule } from "wijmo/wijmo.angular2.grid";
-import { WjGridFilterModule } from "wijmo/wijmo.angular2.grid.filter";
-import { WjInputModule } from "wijmo/wijmo.angular2.input";
-import { WjChartInteractionModule } from "wijmo/wijmo.angular2.chart.interaction";
-import { WjChartModule } from "wijmo/wijmo.angular2.chart";
-import { WjChartAnnotationModule } from "wijmo/wijmo.angular2.chart.annotation";
-import { WjGridGrouppanelModule } from "wijmo/wijmo.angular2.grid.grouppanel";
-import { WjGridDetailModule } from "wijmo/wijmo.angular2.grid.detail";
-import { WjGridSheetModule } from "wijmo/wijmo.angular2.grid.sheet";
-import { WjViewerModule } from "wijmo/wijmo.angular2.viewer";
-import { WjNavModule } from "wijmo/wijmo.angular2.nav";
 
 import { routes } from "./app.routing";
 
@@ -34,17 +23,15 @@ import { LoginService } from './core/services/login.service';
 import { MeuteService } from './core/services/meute/meute.service';
 import { CopyPasteViewComponent } from './view/copypaste-view.component';
 import { ViewService } from './core/services/view/view.service';
+import { BabylonjsService } from './core/services/babylonjs.service';
 
 @NgModule({
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot(routes,
-      {
-        //enableTracing: true,
-        useHash: true
-      }),
+    WjGridModule,
+    RouterModule.forRoot(routes),
   ],
   declarations: [
     AppComponent,
@@ -60,6 +47,7 @@ import { ViewService } from './core/services/view/view.service';
   ],
   providers: [
     PlacesService,
+    BabylonjsService,
     GuildplacesService,
     ItemsService,
     LoginService,
