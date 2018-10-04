@@ -4,7 +4,6 @@ import { GuildplacesService } from './../core/services/identify/guildplaces.serv
 import { ItemsService } from '../core/services/identify/items.service';
 import { CollectionView } from 'wijmo/wijmo';
 import { Subscription } from 'rxjs';
-import { WjFlexGrid } from 'wijmo/wijmo.angular2.grid';
 import { DataMap } from 'wijmo/wijmo.grid';
 import { QeosGridComponent } from '../core/components/QeosGrid/qeosgrid.component';
 
@@ -46,5 +45,11 @@ export class IdentifyComponent implements OnInit {
             "Identifie", "Category", "Type", "Matiere"
         ];
         this.grid.headersVisibility = 1;
+    }
+
+    refresh(){
+      this.subsMain = this.guildplacesService.get(true).subscribe((res) => {
+        this.cvMain = new CollectionView(res);
+      });
     }
 }

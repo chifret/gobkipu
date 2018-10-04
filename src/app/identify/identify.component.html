@@ -1,4 +1,5 @@
 <h4>Pré-identitifieur de tanières</h4>
+<button (click)="refresh()">Refresh mathos</button>
 <qeos-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()" style="font-size:11px!important;text-shadow:none!important;">
     <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="55"></wj-flex-grid-column>
     <wj-flex-grid-column header="IdT" binding="Identifie" [width]="45"></wj-flex-grid-column>

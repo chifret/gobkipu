@@ -38,7 +38,7 @@ export class TeamComponent {
     constructor(private loginService: LoginService,
         private meuteService: MeuteService,
         private viewService: ViewService) {
-        if (this.loginService.isConnected()) {
+        if (LoginService.isConnected()) {
             this.meuteService.get().subscribe((res) => {
                 this.teamMembers = res;
                 console.log(res);
