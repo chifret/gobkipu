@@ -24,7 +24,7 @@ export class ViewService extends Service {
             return Observable.of(JSON.parse(localStorage.getItem("view-" + id)));
         } else {
             console.log("get distant");
-            return this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=654236304fba843f804c404aa868df39&id=" + id, { responseType: 'text' })
+            return this.http.get("https://www.chifret.be/gobkipu/services/view.php?id=332&key=654236304fba843f804c404aa868df39&id_view=" + id, { responseType: 'text' })
                 .map((res: any) => {
                         const json = CsvUtils.getJson<ViewTyping>(res, this.numerics, this.floats, this.dates, []);
                     localStorage.setItem("view-" + id, JSON.stringify(json));
