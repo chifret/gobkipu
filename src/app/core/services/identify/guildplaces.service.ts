@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Rx';
 import {Service} from "../service";
 import {CsvUtils} from "../../utils/csv.utils";
 import {GuildPlaceItemsTypings} from "../../typings/guildplaceitems.typings";
+import {LoginService} from "../login.service";
 
 @Injectable()
 export class GuildplacesService extends Service {
@@ -107,13 +108,18 @@ export class GuildplacesService extends Service {
       return Observable.of(json);
     } else {
       console.log("get distant");
-      return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=654236304fba843f804c404aa868df39&id=332", {responseType: 'text'})
-        .map((res: any) => {
-          const json = CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-          this.enrichment(json);
-          localStorage.setItem("guildplaceitems", JSON.stringify(json));
-          return json;
-        });
+      const token = LoginService.getToken();
+      if (token) {
+        return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
+          .map((res: any) => {
+            const json = CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
+            this.enrichment(json);
+            localStorage.setItem("guildplaceitems", JSON.stringify(json));
+            return json;
+          });
+      } else {
+        return Observable.empty();
+      }
     }
   }
 
