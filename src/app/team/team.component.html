@@ -15,12 +15,19 @@
             <td>{{ teamMember.Id }}</td>
             <td><b>{{ teamMember.Nom }}</b></td>
             <td>{{ teamMember.Tribu }} - {{ teamMember.Niveau }}</td>
-            <td>{{ teamMember.PV }}</td>
-            <td>{{ teamMember.X }}/{{ teamMember.Y }}/{{ teamMember.N }}</td>
-            <td>{{ teamMember.PA }}</td>
             <td>
-                {{ teamMember.DLA }}<br />
-                <small>{{ teamMember.DLA }}</small>
+                {{ teamMember.PV }} / {{ teamMember.PVMax }}
+                <div #pv style="width: 100%; border: 1px solid grey; height: 10px;">
+                    <div style="width: 50%; height:100%;"
+                         [style.width.%]="(teamMember.PV / teamMember.PVMax) * 100"
+                         [style.backgroundColor]="getPVColor(teamMember.PV, teamMember.PVMax)"></div>
+                </div>
+            </td>
+            <td>{{ teamMember.X }} / {{ teamMember.Y }} / {{ teamMember.N }}</td>
+            <td [style.backgroundColor]="getDLAColor(teamMember.DLAState)">{{ teamMember.PA }}</td>
+            <td>
+                {{ teamMember.DLA | date:'dd-MM-yyyy HH:mm' }}<br/>
+                <small>{{ teamMember.nextDLA | date:'dd-MM-yyyy HH:mm' }}</small>
             </td>
             <td>
                 <a href="javascript:void(0)" (click)="view(teamMember.Id)">Voir la vue</a>

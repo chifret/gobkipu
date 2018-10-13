@@ -1,4 +1,4 @@
-export class MeuteMembresTyping {
+export class Meutemembres1Typing {
     CARAC: string = null;
     CT: number = 0;
     DLA: Date = new Date();

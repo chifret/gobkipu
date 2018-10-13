@@ -117,3 +117,6 @@ body {
 .wj-grouppanel div[wj-part=div-ph]{
   margin-top:7px;
 }
+td{
+    vertical-align: middle!important;
+}

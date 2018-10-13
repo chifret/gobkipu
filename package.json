@@ -26,7 +26,9 @@
     "babylonjs-materials": "^3.2.0",
     "core-js": "^2.5.7",
     "font-awesome": "^4.7.0",
-    "rxjs": "^6.3.2",
+    "moment": "^2.22.2",
+    "ngrx": "^2.0.1",
+    "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.2",
     "wijmo": "^5.20182.523",
     "zone.js": "^0.8.26"
