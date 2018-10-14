@@ -13,6 +13,8 @@ import { QeosGridComponent } from '../core/components/QeosGrid/qeosgrid.componen
 })
 export class IdentifyComponent implements OnInit {
 
+	busy = false;
+	text = "Refresh";
     cvMain: CollectionView = null;
     subsMain: Subscription;
 

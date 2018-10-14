@@ -1,7 +1,7 @@
 import { Component, Injector } from '@angular/core';
 
 import { TravelClass } from './travel.class';
-import { Position } from './../core/classes/position';
+import { PositionClass } from '../core/classes/position.class';
 import { DistanceUtils } from '../core/utils/business/distance-utils';
 
 @Component({
@@ -106,7 +106,7 @@ export class SpotTravelComponent extends TravelClass {
         let distance = 0;
         for (let i = 0; i < data.length; i++) {
             for (let j = i + 1; j < data.length; j++) {
-                const distTmp = DistanceUtils.calculateTotalDistance(new Position(data[i].x, data[i].y, data[i].z), new Position(data[j].x, data[j].y, data[j].z), tp);
+                const distTmp = DistanceUtils.calculateTotalDistance(new PositionClass(data[i].x, data[i].y, data[i].z), new PositionClass(data[j].x, data[j].y, data[j].z), tp);
                 if (distTmp >= maxDist) {
                     return -1;
                 }

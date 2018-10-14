@@ -1,4 +1,4 @@
-export class Lieux {
+export class LieuxClass {
     dist: number;
     name: string;
     num: number;

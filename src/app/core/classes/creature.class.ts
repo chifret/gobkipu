@@ -1,4 +1,4 @@
-export class Creature {
+export class CreatureClass {
     dist: number;
     level: number;
     name: string;

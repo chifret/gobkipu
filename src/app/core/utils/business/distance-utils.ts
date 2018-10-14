@@ -1,11 +1,11 @@
-import { Position } from './../../../core/classes/position';
+import { PositionClass } from '../../classes/position.class';
 
 export class DistanceUtils {
-    static calculateTotalDistanceForElement(element: any, p1: Position, p2: Position, tp: boolean): void {
+    static calculateTotalDistanceForElement(element: any, p1: PositionClass, p2: PositionClass, tp: boolean): void {
         element.distance = DistanceUtils.calculateTotalDistance(p1, p2, tp);
     }
 
-    static calculateTotalDistance(p1: Position, p2: Position, tp: boolean): number {
+    static calculateTotalDistance(p1: PositionClass, p2: PositionClass, tp: boolean): number {
         let distance = 0;
         const horiz = Math.max(DistanceUtils.calculateDistanceOneAxe(p1.x, p2.x), DistanceUtils.calculateDistanceOneAxe(p1.y, p2.y));
         const verti = DistanceUtils.calculateDistanceOneAxe(p1.z, p2.z);

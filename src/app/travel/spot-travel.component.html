@@ -1,4 +1,4 @@
-<h4>Recherche du meilleur spot</h4>
+<h1>Recherche du meilleur spot</h1>
 <form class="form-inline">
     <label class="sr-only" for="placeType">placeType</label>
     <select multiple #type class="form-control mb-2 mr-sm-2" id="placeType" (change)="setSelected($event.target)">
@@ -17,7 +17,7 @@
     <button type="button" class="btn btn-primary mb-2" (click)="search(type.values, tp.checked, p0.checked, m10.checked)">Submit</button>
 </form>
 <div *ngIf="top20.length>0">
-    <h4 >Résultats</h4>
+    <h1 >Résultats</h1>
     <table style="width:100%;margin-bottom:25px;" *ngFor="let row of top20">
         <tr>
             <th style="width:10%;text-align:center;">id</th>

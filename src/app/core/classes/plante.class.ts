@@ -1,4 +1,4 @@
-export class Tresor {
+export class PlanteClass {
     dist: number;
     name: string;
     num: number;

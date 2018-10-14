@@ -1,7 +1,7 @@
 import { Injector } from '@angular/core';
 
 import { PlacesService } from './../core/services/places/places.service';
-import { Position } from './../core/classes/position';
+import { PositionClass } from '../core/classes/position.class';
 import { DistanceUtils } from '../core/utils/business/distance-utils';
 
 

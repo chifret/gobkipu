@@ -1,4 +1,4 @@
-<h4>Recherche de lieux proches</h4>
+<h1>Recherche de lieux proches</h1>
 <form class="form-inline">
   <label class="sr-only" for="placeType">placeType</label>
   <select #type class="form-control mb-2 mr-sm-2" id="placeType" placeholder="Jane Doe">
@@ -26,7 +26,7 @@
 
   <button type="button" class="btn btn-primary mb-2" (click)="search(type.value, x.value, y.value, z.value, tp.checked, p0.checked, m10.checked)">Submit</button>
 </form>
-<h4 *ngIf="placeSearch">Résultats</h4>
+<h1 *ngIf="placeSearch">Résultats</h1>
 <table *ngIf="placeSearch" style="width:100%">
   <tr>
     <th style="width:10%;text-align:center;">id</th>
