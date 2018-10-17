@@ -10,4 +10,5 @@ export class ViewTyping {
     X: number = 0;
     Y: number = 0;
     Z: number = 0;
+    snapshotDate:Date;
 }

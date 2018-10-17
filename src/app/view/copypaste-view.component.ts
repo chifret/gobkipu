@@ -34,23 +34,17 @@ export class CopyPasteViewComponent {
 
 		this.viewable = new ViewableClass(
 			{
-				posX: null,
-				posY: null,
-				posN: null,
-				horiz: null,
-				verti: null,
-
 				avgPosN: null,
 				minX: null,
 				maxX: null,
 				minY: null,
 				maxY: null
 			},
-			[],
-			[],
-			[],
-			[],
-			[]
+			new Map(),
+			new Map(),
+			new Map(),
+			new Map(),
+			new Map()
 		);
 		let posX = null;
 		let posY = null;
@@ -86,7 +80,7 @@ export class CopyPasteViewComponent {
 							creatureTmp.posX = posX;
 							creatureTmp.posY = posY;
 							creatureTmp.posN = posN;
-							this.viewable.gobelins.push(creatureTmp);
+							this.viewable.gobelins.set(creatureTmp.num, creatureTmp);
 						} else if (line.indexOf("L'affichage est limité à ") > -1) {
 							line = line.substr(25, line.length);
 							horiz = parseInt(line.substr(0, line.indexOf("cases horizontalement") - 1));
@@ -126,12 +120,12 @@ export class CopyPasteViewComponent {
 			}
 			if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
 				console.log(cols);
-				this.viewable.gobelins.push({
+				this.viewable.gobelins.set(id.num, {
 					dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
 					posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
 				})
 			} else {
-				this.viewable.creatures.push({
+				this.viewable.creatures.set(id.num, {
 					dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
 					posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
 				});
@@ -147,7 +141,7 @@ export class CopyPasteViewComponent {
 			if (!parseInt(cols[1])) {
 				return;
 			}
-			this.viewable.tresors.push({
+			this.viewable.tresors.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
 				posX: parseInt(cols[3]), posY: parseInt(cols[4]), posN: parseInt(cols[5])
 			});
@@ -162,7 +156,7 @@ export class CopyPasteViewComponent {
 			if (!parseInt(cols[1])) {
 				return;
 			}
-			this.viewable.lieux.push({
+			this.viewable.lieux.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]), type: cols[3],
 				posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
 			});
@@ -177,7 +171,7 @@ export class CopyPasteViewComponent {
 			if (!parseInt(cols[1])) {
 				return;
 			}
-			this.viewable.plantes.push({
+			this.viewable.plantes.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
 				posX: parseInt(cols[3]), posY: parseInt(cols[4]), posN: parseInt(cols[5])
 			});

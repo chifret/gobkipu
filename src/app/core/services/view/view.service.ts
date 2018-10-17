@@ -13,7 +13,6 @@ import {CreatureClass} from "../../classes/creature.class";
 import {TresorClass} from "../../classes/tresor.class";
 import {LieuxClass} from "../../classes/lieux.class";
 import {PlanteClass} from "../../classes/plante.class";
-import {MeuteService} from "../meute/meute.service";
 
 @Injectable()
 export class ViewService extends Service {
@@ -22,8 +21,7 @@ export class ViewService extends Service {
 	floats = [];
 	dates = [];
 
-	constructor(injector: Injector,
-	            protected meuteService: MeuteService) {
+	constructor(injector: Injector) {
 		super(injector);
 	}
 
@@ -48,99 +46,95 @@ export class ViewService extends Service {
 	}
 
 
-	public getAll(force: boolean = false): Observable<ViewTyping[]> {
-		const token = LoginService.getToken();
-		if (token) {
-
-
-			// return this.meuteService.get()
-			// 	.pipe(map((meuteMembres) => {
-			// 		let viewTypingsMeute: ViewTyping[] = [];
-			// 		let test = [];
-			// 		meuteMembres.forEach((meuteMembre) => {
-			// 			if (localStorage.getItem("view-" + meuteMembre.Id) && !force) {
-			// 				console.log("get local");
-			// 				viewTypingsMeute = [...viewTypingsMeute, ...JSON.parse(localStorage.getItem("view-" + meuteMembre.Id))];
-			// 				test.push()
-			//
-			// 				} else {
-			// 					console.log("get distant");
-			// 					this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=" + token.clan + "&id=" + token.id + "&id_view=" + meuteMembre.Id, {responseType: 'text'})
-			// 						.pipe(map((res: any) => {
-			// 							const json = CsvUtils.getJson<ViewTyping>(res, this.numerics, this.floats, this.dates, []);
-			// 							localStorage.setItem("view-" + meuteMembre.Id, JSON.stringify(json));
-			// 							viewTypingsMeute = [...viewTypingsMeute, ...json];
-			// 						}));
-			//
-			//
-			// 			}
-			// 		});
-			// 		return viewTypingsMeute;
-			// 	}));
-
-
-			// return this.meuteService.get()
-			// 	.pipe(map(meuteMembres => {
-			// 		return meuteMembres;
-			// 	}))
-			// 	.mergeMap(meuteMembre => {
-			// 		if (localStorage.getItem("view-" + meuteMembre.Id) && !force) {
-			// 			console.log("get local");
-			// 			return JSON.parse(localStorage.getItem("view-" + meuteMembre.Id));
-			// 		} else {
-			// 			console.log("get distant");
-			// 			return this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=" + token.clan + "&id=" + token.id + "&id_view=" + meuteMembre.Id, {responseType: 'text'})
-			// 				.pipe(map((res: any) => {
-			// 					const json = CsvUtils.getJson<ViewTyping>(res, this.numerics, this.floats, this.dates, []);
-			// 					localStorage.setItem("view-" + meuteMembre.Id, JSON.stringify(json));
-			// 					return json;
-			// 				}));
-			//
-			//
-			// 		}
-			// 	});
-
-
-			// this.homeworld = this.http.get('/api/people/1')
-			// 	.map(res => res.json())
-			// 	.mergeMap(character => this.http.get(character.homeworld))
-
-
-			// const takeEveryNth = (n: number) => <T>(source: Observable<T>) =>
-			// 	new Observable<T>(observer => {
-			// 		let count = 0;
-			// 		return source.subscribe({
-			// 			next(x) {
-			// 				if (count++ % n === 0) observer.next(x);
-			// 			},
-			// 			error(err) { observer.error(err); },
-			// 			complete() { observer.complete(); }
-			// 		})
-			// 	});
-		} else {
-			return Observable.empty();
-		}
-	}
+	// public getAll(force: boolean = false): Observable<ViewTyping[]> {
+	// 	const token = LoginService.getToken();
+	// 	if (token) {
+	//
+	//
+	// 		// return this.meuteService.get()
+	// 		// 	.pipe(map((meuteMembres) => {
+	// 		// 		let viewTypingsMeute: ViewTyping[] = [];
+	// 		// 		let test = [];
+	// 		// 		meuteMembres.forEach((meuteMembre) => {
+	// 		// 			if (localStorage.getItem("view-" + meuteMembre.Id) && !force) {
+	// 		// 				console.log("get local");
+	// 		// 				viewTypingsMeute = [...viewTypingsMeute, ...JSON.parse(localStorage.getItem("view-" + meuteMembre.Id))];
+	// 		// 				test.push()
+	// 		//
+	// 		// 				} else {
+	// 		// 					console.log("get distant");
+	// 		// 					this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=" + token.clan + "&id=" + token.id + "&id_view=" + meuteMembre.Id, {responseType: 'text'})
+	// 		// 						.pipe(map((res: any) => {
+	// 		// 							const json = CsvUtils.getJson<ViewTyping>(res, this.numerics, this.floats, this.dates, []);
+	// 		// 							localStorage.setItem("view-" + meuteMembre.Id, JSON.stringify(json));
+	// 		// 							viewTypingsMeute = [...viewTypingsMeute, ...json];
+	// 		// 						}));
+	// 		//
+	// 		//
+	// 		// 			}
+	// 		// 		});
+	// 		// 		return viewTypingsMeute;
+	// 		// 	}));
+	//
+	//
+	// 		// return this.meuteService.get()
+	// 		// 	.pipe(map(meuteMembres => {
+	// 		// 		return meuteMembres;
+	// 		// 	}))
+	// 		// 	.mergeMap(meuteMembre => {
+	// 		// 		if (localStorage.getItem("view-" + meuteMembre.Id) && !force) {
+	// 		// 			console.log("get local");
+	// 		// 			return JSON.parse(localStorage.getItem("view-" + meuteMembre.Id));
+	// 		// 		} else {
+	// 		// 			console.log("get distant");
+	// 		// 			return this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=" + token.clan + "&id=" + token.id + "&id_view=" + meuteMembre.Id, {responseType: 'text'})
+	// 		// 				.pipe(map((res: any) => {
+	// 		// 					const json = CsvUtils.getJson<ViewTyping>(res, this.numerics, this.floats, this.dates, []);
+	// 		// 					localStorage.setItem("view-" + meuteMembre.Id, JSON.stringify(json));
+	// 		// 					return json;
+	// 		// 				}));
+	// 		//
+	// 		//
+	// 		// 		}
+	// 		// 	});
+	//
+	//
+	// 		// this.homeworld = this.http.get('/api/people/1')
+	// 		// 	.map(res => res.json())
+	// 		// 	.mergeMap(character => this.http.get(character.homeworld))
+	//
+	//
+	// 		// const takeEveryNth = (n: number) => <T>(source: Observable<T>) =>
+	// 		// 	new Observable<T>(observer => {
+	// 		// 		let count = 0;
+	// 		// 		return source.subscribe({
+	// 		// 			next(x) {
+	// 		// 				if (count++ % n === 0) observer.next(x);
+	// 		// 			},
+	// 		// 			error(err) { observer.error(err); },
+	// 		// 			complete() { observer.complete(); }
+	// 		// 		})
+	// 		// 	});
+	//
+	//
+	// 	} else {
+	// 		return Observable.empty();
+	// 	}
+	// }
 
 	getViewable(viewItems: ViewTyping[]): ViewableClass {
 		let position = {
-			posX: null,
-			posY: null,
-			posN: null,
-			horiz: null,
-			verti: null,
-
 			avgPosN: null,
 			minX: null,
 			maxX: null,
 			minY: null,
 			maxY: null
 		};
-		let creatures: CreatureClass[] = [];
-		let gobelins: CreatureClass[] = [];
-		let tresors: TresorClass[] = [];
-		let lieux: LieuxClass[] = [];
-		let plantes: PlanteClass[] = [];
+		let creatures: Map<number, CreatureClass> = new Map();
+		let gobelins: Map<number, CreatureClass> = new Map();
+		let tresors: Map<number, TresorClass> = new Map();
+		let lieux: Map<number, LieuxClass> = new Map();
+		let plantes: Map<number, PlanteClass> = new Map();
 
 		let maxDist = 0;
 		let posNs: number[] = [];
@@ -163,23 +157,20 @@ export class ViewService extends Service {
 			switch (line.Categorie) {
 				case "C":
 					if (line.Dist == -1) {
-						position.posX = line.X;
-						position.posY = line.Y;
-						position.posN = line.N;
 						posNs.push(line.N);
-						gobelins.push({
+						gobelins.set(line.Id, {
 							dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
 							posX: line.X, posY: line.Y, posN: line.N
 						});
 					} else {
 						if (CreaturetypesUtils.creatureIsGob(line.Type, line.Id)) {
-							gobelins.push({
+							gobelins.set(line.Id, {
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
 								posX: line.X, posY: line.Y, posN: line.N
 							});
 						}
 						else {
-							creatures.push({
+							creatures.set(line.Id, {
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
 								posX: line.X, posY: line.Y, posN: line.N
 							});
@@ -187,24 +178,22 @@ export class ViewService extends Service {
 					}
 					break;
 				case "T":
-					tresors.push({
+					tresors.set(line.Id, {
 						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N
 					});
 					break;
 				case "L":
-					lieux.push({
+					lieux.set(line.Id, {
 						dist: line.Dist, name: line.Nom, num: line.Id, type: line.Type, posX: line.X, posY: line.Y, posN: line.N
 					});
 					break;
 				case "P":
-					plantes.push({
+					plantes.set(line.Id, {
 						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N
 					});
 					break;
 			}
 		});
-		position.horiz = maxDist;
-		position.verti = maxDist;
 		let totPosN = 0;
 		posNs.forEach((posN) => {
 			totPosN += posN;

@@ -9,7 +9,6 @@ import {ViewableClass} from "../core/classes/viewable.class";
 export class ViewComponent {
 
 	viewable: ViewableClass;
-	scale = 1;
 	processed = false;
 
 	values: { type: string, value: number }[] = [
@@ -28,6 +27,7 @@ export class ViewComponent {
 		{type: "Bouclier", value: 3},
 		{type: "Arme 1 Main", value: 3},
 		{type: "Arme 2 mains", value: 3},
+		{type: "Une poignÃ©e de Canines de TrÃµll", value: 1}
 	];
 
 	followers: string[] = ["Créature mécanique", "CrÃ©ature mÃ©canique", "Arme dansante", "Pixie"];
@@ -64,10 +64,10 @@ export class ViewComponent {
 				let minDist: number = null;
 				let hasFollower = false;
 				let hasMonster = false;
-				for (let k = 0; k < this.viewable.creatures.length; k++) {
-					if (this.viewable.creatures[k].posX == x && this.viewable.creatures[k].posY == y) {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - this.viewable.creatures[k].posN);
-						if (this.followers.indexOf(this.viewable.creatures[k].race) > -1) {
+				this.viewable.creatures.forEach((creature) => {
+					if (creature.posX == x && creature.posY == y) {
+						const diffLevel = Math.abs(this.viewable.position.avgPosN - creature.posN);
+						if (this.followers.indexOf(creature.race) > -1) {
 							hasFollower = true;
 						} else {
 							hasMonster = true;
@@ -88,7 +88,7 @@ export class ViewComponent {
 							});
 						}
 					}
-				}
+				});
 				if (infoC) {
 					let lang: number = this.setCellDist(infoC, minDist);
 					if (hasMonster) {
@@ -107,33 +107,32 @@ export class ViewComponent {
 				// ------------------------------------------- gobelins -------------------------------------------
 				infoC = null;
 				minDist = null;
-				for (let k = 0; k < this.viewable.gobelins.length; k++) {
-					if (this.viewable.gobelins[k].posX == x && this.viewable.gobelins[k].posY == y) {
-						if (this.viewable.gobelins[k].dist == -1) {
+				this.viewable.gobelins.forEach((gobelin) => {
+					if (gobelin.posX == x && gobelin.posY == y) {
+						if (gobelin.dist == -1) {
 							cell.style.border = "1px solid white";
 							cell.style.boxShadow = "0px 0px 15px white";
-						}// else {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - this.viewable.gobelins[k].posN);
+						}
+						const diffLevel = Math.abs(this.viewable.position.avgPosN - gobelin.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
 						}
-						if (infoC) {
-							continue;
+						if (!infoC) {
+							infoC = document.createElement("div") as HTMLDivElement;
+							infoC.style.position = "absolute";
+							infoC.style.top = "0";
+							infoC.style.backgroundColor = "greenyellow";
+							infoC.style.left = "0";
+							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+								this.showGobInfo(e, x, y);
+							});
+							infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+								this.hideInfo();
+							});
 						}
-						infoC = document.createElement("div") as HTMLDivElement;
-						infoC.style.position = "absolute";
-						infoC.style.top = "0";
-						infoC.style.backgroundColor = "greenyellow";
-						infoC.style.left = "0";
-						infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-							this.showGobInfo(e, x, y);
-						});
-						infoC.addEventListener("mouseleave", (e: MouseEvent) => {
-							this.hideInfo();
-						});
-						//}
+
 					}
-				}
+				});
 				if (infoC) {
 					this.setCellDist(infoC, minDist);
 					cell.appendChild(infoC);
@@ -143,21 +142,21 @@ export class ViewComponent {
 				infoC = null;
 				minDist = null;
 				let maxValue: number = 0;
-				for (let k = 0; k < this.viewable.tresors.length; k++) {
-					if (this.viewable.tresors[k].posX == x && this.viewable.tresors[k].posY == y) {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - this.viewable.tresors[k].posN);
+				this.viewable.tresors.forEach((tresor) => {
+					if (tresor.posX == x && tresor.posY == y) {
+						const diffLevel = Math.abs(this.viewable.position.avgPosN - tresor.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
 						}
 						let itemValue = 2;
 						for (let v = 0; v < this.values.length; v++) {
-							if (this.viewable.tresors[k].name === this.values[v].type) {
+							if (tresor.name === this.values[v].type) {
 								itemValue = this.values[v].value;
 								break;
 							}
 						}
 						if (itemValue === 2) {
-							console.log(this.viewable.tresors[k].name);
+							console.log(tresor.name);
 						}
 						if (!maxValue || maxValue < itemValue) {
 							maxValue = itemValue;
@@ -175,7 +174,7 @@ export class ViewComponent {
 							});
 						}
 					}
-				}
+				});
 				if (infoC) {
 					this.setCellDist(infoC, minDist);
 					switch (maxValue) {
@@ -203,9 +202,9 @@ export class ViewComponent {
 				// ------------------------------------------- plantes -------------------------------------------
 				infoC = null;
 				minDist = null;
-				for (let k = 0; k < this.viewable.plantes.length; k++) {
-					if (this.viewable.plantes[k].posX == x && this.viewable.plantes[k].posY == y) {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - this.viewable.plantes[k].posN);
+				this.viewable.plantes.forEach((plante) => {
+					if (plante.posX == x && plante.posY == y) {
+						const diffLevel = Math.abs(this.viewable.position.avgPosN - plante.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
 						}
@@ -223,7 +222,7 @@ export class ViewComponent {
 							});
 						}
 					}
-				}
+				});
 				if (infoC) {
 					this.setCellDist(infoC, minDist);
 					cell.appendChild(infoC);
@@ -231,15 +230,15 @@ export class ViewComponent {
 
 				// ------------------------------------------- lieux -------------------------------------------
 				let color: string = null;
-				for (let k = 0; k < this.viewable.lieux.length; k++) {
-					if (this.viewable.lieux[k].posX == x && this.viewable.lieux[k].posY == y) {
-						if (this.viewable.lieux[k].name === "Arbre" && !color) {
+				this.viewable.lieux.forEach((lieu) => {
+					if (lieu.posX == x && lieu.posY == y) {
+						if (lieu.name === "Arbre" && !color) {
 							color = "green";
 						} else {
 							color = "purple";
 						}
 					}
-				}
+				});
 				if (color) {
 					cell.style.backgroundColor = color;
 					cell.addEventListener("mouseenter", (e: MouseEvent) => {
@@ -271,51 +270,51 @@ export class ViewComponent {
 
 	showGobInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		for (let k = 0; k < this.viewable.gobelins.length; k++) {
-			if (this.viewable.gobelins[k].posX == x && this.viewable.gobelins[k].posY == y) {
-				txt += "(" + this.viewable.gobelins[k].num + ") " + this.viewable.gobelins[k].name + " [" + this.viewable.gobelins[k].level + "] " + this.viewable.gobelins[k].posX + "/" + this.viewable.gobelins[k].posY + "/" + this.viewable.gobelins[k].posN + "<br/>";
+		this.viewable.gobelins.forEach((item) => {
+			if (item.posX == x && item.posY == y) {
+				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
-		}
+		});
 		this.setTooltip(e, txt);
 	}
 
 	showMonsterInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		for (let k = 0; k < this.viewable.creatures.length; k++) {
-			if (this.viewable.creatures[k].posX == x && this.viewable.creatures[k].posY == y) {
-				txt += "(" + this.viewable.creatures[k].num + ") " + this.viewable.creatures[k].name + " [" + this.viewable.creatures[k].level + "] " + this.viewable.creatures[k].posX + "/" + this.viewable.creatures[k].posY + "/" + this.viewable.creatures[k].posN + "<br/>";
+		this.viewable.creatures.forEach((item) => {
+			if (item.posX == x && item.posY == y) {
+				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
-		}
+		});
 		this.setTooltip(e, txt);
 	}
 
 	showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		for (let k = 0; k < this.viewable.tresors.length; k++) {
-			if (this.viewable.tresors[k].posX == x && this.viewable.tresors[k].posY == y) {
-				txt += "(" + this.viewable.tresors[k].num + ") " + this.viewable.tresors[k].name + " " + this.viewable.tresors[k].posX + "/" + this.viewable.tresors[k].posY + "/" + this.viewable.tresors[k].posN + "<br/>";
+		this.viewable.tresors.forEach((item) => {
+			if (item.posX == x && item.posY == y) {
+				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
-		}
+		});
 		this.setTooltip(e, txt);
 	}
 
 	showPlantsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		for (let k = 0; k < this.viewable.plantes.length; k++) {
-			if (this.viewable.plantes[k].posX == x && this.viewable.plantes[k].posY == y) {
-				txt += "(" + this.viewable.plantes[k].num + ") " + this.viewable.plantes[k].name + " " + this.viewable.plantes[k].posX + "/" + this.viewable.plantes[k].posY + "/" + this.viewable.plantes[k].posN + "<br/>";
+		this.viewable.plantes.forEach((item) => {
+			if (item.posX == x && item.posY == y) {
+				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
-		}
+		});
 		this.setTooltip(e, txt);
 	}
 
 	showLieuxInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		for (let k = 0; k < this.viewable.lieux.length; k++) {
-			if (this.viewable.lieux[k].posX == x && this.viewable.lieux[k].posY == y) {
-				txt += "(" + this.viewable.lieux[k].num + ") " + this.viewable.lieux[k].name + " " + this.viewable.lieux[k].posX + "/" + this.viewable.lieux[k].posY + "/" + this.viewable.lieux[k].posN + "<br/>";
+		this.viewable.lieux.forEach((item) => {
+			if (item.posX == x && item.posY == y) {
+				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
-		}
+		});
 		this.setTooltip(e, txt);
 	}
 

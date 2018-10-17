@@ -6,67 +6,43 @@ import {PlanteClass} from "./plante.class";
 export class ViewableClass {
 
 	position: {
-		posX: number,
-		posY: number,
-		posN: number,
-		horiz: number,
-		verti: number,
-
 		avgPosN: number,
 		minX: number,
 		maxX: number,
 		minY: number,
 		maxY: number
 	} = {
-		posX: null,
-		posY: null,
-		posN: null,
-		horiz: null,
-		verti: null,
-
 		avgPosN: null,
 		minX: null,
 		maxX: null,
 		minY: null,
 		maxY: null
 	};
-	creatures: CreatureClass[] = [];
-	gobelins: CreatureClass[] = [];
-	tresors: TresorClass[] = [];
-	lieux: LieuxClass[] = [];
-	plantes: PlanteClass[] = [];
+	creatures: Map<number, CreatureClass> = new Map();
+	gobelins: Map<number, CreatureClass> = new Map();
+	tresors: Map<number, TresorClass> = new Map();
+	lieux: Map<number, LieuxClass> = new Map();
+	plantes: Map<number, PlanteClass> = new Map();
 
 	constructor(
 		position: {
-			posX: number,
-			posY: number,
-			posN: number,
-			horiz: number,
-			verti: number,
-
 			avgPosN: number,
 			minX: number,
 			maxX: number,
 			minY: number,
 			maxY: number
 		} = {
-			posX: null,
-			posY: null,
-			posN: null,
-			horiz: null,
-			verti: null,
-
 			avgPosN: null,
 			minX: null,
 			maxX: null,
 			minY: null,
 			maxY: null
 		},
-		creatures: CreatureClass[],
-		gobelins: CreatureClass[],
-		tresors: TresorClass[],
-		lieux: LieuxClass[],
-		plantes: PlanteClass[]) {
+		creatures: Map<number, CreatureClass>,
+		gobelins: Map<number, CreatureClass>,
+		tresors: Map<number, TresorClass>,
+		lieux: Map<number, LieuxClass>,
+		plantes: Map<number, PlanteClass>) {
 		this.creatures = creatures;
 		this.lieux = lieux;
 		this.gobelins = gobelins;
