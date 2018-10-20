@@ -2,26 +2,36 @@
 <div class="form-group">
     <button type="button" class="btn btn-primary mb-2" (click)="refresh()" [disabled]="busy">{{text}}</button>
 </div>
+<form class="form-group" style="text-align:left;">
+    <span class="mb-2 mr-sm-2">Préset :</span>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-secondary" (click)="preset('e');">Équipement</button>
+        <button type="button" class="btn btn-secondary" (click)="preset('i');">Identification</button>
+        <button type="button" class="btn btn-secondary" (click)="preset('r');">Recyclage</button>
+        <button type="button" class="btn btn-secondary" (click)="preset('m');">Matériaux</button>
+        <!--<button type="button" class="btn btn-secondary" (click)="preset('z');">testt</button>-->
+    </div>
+</form>
 <qeos-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()" style="font-size:11px!important;text-shadow:none!important;">
-    <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="55"></wj-flex-grid-column>
+    <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="60"></wj-flex-grid-column>
     <wj-flex-grid-column header="IdT" binding="Identifie" [width]="45"></wj-flex-grid-column>
     <wj-flex-grid-column header="Stars" binding="Stars" [width]="60"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Nom" binding="Nom" [width]="150">
+    <wj-flex-grid-column header="Nom" binding="Nom" [width]="200">
         <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
             {{ item.Nom }} <span *ngIf="item.Type !== 'Composant' && item.Magie"><b> {{ item.Magie }} </b></span>
         </ng-template>
     </wj-flex-grid-column>
-    <wj-flex-grid-column header="Expected" binding="Expected" [width]="180"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Category" binding="Category" [width]="80"></wj-flex-grid-column>
+    <!--<wj-flex-grid-column header="Expected" binding="Expected" [width]="180"></wj-flex-grid-column>-->
+    <wj-flex-grid-column header="Category" binding="Category" [width]="100"></wj-flex-grid-column>
     <wj-flex-grid-column header="Type" binding="Type" [width]="80"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Description" binding="Desc" [width]="120"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Description" binding="Desc" [width]="200"></wj-flex-grid-column>
     <wj-flex-grid-column header="Poids" binding="Poids" [width]="50">
         <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
             {{ item.Poids }} min
         </ng-template>
     </wj-flex-grid-column>
     <wj-flex-grid-column header="Magie" binding="Magie" [visible]="false"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Matière" binding="Matiere" [width]="60"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Matière" binding="Matiere" [width]="80"></wj-flex-grid-column>
     <wj-flex-grid-column header="Qualité" binding="Qualite" [dataMap]="dtmQuality" [width]="90"></wj-flex-grid-column>
     <wj-flex-grid-column header="Taille" binding="Taille" [width]="55"></wj-flex-grid-column>
     <wj-flex-grid-column header="Carats" binding="Carats" [width]="55" [aggregate]="1"></wj-flex-grid-column>
