@@ -90,6 +90,23 @@ export class IdentifyComponent implements OnInit {
 				// collapse
 				this.grid.collapseGroupsToLevel(this.grid.collectionView.groupDescriptions.slice().length);
 				break;
+			case "ir":
+				// filter
+				this.grid.filter.filterDefinition = JSON.stringify({
+					"defaultFilterType": 3,
+					"filters": [
+						{"binding": "Identifie", "type": "value", "filterText": "", "showValues": {"false": true}},
+						{"binding": "Matiere", "type": "condition", "condition1": {"operator": 1, "value": ""}, "and": true, "condition2": {"operator": null, "value": ""}}
+					]
+				});
+				// sort
+				this.cvMain.sortDescriptions.clear();
+				this.cvMain.sortDescriptions.push(new SortDescription('Poids', false));
+				// group
+				this.cvMain.groupDescriptions.clear();
+				// collapse
+				this.grid.collapseGroupsToLevel(this.grid.collectionView.groupDescriptions.slice().length);
+				break;
 			case "r":
 				// filter
 				this.grid.filter.filterDefinition = JSON.stringify({
@@ -97,13 +114,12 @@ export class IdentifyComponent implements OnInit {
 					"filters": [
 						{"binding": "Identifie", "type": "value", "filterText": "", "showValues": {"true": true}},
 						{"binding": "Category", "type": "value", "filterText": "", "showValues": {"Équipement": true, "Outil": true}},
-						// {"binding": "Matiere", "type": "value", "filterText": "", "showValues": {"": false}}
-						{"binding": "Matiere", "type": "value", "filterText": "", "showValues": {"Bois":true,"Cuir":true,"Fer":true,"Pierre":true,"Tissus":true}}
+						{"binding": "Matiere", "type": "condition", "condition1": {"operator": 1, "value": ""}, "and": true, "condition2": {"operator": null, "value": ""}}
 					]
 				});
 				// sort
 				this.cvMain.sortDescriptions.clear();
-				this.cvMain.sortDescriptions.push(new SortDescription('Type', true));
+				this.cvMain.sortDescriptions.push(new SortDescription('Matiere', true));
 				this.cvMain.sortDescriptions.push(new SortDescription('Carats', false));
 				// group
 				this.cvMain.groupDescriptions.clear();
@@ -119,7 +135,7 @@ export class IdentifyComponent implements OnInit {
 				});
 				// sort
 				this.cvMain.sortDescriptions.clear();
-				this.cvMain.sortDescriptions.push(new SortDescription('Type', true));
+				this.cvMain.sortDescriptions.push(new SortDescription('Matiere', true));
 				this.cvMain.sortDescriptions.push(new SortDescription('Carats', false));
 				// group
 				this.cvMain.groupDescriptions.clear();
