@@ -27,6 +27,7 @@ export class GuildplacesService extends Service {
 			[2, {name: "Poinçon", stars: 0, material: null}],
 			[3, {name: "Marteau de joaillier", stars: 0, material: null}],
 			[5, {name: "Ciseau à bois", stars: 0, material: null}],
+			[10, {name: "Alambic", stars: 0, material: null}],
 			[20, {name: "Marteau de forgeron / de tailleur", stars: 0, material: "Fer, Pierre"}],
 			[40, {name: "Hache de bûcheron", stars: 3, material: null}],
 			[60, {name: "Creuset", stars: 0, material: null}]
@@ -48,7 +49,8 @@ export class GuildplacesService extends Service {
 			[30, {name: "Épée bâtarde / Hache de guerre naine / Marteau de guerre / Morgenstern", stars: 1, material: "Bois, Fer"}]
 		])],
 		["Arme 2 mains", new Map([
-			[8, {name: "Bâton lesté / Bâtons de parade", stars: 0, material: "Bois"}],
+			[7.5, {name: "Bâtons de parade", stars: 0, material: null}],
+			[8, {name: "Bâton lesté", stars: 0, material: null}],
 			[10, {name: "Arc court", stars: 3, material: null}],
 			[15, {name: "Arc composite / Arc long / Bâton de combat / Hachoir en bois", stars: 4, material: "Bois, Fer"}],
 			[20, {name: "Bâton de feu", stars: 5, material: null}],
