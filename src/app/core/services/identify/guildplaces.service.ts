@@ -276,7 +276,7 @@ export class GuildplacesService extends Service {
 		if (localStorage.getItem("guildplaceitems") && !force) {
 			console.log("get local");
 			const json = JSON.parse(localStorage.getItem("guildplaceitems"));
-			this.enrichment(json);
+			// this.enrichment(json);
 			return Observable.of(json);
 		} else {
 			console.log("get distant");
@@ -285,9 +285,9 @@ export class GuildplacesService extends Service {
 				return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
 					.map((res: any) => {
 						const json = CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-						// this.enrichment(json);
-						localStorage.setItem("guildplaceitems", JSON.stringify(json));
 						this.enrichment(json);
+						localStorage.setItem("guildplaceitems", JSON.stringify(json));
+						// this.enrichment(json);
 						return json;
 					});
 			} else {
