@@ -52,17 +52,13 @@ export class MeuteService extends Service {
 	}
 
 	static enrichment(item: MeutemembresTyping): MeutemembresTyping {
-		item.DLA = new Date("2018-10-21 10:01");
-		item.DLADuration = 36000;
+		// item.DLA = new Date("2018-10-21 10:01");
+		// item.DLADuration = 36000;
 
-		const nextDLAs = DlaUtils.getNextDlas(item.DLA,
-			item.DLADuration, 0,
-			new Date("2018-10-21 12:50"));
-
+		const nextDLAs = DlaUtils.getNextDlas(item.DLA, item.DLADuration, item.PA);
 		item.nextDLA = nextDLAs.nextDla.date;
 		item.dlaState = nextDLAs.dlaState;
 		item.paState = nextDLAs.paState;
-
 
 		return item;
 		// item.DLAState = null;
@@ -101,16 +97,6 @@ export class MeuteService extends Service {
 		// 	}
 		// }
 		// return item;
-	}
-
-	static update(items: MeutemembresTyping[]): MeutemembresTyping[] {
-		if (items) {
-			for (let i = 0; i < items.length; i++) {
-				items[i] = MeuteService.enrichment(items[i]);
-			}
-			localStorage.setItem("meutemembres", JSON.stringify(items));
-		}
-		return items;
 	}
 
 	static update(items: MeutemembresTyping[]): MeutemembresTyping[] {
