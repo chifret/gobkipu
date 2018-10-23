@@ -332,9 +332,9 @@ export class GuildplacesService extends Service {
 				if (["Nourriture", "Potion", "Outil"].indexOf(json[i].Type) > -1) {
 					json[i].Taille = null;
 				}
-				//if (!(["Outil"].indexOf(json[i].Type) > -1)) {
+				if (!(["Outil"].indexOf(json[i].Type) > -1)) {
 					json[i].Type = null;
-				//}
+				}
 			} else {
 				json[i].Category = "Équipement";
 				json[i].Taille = null;
@@ -360,6 +360,9 @@ export class GuildplacesService extends Service {
 				} else {
 					console.log("Weight to expected " + json[i].Type + " not done");
 				}
+			}
+			else if (json[i].Identifie && json[i].Category=== "Outil") {
+				json[i].Type = null;
 			}
 
 			if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
