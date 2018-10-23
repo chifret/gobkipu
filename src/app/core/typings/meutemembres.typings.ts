@@ -1,5 +1,6 @@
 import {Meutemembres1Typing} from "./meutemembres1.typing";
-import {DlastateEnum} from "../enums/dlastate.enums";
+import {DlastateEnum} from "../enums/dlastate.enum";
+import {PastateEnum} from "../enums/pastate.enum";
 
 export class MeutemembresTyping extends Meutemembres1Typing {
 	ATT: number = 0;
@@ -80,7 +81,7 @@ export class MeutemembresTyping extends Meutemembres1Typing {
 	RS: number = 0;
 	RT: number = 0;
 
-	DLADurationMoment;
 	nextDLA: Date = null;
-	DLAState: DlastateEnum = null;
+	dlaState: DlastateEnum = null;
+	paState: PastateEnum = null;
 }

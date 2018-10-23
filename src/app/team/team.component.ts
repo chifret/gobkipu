@@ -6,8 +6,9 @@ import {ViewComponent} from '../view/view.component';
 import {ViewService} from '../core/services/view/view.service';
 import {ViewTyping} from '../core/typings/view.typings';
 import {MeutemembresTyping} from "../core/typings/meutemembres.typings";
-import {DlastateEnum} from "../core/enums/dlastate.enums";
 import {combineLatest} from "rxjs/observable/combineLatest";
+import {PastateEnum} from "../core/enums/pastate.enum";
+import {DlastateEnum} from "../core/enums/dlastate.enum";
 
 @Component({
 	selector: 'team-component',
@@ -25,8 +26,8 @@ export class TeamComponent implements OnInit {
 	@ViewChild("viewComponent") viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
-	            private meuteService: MeuteService,
-	            private viewService: ViewService) {
+				private meuteService: MeuteService,
+				private viewService: ViewService) {
 		this.getData(false);
 	};
 
@@ -77,18 +78,33 @@ export class TeamComponent implements OnInit {
 		}
 	}
 
-	getDLAColor(dlaState: DlastateEnum): string {
-		switch (dlaState) {
-			case DlastateEnum.Usable:
+	getPAColor(state: PastateEnum): string {
+		switch (state) {
+			case PastateEnum.Usable:
 				return 'green';
-			case DlastateEnum.Urgent:
+			case PastateEnum.Urgent:
+			case PastateEnum.CumulableUrgent:
 				return 'darkorange';
-			case DlastateEnum.VeryUrgent:
+			case PastateEnum.VeryUrgent:
+			case PastateEnum.CumulableVeryUrgent:
 				return 'darkred';
-			case DlastateEnum.WaitForMidnight:
-				return 'darblue';
+			case PastateEnum.Cumulable:
+				return 'darkkhaki';
+			default:
+				return 'none';
+		}
+	}
+
+	getDLAColor(state: DlastateEnum): string {
+		switch (state) {
+			case DlastateEnum.Shortened:
+				return 'yellow';
 			case DlastateEnum.ShouldDelayAtMidnight:
-				return 'violet';
+				return 'magenta';
+			case DlastateEnum.WaitForMidnight:
+				return 'lightblue';
+			case DlastateEnum.ShouldActivateBeforeMidnight:
+				return 'green';
 			default:
 				return 'none';
 		}

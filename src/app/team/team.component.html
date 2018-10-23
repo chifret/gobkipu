@@ -27,10 +27,12 @@
                 </div>
             </td>
             <td>{{ teamMember.X }} / {{ teamMember.Y }} / {{ teamMember.N }}</td>
-            <td [style.backgroundColor]="getDLAColor(teamMember.DLAState)">{{ teamMember.PA }}</td>
+            <td [style.backgroundColor]="getPAColor(teamMember.paState)">{{ teamMember.PA }}</td>
             <td>
                 {{ teamMember.DLA | date:'dd-MM-yyyy HH:mm' }}<br/>
-                <small>{{ teamMember.nextDLA | date:'dd-MM-yyyy HH:mm' }}</small>
+                <small>{{ teamMember.nextDLA | date:'dd-MM-yyyy HH:mm' }}
+                    <span *ngIf="teamMember.dlaState>0"> - <span [style.color]="getDLAColor(teamMember.dlaState)">■</span></span>
+                </small>
             </td>
             <td>
                 <a href="javascript:void(0)" (click)="view(teamMember.Id)">Voir la vue</a>
