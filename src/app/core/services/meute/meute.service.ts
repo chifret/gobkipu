@@ -113,6 +113,16 @@ export class MeuteService extends Service {
 		return items;
 	}
 
+	static update(items: MeutemembresTyping[]): MeutemembresTyping[] {
+		if (items) {
+			for (let i = 0; i < items.length; i++) {
+				items[i] = MeuteService.enrichment(items[i]);
+			}
+			localStorage.setItem("meutemembres", JSON.stringify(items));
+		}
+		return items;
+	}
+
 	get(force: boolean = false): Observable<MeutemembresTyping[]> {
 		if (localStorage.getItem("meutemembres") && !force) {
 			console.log("get local");
@@ -133,9 +143,7 @@ export class MeuteService extends Service {
 		if (token) {
 			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile.php?key=" + token.meute + "&id=" + token.id, {responseType: 'text'})
 				.map((res: any) => {
-					const json = CsvUtils.getJson<Meutemembres1Typing>(res, this.numerics, this.floats, this.dates, []);
-					localStorage.setItem("meutemembres1", JSON.stringify(json));
-					return json;
+					return CsvUtils.getJson<Meutemembres1Typing>(res, this.numerics, this.floats, this.dates, []);
 				});
 		}
 		else {
@@ -148,9 +156,7 @@ export class MeuteService extends Service {
 		if (token) {
 			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile2.php?key=" + token.meute + "&id=" + token.id, {responseType: 'text'})
 				.map((res: any) => {
-					const json = CsvUtils.getJson<MeuteMembres2Typing>(res, this.numerics2, this.floats2, this.dates2, []);
-					localStorage.setItem("meutemembres2", JSON.stringify(json));
-					return json;
+					return CsvUtils.getJson<MeuteMembres2Typing>(res, this.numerics2, this.floats2, this.dates2, []);
 				});
 		} else {
 			return Observable.empty();

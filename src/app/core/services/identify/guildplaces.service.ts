@@ -27,6 +27,7 @@ export class GuildplacesService extends Service {
 			[2, {name: "Poinçon", stars: 0, material: null}],
 			[3, {name: "Marteau de joaillier", stars: 0, material: null}],
 			[5, {name: "Ciseau à bois", stars: 0, material: null}],
+			[10, {name: "Alambic", stars: 0, material: null}],
 			[20, {name: "Marteau de forgeron / de tailleur", stars: 0, material: "Fer, Pierre"}],
 			[40, {name: "Hache de bûcheron", stars: 3, material: null}],
 			[60, {name: "Creuset", stars: 0, material: null}]
@@ -48,7 +49,8 @@ export class GuildplacesService extends Service {
 			[30, {name: "Épée bâtarde / Hache de guerre naine / Marteau de guerre / Morgenstern", stars: 1, material: "Bois, Fer"}]
 		])],
 		["Arme 2 mains", new Map([
-			[8, {name: "Bâton lesté / Bâtons de parade", stars: 0, material: "Bois"}],
+			[7.5, {name: "Bâtons de parade", stars: 0, material: null}],
+			[8, {name: "Bâton lesté", stars: 0, material: null}],
 			[10, {name: "Arc court", stars: 3, material: null}],
 			[15, {name: "Arc composite / Arc long / Bâton de combat / Hachoir en bois", stars: 4, material: "Bois, Fer"}],
 			[20, {name: "Bâton de feu", stars: 5, material: null}],
@@ -274,7 +276,7 @@ export class GuildplacesService extends Service {
 		if (localStorage.getItem("guildplaceitems") && !force) {
 			console.log("get local");
 			const json = JSON.parse(localStorage.getItem("guildplaceitems"));
-			this.enrichment(json);
+			// this.enrichment(json);
 			return Observable.of(json);
 		} else {
 			console.log("get distant");
@@ -283,9 +285,9 @@ export class GuildplacesService extends Service {
 				return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
 					.map((res: any) => {
 						const json = CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-						// this.enrichment(json);
-						localStorage.setItem("guildplaceitems", JSON.stringify(json));
 						this.enrichment(json);
+						localStorage.setItem("guildplaceitems", JSON.stringify(json));
+						// this.enrichment(json);
 						return json;
 					});
 			} else {
@@ -399,9 +401,13 @@ export class GuildplacesService extends Service {
 
 			// carats
 			if (json[i].Taille && json[i].Matiere) {
-				json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
+				if (json[i].Matiere === "Bois") {
+					json[i].Carats = json[i].Taille;
+				}
+				else {
+					json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
+				}
 			}
-
 		}
 		return json;
 	}
