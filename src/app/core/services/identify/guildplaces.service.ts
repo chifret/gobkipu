@@ -29,7 +29,7 @@ export class GuildplacesService extends Service {
 			[5, {name: "Ciseau à bois", stars: 0, material: null}],
 			[10, {name: "Alambic", stars: 0, material: null}],
 			[20, {name: "Marteau de forgeron / de tailleur", stars: 0, material: "Fer, Pierre"}],
-			[40, {name: "Hache de bûcheron", stars: 3, material: null}],
+			[40, {name: "Hache de bucheron", stars: 3, material: null}],
 			[60, {name: "Creuset", stars: 0, material: null}]
 		])],
 		["Anneau", new Map([
@@ -258,7 +258,7 @@ export class GuildplacesService extends Service {
 		["Aiguille", "Fer"],
 		["Ciseau à bois", "Bois"],
 		["Creuset", "Fer"],
-		["Hache de bûcheron", "Fer"],
+		["Hache de bucheron", "Fer"],
 		["Marteau de forgeron", "Fer"],
 		["Marteau de joaillier", "Fer"],
 		["Marteau de tailleur", "Pierre"],
@@ -332,9 +332,9 @@ export class GuildplacesService extends Service {
 				if (["Nourriture", "Potion", "Outil"].indexOf(json[i].Type) > -1) {
 					json[i].Taille = null;
 				}
-				if (!(["Outil"].indexOf(json[i].Type) > -1)) {
+				//if (!(["Outil"].indexOf(json[i].Type) > -1)) {
 					json[i].Type = null;
-				}
+				//}
 			} else {
 				json[i].Category = "Équipement";
 				json[i].Taille = null;
