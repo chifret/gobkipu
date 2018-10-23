@@ -401,9 +401,13 @@ export class GuildplacesService extends Service {
 
 			// carats
 			if (json[i].Taille && json[i].Matiere) {
-				json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
+				if (json[i].Matiere === "Bois") {
+					json[i].Carats = json[i].Taille;
+				}
+				else {
+					json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
+				}
 			}
-
 		}
 		return json;
 	}
