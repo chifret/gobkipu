@@ -361,7 +361,7 @@ export class GuildplacesService extends Service {
 					console.log("Weight to expected " + json[i].Type + " not done");
 				}
 			}
-			else if (json[i].Identifie && json[i].Category=== "Outil") {
+			else if (json[i].Identifie && json[i].Category === "Outil") {
 				json[i].Type = null;
 			}
 
