@@ -1,8 +1,8 @@
-import {Meutemembres1Typing} from "./meutemembres1.typing";
+import {Gobs1Typings} from "./gobs1.typings";
 import {DlastateEnum} from "../enums/dlastate.enum";
 import {PastateEnum} from "../enums/pastate.enum";
 
-export class MeutemembresTyping extends Meutemembres1Typing {
+export class GobsTypings extends Gobs1Typings {
 	ATT: number = 0;
 	BMATT: number = 0;
 	BMArm: number = 0;
@@ -62,6 +62,7 @@ export class MeutemembresTyping extends Meutemembres1Typing {
 	Faim: number = 0;
 	Id: number = 0;
 	IdMeute: number = 0;
+	IdClan: number = 0;
 	MC: number = 0;
 	MM: number = 0;
 	MP: number = 0;
@@ -70,6 +71,7 @@ export class MeutemembresTyping extends Meutemembres1Typing {
 	MT: number = 0;
 	Nom: string = null;
 	NomMeute: string = null;
+	NomClan: string = null;
 	PER: number = 0;
 	PITotal: number = 0;
 	PVMax: number = 0;

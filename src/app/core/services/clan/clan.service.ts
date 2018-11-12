@@ -14,9 +14,9 @@ import {DlaUtils} from "../../utils/business/dla.utils";
 
 
 @Injectable()
-export class MeuteService extends Service {
+export class ClanService extends Service {
 
-	numerics = ["CT", "Id", "IdMeute", "N", "Niveau", "PA", "PI", "PV", "PX", "PXPerso", "X", "Y", "Z"];
+	numerics = ["CT", "Id", "IdClan", "N", "Niveau", "PA", "PI", "PV", "PX", "PXPerso", "X", "Y", "Z"];
 	floats = [];
 	dates = ["DLA"];
 
@@ -46,79 +46,39 @@ export class MeuteService extends Service {
 					}
 				}
 			}
-			gobs.push(MeuteService.enrichment(gob));
+			gobs.push(ClanService.enrichment(gob));
 		}
 		return gobs;
 	}
 
 	static enrichment(item: GobsTypings): GobsTypings {
-		// item.DLA = new Date("2018-10-21 10:01");
-		// item.DLADuration = 36000;
-
 		const nextDLAs = DlaUtils.getNextDlas(item.DLA, item.DLADuration, item.PA);
 		item.nextDLA = nextDLAs.nextDla.date;
 		item.dlaState = nextDLAs.dlaState;
 		item.paState = nextDLAs.paState;
-
 		return item;
-		// item.DLAState = null;
-		// item.nextDLA = new Date(item.DLA.getTime() + (1000 * item.DLADuration));
-		// const now = new Date();
-		// if (item.DLA.getDay() === 5) {
-		// 	// optimisation !
-		// 	if (item.nextDLA.getDay() === 6) {
-		// 		if (now.getDay() != 6) {
-		// 			item.DLAState = DlastateEnum.WaitForMidnight;
-		// 			item.nextDLA = new Date(item.DLA.getTime() + (500 * item.DLADuration));
-		// 		}
-		// 	} else if (
-		// 		new Date(item.nextDLA.getTime() + (500 * item.DLADuration)).getDay() === 6
-		// 		|| (
-		// 		new Date(item.nextDLA.getTime() + (1500 * item.DLADuration)).getDay() === 6
-		// 		&& new Date(item.nextDLA.getTime() + (1000 * item.DLADuration)).getDay() != 6)
-		// 	) {
-		// 		item.DLAState = DlastateEnum.ShouldDelayAtMidnight;
-		// 	}
-		// } else if (item.DLA.getDay() === 6 || item.DLA.getDay() === 7) {
-		// 	item.nextDLA = new Date(item.DLA.getTime() + (500 * item.DLADuration));
-		// }
-		// if (!item.DLAState) {
-		// 	if (now.getTime() > item.DLA.getTime()) {
-		// 		const diffMin = (item.nextDLA.getTime() - now.getTime()) / 60000;
-		// 		if (diffMin <= 30) {
-		// 			item.DLAState = DlastateEnum.VeryUrgent;
-		// 		} else if (diffMin <= 90) {
-		// 			item.DLAState = DlastateEnum.Urgent;
-		// 		} else {
-		// 			item.DLAState = DlastateEnum.Usable;
-		// 		}
-		// 	} else if (item.PA > 0) {
-		// 		item.DLAState = DlastateEnum.Usable;
-		// 	}
-		// }
-		// return item;
 	}
 
 	static update(items: GobsTypings[]): GobsTypings[] {
 		if (items) {
 			for (let i = 0; i < items.length; i++) {
-				items[i] = MeuteService.enrichment(items[i]);
+				items[i] = ClanService.enrichment(items[i]);
 			}
-			localStorage.setItem("meutemembres", JSON.stringify(items));
+			localStorage.setItem("clanmembres", JSON.stringify(items));
 		}
 		return items;
 	}
 
 	get(force: boolean = false): Observable<GobsTypings[]> {
-		if (localStorage.getItem("meutemembres") && !force) {
+		if (localStorage.getItem("clanmembres") && !force) {
 			console.log("get local");
-			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
+			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("clanmembres"), this.dates));
 		} else {
 			console.log("get distant");
 			return combineLatest(this.get1(), this.get2())
 				.pipe(map(([one, two]) => {
-					const json = MeuteService.concat(one, two);
-					localStorage.setItem("meutemembres", JSON.stringify(json));
+					const json = ClanService.concat(one, two);
+					localStorage.setItem("clanmembres", JSON.stringify(json));
 					return json;
 				}));
 		}
@@ -127,7 +87,7 @@ export class MeuteService extends Service {
 	private get1(): Observable<Gobs1Typings[]> {
 		const token = LoginService.getToken();
 		if (token) {
-			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile.php?key=" + token.meute + "&id=" + token.id, {responseType: 'text'})
+			return this.http.get("https://www.chifret.be/gobkipu/services/guildprofile.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
 				.map((res: any) => {
 					return CsvUtils.getJson<Gobs1Typings>(res, this.numerics, this.floats, this.dates, []);
 				});
@@ -140,7 +100,7 @@ export class MeuteService extends Service {
 	private get2(): Observable<Gobs2Typings[]> {
 		const token = LoginService.getToken();
 		if (token) {
-			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile2.php?key=" + token.meute + "&id=" + token.id, {responseType: 'text'})
+			return this.http.get("https://www.chifret.be/gobkipu/services/guildprofile2.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
 				.map((res: any) => {
 					return CsvUtils.getJson<Gobs2Typings>(res, this.numerics2, this.floats2, this.dates2, []);
 				});

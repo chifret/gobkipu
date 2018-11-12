@@ -1,4 +1,4 @@
-export class MeuteMembres2Typing {
+export class Gobs2Typings {
 	ATT: number = 0;
 	BMATT: number = 0;
 	BMArm: number = 0;
@@ -64,8 +64,9 @@ export class MeuteMembres2Typing {
 	MR: number = 0;
 	MS: number = 0;
 	MT: number = 0;
-	Nom: "Le Kipu";
-	NomMeute: "Neuneumeu Neubeubeuleu";
+	Nom: string = null;
+	NomMeute: string = null;
+	NomClan: string = null;
 	PER: number = 0;
 	PITotal: number = 0;
 	PVMax: number = 0;

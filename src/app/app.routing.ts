@@ -6,12 +6,17 @@ import { IdentifyComponent } from "./identify/identify.component";
 import { LoginComponent } from "./login/login.component";
 import { TeamComponent } from "./team/team.component";
 import { CopyPasteViewComponent } from "./view/copypaste-view.component";
+import {GuildComponent} from "./guild/guild.component";
 
 export const routes: Routes = [
     {
         path: "team",
         component: TeamComponent
     },
+	{
+		path: "guild",
+		component: GuildComponent
+	},
     {
         path: "travel",
         component: TravelTravelComponent

@@ -1,4 +1,4 @@
-import {Component, Injector, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Injector, OnInit, ViewChild} from '@angular/core';
 
 import {GuildplacesService} from './../core/services/identify/guildplaces.service';
 import {ItemsService} from '../core/services/identify/items.service';
@@ -6,6 +6,7 @@ import {CollectionView, GroupDescription, PropertyGroupDescription, SortDescript
 import {Subscription} from 'rxjs';
 import {DataMap} from 'wijmo/wijmo.grid';
 import {QeosGridComponent} from '../core/components/QeosGrid/qeosgrid.component';
+import {RecyclageService} from "../core/services/identify/recyclage.service";
 
 @Component({
 	selector: 'app-root',
@@ -17,6 +18,7 @@ export class IdentifyComponent implements OnInit {
 	text = "Refresh";
 	cvMain: CollectionView = null;
 	subsMain: Subscription;
+	recyclage: { niveau: number, atelier: boolean, crochetGriffe: boolean };
 
 	dtmQuality = new DataMap([
 		{key: -1, value: "---"},
@@ -29,13 +31,19 @@ export class IdentifyComponent implements OnInit {
 	], "key", "value");
 
 	@ViewChild("grid") grid: QeosGridComponent;
+	@ViewChild("niveauRecyclageInput") niveauRecyclageInput: ElementRef;
+	@ViewChild("atelierCheckbox") atelierCheckbox: ElementRef;
+	@ViewChild("griffesCrochetCheckbox") griffesCrochetCheckbox: ElementRef;
 
 	constructor(protected injector: Injector,
 				protected itemsService: ItemsService,
-				protected guildplacesService: GuildplacesService) {
+				protected guildplacesService: GuildplacesService,
+				protected recyclageService: RecyclageService) {
 		this.subsMain = this.guildplacesService.get().subscribe((res) => {
 			this.cvMain = new CollectionView(res);
 		});
+		this.recyclage = recyclageService.get()[0];
+		console.log(this.recyclage);
 	}
 
 	initGrid() {
@@ -149,5 +157,14 @@ export class IdentifyComponent implements OnInit {
 				console.log(this.cvMain.groupDescriptions);
 		}
 		this.grid.select(0, 0);
+	}
+
+	updateRecyclage() {
+		console.log(this.niveauRecyclageInput.nativeElement.value + " " + this.atelierCheckbox.nativeElement.checked + " " + this.griffesCrochetCheckbox.nativeElement.checked);
+		this.recyclageService.set({
+			niveau: this.niveauRecyclageInput.nativeElement.value,
+			atelier: this.atelierCheckbox.nativeElement.checked,
+			crochetGriffe: this.griffesCrochetCheckbox.nativeElement.checked
+		});
 	}
 }

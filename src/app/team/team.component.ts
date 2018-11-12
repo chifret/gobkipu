@@ -5,7 +5,7 @@ import {MeuteService} from '../core/services/meute/meute.service';
 import {ViewComponent} from '../view/view.component';
 import {ViewService} from '../core/services/view/view.service';
 import {ViewTyping} from '../core/typings/view.typings';
-import {MeutemembresTyping} from "../core/typings/meutemembres.typings";
+import {GobsTypings} from "../core/typings/gobs.typings";
 import {combineLatest} from "rxjs/observable/combineLatest";
 import {PastateEnum} from "../core/enums/pastate.enum";
 import {DlastateEnum} from "../core/enums/dlastate.enum";
@@ -19,7 +19,7 @@ export class TeamComponent implements OnInit {
 	processed = false;
 	busy = false;
 	text = "Refresh";
-	teamMembers: MeutemembresTyping[] = [];
+	teamMembers: GobsTypings[] = [];
 
 	lastId: number = null;
 

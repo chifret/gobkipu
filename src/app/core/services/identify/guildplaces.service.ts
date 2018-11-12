@@ -5,10 +5,12 @@ import {Service} from "../service";
 import {CsvUtils} from "../../utils/csv.utils";
 import {GuildPlaceItemsTypings} from "../../typings/guildplaceitems.typings";
 import {LoginService} from "../login.service";
+import {RecyclageService} from "./recyclage.service";
 
 @Injectable()
 export class GuildplacesService extends Service {
 
+	recyclage: { niveau: number, atelier: boolean, crochetGriffe: boolean };
 	numerics = ["Id", "Poids", "Prix", "Qualite", "Taille"];
 	floats = [];
 	dates = [];
@@ -232,7 +234,7 @@ export class GuildplacesService extends Service {
 		["Casque à cornes", "Fer"],
 		["Casque à pointes", "Fer"],
 		["Casque en cuir", "Cuir"],
-		["Casque en métal", ""],
+		["Casque en métal", "Fer"],
 		["Cerebro", "Fer"],
 		["Chapeau pointu", "Tissus"],
 		["Heaume", "Fer"],
@@ -268,8 +270,10 @@ export class GuildplacesService extends Service {
 		{name: "en Pierre", materiau: "Pierre"}
 	];
 
-	constructor(injector: Injector) {
+	constructor(injector: Injector,
+				private recyclageService: RecyclageService) {
 		super(injector);
+		this.recyclage = this.recyclageService.get()[0];
 	}
 
 	public get(force: boolean = false): Observable<GuildPlaceItemsTypings[]> {
@@ -312,15 +316,18 @@ export class GuildplacesService extends Service {
 
 			// category, desc, types
 			if (json[i].Qualite) {
-				if (["Composant", "Fleur"].indexOf(json[i].Type) > -1) {
+				if (["Composant", "Fleur", "Racine"].indexOf(json[i].Type) > -1) {
 					json[i].Category = "Compo & Fleurs";
 				}
 				else {
 					json[i].Category = "Matériaux";
+					if (!json[i].Matiere) {
+						json[i].Matiere = json[i].Nom;
+					}
 				}
 				json[i].Desc = null;
 				json[i].Type = null;
-			} else if (["Fleur"].indexOf(json[i].Type) > -1) {
+			} else if (["Fleur", "Racine"].indexOf(json[i].Type) > -1) {
 				json[i].Category = "Compo & Fleurs";
 				json[i].Desc = null;
 				json[i].Type = null;
@@ -365,6 +372,17 @@ export class GuildplacesService extends Service {
 				json[i].Type = null;
 			}
 
+			// carats
+			if (json[i].Taille && json[i].Matiere) {
+				if (json[i].Matiere === "Bois") {
+					json[i].Carats = json[i].Taille;
+				}
+				else {
+					json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
+				}
+			}
+
+			// estimation carats
 			if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
 
 				// material expectation
@@ -379,36 +397,35 @@ export class GuildplacesService extends Service {
 					})
 				}
 
+				let factor = 1;
+				factor += (this.recyclage.niveau - 1) * 0.5;
+				let mult = 1;
+				if (this.recyclage.atelier) {
+					mult += 0.25;
+				}
+				if (this.recyclage.crochetGriffe) {
+					mult += 0.25;
+				}
+				factor *= mult;
+
 				if (mat) {
 					json[i].Matiere = mat;
 					switch (json[i].Matiere) {
 						case "Bois":
-							json[i].Taille = Math.max(1, Math.floor(json[i].Poids * 0.9));
-							break;
-						case "Cuir":
-							json[i].Taille = Math.max(1, Math.floor(json[i].Poids * 0.225));
+							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * 0.9 * factor));
 							break;
 						case "":
 						case null:
-							json[i].Taille = null;
+							json[i].Carats = null;
 							break;
 						//default:
+						case "Cuir":
 						case "Fer":
 						case "Pierre":
 						case "Tissus":
-							json[i].Taille = Math.max(1, Math.floor(json[i].Poids * 0.45));
+							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * factor));
 							break;
 					}
-				}
-			}
-
-			// carats
-			if (json[i].Taille && json[i].Matiere) {
-				if (json[i].Matiere === "Bois") {
-					json[i].Carats = json[i].Taille;
-				}
-				else {
-					json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
 				}
 			}
 		}
