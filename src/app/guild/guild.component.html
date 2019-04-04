@@ -1,5 +1,6 @@
 <h1>Meute</h1>
 <div *ngIf="guildMembers">
+    <div class="form-group">
         <button type="button" class="btn btn-primary mb-2" (click)="refresh()" [disabled]="busy">{{text}}</button>
     </div>
     <table class="table table-sm table-bordered">
