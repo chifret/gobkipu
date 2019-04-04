@@ -1,0 +1,43 @@
+<h1>Meute</h1>
+<div *ngIf="guildMembers">
+        <button type="button" class="btn btn-primary mb-2" (click)="refresh()" [disabled]="busy">{{text}}</button>
+    </div>
+    <table class="table table-sm table-bordered">
+        <tr>
+            <th>Id</th>
+            <th>Nom</th>
+            <th>Race / niveau</th>
+            <th>PV</th>
+            <th>Pos</th>
+            <th>PAs</th>
+            <th>DLA</th>
+            <th></th>
+        </tr>
+        <tr *ngFor="let guildMember of guildMembers">
+            <td>{{ guildMember.Id }}</td>
+            <td><b>{{ guildMember.Nom }}</b></td>
+            <td>{{ guildMember.Tribu }} - {{ guildMember.Niveau }}</td>
+            <td>
+                {{ guildMember.PV }} / {{ guildMember.PVMax }}
+                <div #pv style="width: 100%; border: 1px solid grey; height: 10px;">
+                    <div style="width: 50%; height:100%;"
+                         [style.width.%]="(guildMember.PV / guildMember.PVMax) * 100"
+                         [style.backgroundColor]="getPVColor(guildMember.PV, guildMember.PVMax)"></div>
+                </div>
+            </td>
+            <td>{{ guildMember.X }} / {{ guildMember.Y }} / {{ guildMember.N }}</td>
+            <td [style.backgroundColor]="getPAColor(guildMember.paState)">{{ guildMember.PA }}</td>
+            <td>
+                {{ guildMember.DLA | date:'dd-MM-yyyy HH:mm' }}<br/>
+                <small>{{ guildMember.nextDLA | date:'dd-MM-yyyy HH:mm' }}
+                    <span *ngIf="guildMember.dlaState>0"> - <span [style.color]="getDLAColor(guildMember.dlaState)">■</span></span>
+                </small>
+            </td>
+            <td>
+                <a href="javascript:void(0)" (click)="view(guildMember.Id)">Voir la vue</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<view-component #viewComponent></view-component>
+<button *ngIf="lastId" (click)="refreshView()">Refresh vue</button>
