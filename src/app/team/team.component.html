@@ -5,37 +5,58 @@
     </div>
     <table class="table table-sm table-bordered">
         <tr>
-            <th>Id</th>
-            <th>Nom</th>
-            <th>Race / niveau</th>
-            <th>PV</th>
+            <th>
+                Nom<br/>
+                <small>Race / niveau</small>
+            </th>
+            <th>
+                PV<br/>
+                <small>Faim</small>
+            </th>
             <th>Pos</th>
             <th>PAs</th>
             <th>DLA</th>
-            <th><a href="javascript:void(0)" (click)="viewAll()">Vue générale (beta)</a></th>
+            <th>
+                <small><a href="javascript:void(0)" (click)="viewAll()">Vue<br/>générale</a></small>
+            </th>
         </tr>
         <tr *ngFor="let teamMember of teamMembers">
-            <td>{{ teamMember.Id }}</td>
-            <td><b>{{ teamMember.Nom }}</b></td>
-            <td>{{ teamMember.Tribu }} - {{ teamMember.Niveau }}</td>
             <td>
-                {{ teamMember.PV }} / {{ teamMember.PVMax }}
-                <div #pv style="width: 100%; border: 1px solid grey; height: 10px;">
-                    <div style="width: 50%; height:100%;"
+                <b>{{ teamMember.Nom }}</b>
+                <span class="mobHide"><br/><small>({{ teamMember.Id }}) {{ teamMember.Tribu }} {{ teamMember.Niveau }}</small></span>
+            </td>
+            <td style="padding: 0;">
+                <div #pv style="width: 100%; border: 0; position:relative">
+                    <div style="width: 100%; height: 31px; padding: 2px;"
                          [style.width.%]="(teamMember.PV / teamMember.PVMax) * 100"
-                         [style.backgroundColor]="getPVColor(teamMember.PV, teamMember.PVMax)"></div>
+                         [style.backgroundColor]="getPVColor(teamMember.PV, teamMember.PVMax)">
+                    </div>
+                    <div style="width: 100%; height: 31px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px; position: absolute; top: 0;">
+                        <span style="display: block;">{{ teamMember.PV }}<span class="mobHide"> / {{ teamMember.PVMax }}</span></span>
+                    </div>
+                </div>
+                <div #faim style="width: 100%; border: 0;">
+                    <div style="width: 100%; height:25px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px;"
+                         [style.backgroundColor]="getHungerColor(teamMember.Faim)">
+                        <small style="display: block;">{{ teamMember.Faim }}</small>
+                    </div>
                 </div>
             </td>
             <td>{{ teamMember.X }} / {{ teamMember.Y }} / {{ teamMember.N }}</td>
             <td [style.backgroundColor]="getPAColor(teamMember.paState)">{{ teamMember.PA }}</td>
             <td>
-                {{ teamMember.DLA | date:'dd-MM-yyyy HH:mm' }}<br/>
-                <small>{{ teamMember.nextDLA | date:'dd-MM-yyyy HH:mm' }}
+                <span class="mobHide">{{ teamMember.DLA | date:'dd/MM/yyyy HH:mm' }}</span>
+                <span class="nomobHide">{{ teamMember.DLA | date:'HH:mm' }}</span>
+                <br/>
+                <small>
+
+                    <span class="mobHide">{{ teamMember.nextDLA | date:'dd/MM/yyyy HH:mm' }}</span>
+                    <span class="nomobHide">{{ teamMember.nextDLA | date:'HH:mm' }}</span>
                     <span *ngIf="teamMember.dlaState>0"> - <span [style.color]="getDLAColor(teamMember.dlaState)">■</span></span>
                 </small>
             </td>
             <td>
-                <a href="javascript:void(0)" (click)="view(teamMember.Id)">Voir la vue</a>
+                <a href="javascript:void(0)" (click)="view(teamMember.Id)">Vue</a>
             </td>
         </tr>
     </table>

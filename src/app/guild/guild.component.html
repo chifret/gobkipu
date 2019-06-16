@@ -1,41 +1,62 @@
-<h1>Meute</h1>
+<h1>Clan</h1>
 <div *ngIf="guildMembers">
     <div class="form-group">
         <button type="button" class="btn btn-primary mb-2" (click)="refresh()" [disabled]="busy">{{text}}</button>
     </div>
     <table class="table table-sm table-bordered">
         <tr>
-            <th>Id</th>
-            <th>Nom</th>
-            <th>Race / niveau</th>
-            <th>PV</th>
+            <th>
+                Nom<br/>
+                <small>Race / niveau</small>
+            </th>
+            <th>
+                PV<br/>
+                <small>Faim</small>
+            </th>
             <th>Pos</th>
             <th>PAs</th>
             <th>DLA</th>
-            <th></th>
+            <th>
+
+            </th>
         </tr>
         <tr *ngFor="let guildMember of guildMembers">
-            <td>{{ guildMember.Id }}</td>
-            <td><b>{{ guildMember.Nom }}</b></td>
-            <td>{{ guildMember.Tribu }} - {{ guildMember.Niveau }}</td>
             <td>
-                {{ guildMember.PV }} / {{ guildMember.PVMax }}
-                <div #pv style="width: 100%; border: 1px solid grey; height: 10px;">
-                    <div style="width: 50%; height:100%;"
+                <b>{{ guildMember.Nom }}</b>
+                <br/>
+                <small>({{ guildMember.Id }}) {{ guildMember.Tribu }} {{ guildMember.Niveau }}</small>
+            </td>
+            <td style="padding: 0;">
+                <div #pv style="width: 100%; border: 0;">
+                    <div style="width: 50%; height: 31px; text-shadow: #333 0px 0.05rem 5px, #333 0px 0.05rem 5px, #333 0px 0.05rem 5px; padding: 2px"
                          [style.width.%]="(guildMember.PV / guildMember.PVMax) * 100"
-                         [style.backgroundColor]="getPVColor(guildMember.PV, guildMember.PVMax)"></div>
+                         [style.backgroundColor]="getPVColor(guildMember.PV, guildMember.PVMax)">
+                        <span style="display: block;">{{ guildMember.PV }} / {{ guildMember.PVMax }}</span>
+                    </div>
+                </div>
+                <div #faim style="width: 100%; border: 0;">
+                    <div style="width: 50%; height:25px; width:100%; text-shadow: #333 0px 0.05rem 5px, #333 0px 0.05rem 5px, #333 0px 0.05rem 5px; padding: 2px"
+                         [style.backgroundColor]="getHungerColor(guildMember.Faim)">
+                        <small style="display: block;">{{ guildMember.Faim }}</small>
+                    </div>
                 </div>
             </td>
             <td>{{ guildMember.X }} / {{ guildMember.Y }} / {{ guildMember.N }}</td>
             <td [style.backgroundColor]="getPAColor(guildMember.paState)">{{ guildMember.PA }}</td>
+
             <td>
-                {{ guildMember.DLA | date:'dd-MM-yyyy HH:mm' }}<br/>
-                <small>{{ guildMember.nextDLA | date:'dd-MM-yyyy HH:mm' }}
+                <span class="mobHide">{{ guildMember.DLA | date:'dd/MM/yyyy HH:mm' }}</span>
+                <span class="nomobHide">{{ guildMember.DLA | date:'HH:mm' }}</span>
+                <br/>
+                <small>
+
+                    <span class="mobHide">{{ guildMember.nextDLA | date:'dd/MM/yyyy HH:mm' }}</span>
+                    <span class="nomobHide">{{ guildMember.nextDLA | date:'HH:mm' }}</span>
                     <span *ngIf="guildMember.dlaState>0"> - <span [style.color]="getDLAColor(guildMember.dlaState)">■</span></span>
                 </small>
             </td>
             <td>
-                <a href="javascript:void(0)" (click)="view(guildMember.Id)">Voir la vue</a>
+                <a href="javascript:void(0)" (click)="view(guildMember.Id)">Vue</a>
             </td>
         </tr>
     </table>

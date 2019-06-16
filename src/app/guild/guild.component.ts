@@ -61,6 +61,8 @@ export class GuildComponent implements OnInit {
 				return 'darkred';
 			case PastateEnum.Cumulable:
 				return 'darkkhaki';
+			case PastateEnum.Unusable:
+				return 'black';
 			default:
 				return 'none';
 		}
@@ -93,6 +95,20 @@ export class GuildComponent implements OnInit {
 			return 'orange';
 		} else {
 			return 'red';
+		}
+	}
+
+	getHungerColor(hunger: number): string {
+		if (hunger == 0) {
+			return "#333";
+		} else if (hunger <= 15) {
+			return "rebeccapurple";
+		} else if (hunger <= 20) {
+			return "purple";
+		} else if (hunger <= 25) {
+			return "pink";
+		} else {
+			return "deeppink";
 		}
 	}
 

@@ -72,8 +72,7 @@ export class TeamComponent implements OnInit {
 	refreshView() {
 		if (this.lastId === -1) {
 			this.viewAll(true);
-		}
-		else {
+		} else {
 			this.view(this.lastId, true);
 		}
 	}
@@ -90,6 +89,8 @@ export class TeamComponent implements OnInit {
 				return 'darkred';
 			case PastateEnum.Cumulable:
 				return 'darkkhaki';
+			case PastateEnum.Unusable:
+				return 'black';
 			default:
 				return 'none';
 		}
@@ -114,14 +115,26 @@ export class TeamComponent implements OnInit {
 		const pourcent = pv / pvMax * 100;
 		if (pourcent >= 95) {
 			return 'lawngreen';
-		}
-		if (pourcent >= 70) {
+		} else if (pourcent >= 70) {
 			return 'yellow';
-		}
-		if (pourcent >= 40) {
+		} else if (pourcent >= 40) {
 			return 'orange';
 		} else {
 			return 'red';
+		}
+	}
+
+	getHungerColor(hunger: number): string {
+		if (hunger == 0) {
+			return "#333";
+		} else if (hunger <= 15) {
+			return "rebeccapurple";
+		} else if (hunger <= 20) {
+			return "purple";
+		} else if (hunger <= 25) {
+			return "pink";
+		} else {
+			return "deeppink";
 		}
 	}
 
