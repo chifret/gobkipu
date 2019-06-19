@@ -63,7 +63,7 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
     protected savedSelectedItem = { item: null, position: null };
     protected loadedRowsDebouncer: any;
 
-    @ViewChild("filter") filter: WjFlexGridFilter;
+    @ViewChild("filter", { static: true }) filter: WjFlexGridFilter;
 
     @HostListener("window:resize", ["$event"]) onResize(event) {
         this.setFlexGridHeight();

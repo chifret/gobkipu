@@ -13,8 +13,8 @@ export class CopyPasteViewComponent {
 
 	processed = false;
 	viewable: ViewableClass;
-	@ViewChild("textarea") textarea: ElementRef;
-	@ViewChild("viewComponent") viewComponent: ViewComponent;
+	@ViewChild("textarea", { static: false }) textarea: ElementRef;
+	@ViewChild("viewComponent", { static: true }) viewComponent: ViewComponent;
 
 	private static getNameAndNum(str: string): { name: string, num: number } {
 		try {

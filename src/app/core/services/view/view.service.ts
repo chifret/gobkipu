@@ -27,10 +27,10 @@ export class ViewService extends Service {
 
 	public get(id: number, force: boolean = false): Observable<ViewTyping[]> {
 		if (localStorage.getItem("view-" + id) && !force) {
-			console.log("get local");
+			// console.log("get local");
 			return Observable.of(JSON.parse(localStorage.getItem("view-" + id)));
 		} else {
-			console.log("get distant");
+			// console.log("get distant");
 			const token = LoginService.getToken();
 			if (token) {
 				return this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=" + token.clan + "&id=" + token.id + "&id_view=" + id, {responseType: 'text'})

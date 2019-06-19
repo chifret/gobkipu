@@ -21,8 +21,8 @@ export class QeosGridPanelsComponent {
 
     hideGroupedColumns: boolean = false;
 
-    @ViewChild("filterPanel") filterPanel: FilterPanel;
-    @ViewChild("groupPanel") groupPanel: GroupPanel;
+    @ViewChild("filterPanel", { static: true }) filterPanel: FilterPanel;
+    @ViewChild("groupPanel", { static: false }) groupPanel: GroupPanel;
 
     collapse(status: boolean): void {
         if (status) {

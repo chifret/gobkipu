@@ -278,12 +278,12 @@ export class GuildplacesService extends Service {
 
 	public get(force: boolean = false): Observable<GuildPlaceItemsTypings[]> {
 		if (localStorage.getItem("guildplaceitems") && !force) {
-			console.log("get local");
+			// console.log("get local");
 			const json = JSON.parse(localStorage.getItem("guildplaceitems"));
 			// this.enrichment(json);
 			return Observable.of(json);
 		} else {
-			console.log("get distant");
+			// console.log("get distant");
 			const token = LoginService.getToken();
 			if (token) {
 				return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})

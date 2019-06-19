@@ -22,7 +22,7 @@ export class DlaUtils {
 		};
 
 		item.nextDla.date = new Date(item.dla.date.getTime() + (1000 * duration));
-		console.log(item.nextDla.date.getDay());
+		// console.log(item.nextDla.date.getDay());
 		if (item.dla.date.getDay() === 5) {
 			// vendredi
 			if (item.nextDla.date.getDay() === 6) {

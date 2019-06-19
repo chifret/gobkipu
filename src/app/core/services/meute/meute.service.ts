@@ -111,10 +111,10 @@ export class MeuteService extends Service {
 
 	get(force: boolean = false): Observable<GobsTypings[]> {
 		if (localStorage.getItem("meutemembres") && !force) {
-			console.log("get local");
+			// console.log("get local");
 			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
 		} else {
-			console.log("get distant");
+			// console.log("get distant");
 			return combineLatest(this.get1(), this.get2())
 				.pipe(map(([one, two]) => {
 					const json = MeuteService.concat(one, two);

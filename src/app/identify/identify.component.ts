@@ -30,10 +30,10 @@ export class IdentifyComponent implements OnInit {
 		{key: 5, value: "Exceptionnelle"}
 	], "key", "value");
 
-	@ViewChild("grid") grid: QeosGridComponent;
-	@ViewChild("niveauRecyclageInput") niveauRecyclageInput: ElementRef;
-	@ViewChild("atelierCheckbox") atelierCheckbox: ElementRef;
-	@ViewChild("griffesCrochetCheckbox") griffesCrochetCheckbox: ElementRef;
+	@ViewChild("grid", { static: true }) grid: QeosGridComponent;
+	@ViewChild("niveauRecyclageInput", { static: false }) niveauRecyclageInput: ElementRef;
+	@ViewChild("atelierCheckbox", { static: false }) atelierCheckbox: ElementRef;
+	@ViewChild("griffesCrochetCheckbox", { static: false }) griffesCrochetCheckbox: ElementRef;
 
 	constructor(protected injector: Injector,
 				protected itemsService: ItemsService,

@@ -23,7 +23,7 @@ export class TeamComponent implements OnInit {
 
 	lastId: number = null;
 
-	@ViewChild("viewComponent") viewComponent: ViewComponent;
+	@ViewChild("viewComponent", { static: true }) viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
 				private meuteService: MeuteService,

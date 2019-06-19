@@ -71,10 +71,10 @@ export class ClanService extends Service {
 
 	get(force: boolean = false): Observable<GobsTypings[]> {
 		if (localStorage.getItem("clanmembres") && !force) {
-			console.log("get local");
+			// console.log("get local");
 			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("clanmembres"), this.dates));
 		} else {
-			console.log("get distant");
+			// console.log("get distant");
 			return combineLatest(this.get1(), this.get2())
 				.pipe(map(([one, two]) => {
 					const json = ClanService.concat(one, two);

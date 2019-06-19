@@ -28,7 +28,6 @@ import {LoginService} from './core/services/login.service';
 import {MeuteService} from './core/services/meute/meute.service';
 import {CopyPasteViewComponent} from './view/copypaste-view.component';
 import {ViewService} from './core/services/view/view.service';
-import {BabylonjsService} from './core/services/babylonjs.service';
 import {QeosGridComponent} from './core/components/QeosGrid/qeosgrid.component';
 import {QeosGridPanelsComponent} from './core/components/QeosGridPanels/qeosgridpanels.component';
 import {RecyclageService} from "./core/services/identify/recyclage.service";
@@ -61,7 +60,6 @@ import {ClanService} from "./core/services/clan/clan.service";
 	],
 	providers: [
 		PlacesService,
-		BabylonjsService,
 		GuildplacesService,
 		ItemsService,
 		LoginService,
