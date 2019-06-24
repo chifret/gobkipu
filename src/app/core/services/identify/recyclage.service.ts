@@ -9,7 +9,7 @@ export class RecyclageService {
 	get(): { niveau: number, atelier: boolean, crochetGriffe: boolean } [] {
 		if (localStorage.getItem("recyclage")) {
 			// console.log("get local");
-			return JsonUtils.parse<{ niveau: number, atelier: boolean, crochetGriffe: boolean }>(localStorage.getItem("meutemembres"), this.dates);
+			return JsonUtils.parse<{ niveau: number, atelier: boolean, crochetGriffe: boolean }>(localStorage.getItem("recyclage"), this.dates);
 		} else {
 			let json = [{niveau: 1, atelier: false, crochetGriffe: false}];
 			localStorage.setItem("recyclage", JSON.stringify(json));

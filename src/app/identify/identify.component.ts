@@ -43,7 +43,6 @@ export class IdentifyComponent implements OnInit {
 			this.cvMain = new CollectionView(res);
 		});
 		this.recyclage = recyclageService.get()[0];
-		console.log(this.recyclage);
 	}
 
 	initGrid() {
@@ -52,7 +51,7 @@ export class IdentifyComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.grid.filter.filterColumns = [
-			"Identifie", "Category", "Type", "Matiere"
+			"Identifie", "Category", "Type", "Matiere", "Poids", "Localisation", "Qualite"
 		];
 		this.grid.headersVisibility = 1;
 	}

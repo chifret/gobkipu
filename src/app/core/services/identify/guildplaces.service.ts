@@ -35,31 +35,27 @@ export class GuildplacesService extends Service {
 			[60, {name: "Creuset", stars: 0, material: null}]
 		])],
 		["Anneau", new Map([
-			[2, {name: "Anneau standard", stars: 3, material: null}]
+			[2, {name: "Anneau inconnu", stars: 3, material: null}]
 		])],
-		["Arme 1 Main", new Map([
+		["Arme à 1 main", new Map([
 			[5, {name: "Coutelas (os, pierre) / Corchet / Dague / Griffes / Racine / Torche", stars: 1, material: "Bois, Fer, Pierre, autre..."}],
-			[7.5, {name: "Epée de bois / Fouet / Gantelet", stars: 4, material: "Bois, Cuir, Fer"}],
-			[10, {name: "Epée courte / Hachette / Gourdin", stars: 0, material: null}],
+			[7.5, {name: "Epée de bois / Fouet", stars: 4, material: "Bois, Cuir"}],
+			[10, {name: "Epée courte / Hachette / Gourdin", stars: 0, material: "Bois, Fer"}],
 			[15, {
-				name: "Cimeterre en pierre / Épieu / Gourdin clouté / Hache de lancer / Kama / Lame / Lame d'os / Machette / Pic",
-				stars: 2,
-				material: "Bois, Fer, Pierre, autre..."
+				name: "Cimeterre en pierre / Épieu / Gourdin clouté / Hache de lancer / Lame / Lame d'os / Machette / Pic", stars: 2, material: "Bois, Fer, Pierre, autre..."
 			}],
 			[20, {name: "Épée longue / Hache d'armes / Masse d'armes", stars: 0, material: "Bois, Fer"}],
 			[25, {name: "Fléau d'armes", stars: 0, material: null}],
-			[30, {name: "Épée bâtarde / Hache de guerre naine / Marteau de guerre / Morgenstern", stars: 1, material: "Bois, Fer"}]
+			[30, {name: "Épée bâtarde / Marteau de guerre / Morgenstern", stars: 1, material: "Bois, Fer"}]
 		])],
-		["Arme 2 mains", new Map([
+		["Arme à 2 mains", new Map([
 			[7.5, {name: "Bâtons de parade", stars: 0, material: null}],
 			[8, {name: "Bâton lesté", stars: 0, material: null}],
 			[10, {name: "Arc court", stars: 3, material: null}],
-			[15, {name: "Arc composite / Arc long / Bâton de combat / Hachoir en bois", stars: 4, material: "Bois, Fer"}],
+			[15, {name: "Hachoir en bois", stars: 4, material: null}],
 			[20, {name: "Bâton de feu", stars: 5, material: null}],
 			[30, {
-				name: "Arbalète légère / Épée à deux mains / Grande hache / Hache de bataille / de guerre / en os / en pierre",
-				stars: 3,
-				material: "Bois, Fer, Pierre, autre..."
+				name: "Épée à deux mains / Grande hache / Hache de bataille / de guerre / en os / en pierre", stars: 3, material: "Fer, Pierre, autre..."
 			}],
 			[35, {name: "Arbalète composite / Chaîne cloutée", stars: 4, material: "Bois, Fer"}],
 			[40, {name: "Massue trolle, Pioche, Vouge", stars: 2, material: "Bois, Fer"}],
@@ -68,41 +64,52 @@ export class GuildplacesService extends Service {
 			[60, {name: "Lance-feu", stars: 5, material: null}]
 		])],
 		["Armure", new Map([
-			[3, {name: "Vêtement léger", stars: 0, material: "Cuir, Tissus"}],
+			[3, {name: "Vêtement léger inconnu", stars: 0, material: "Cuir, Tissus"}],
 			[5, {name: "Pagne en cuir", stars: 0, material: null}],
-			[7, {name: "Vêtement lourd", stars: 0, material: "Cuir, Fer, Tissus, autre..."}],
-			[12, {name: "Armure légère", stars: 1, material: "Cuir, Fer, autre..."}],
-			[20, {name: "Armure intermédiaire", stars: 1, material: "Cuir, Fer, autre..."}],
-			[40, {name: "Armure lourde", stars: 3, material: "Bois, Fer, Pierre, autre..."}],
-			[60, {name: "Armure très lourde", stars: 2, material: "Fer, autre..."}]
+			[7, {name: "Vêtement lourd inconnu", stars: 0, material: "Cuir, Fer, Tissus, autre..."}],
+			[12, {name: "Armure légère inconnue", stars: 1, material: "Cuir, Fer, autre..."}],
+			[20, {name: "Armure intermédiaire inconnue", stars: 1, material: "Cuir, Fer, autre..."}],
+			[40, {name: "Armure lourde inconnue", stars: 3, material: "Bois, Fer, Pierre, autre..."}],
+			[60, {name: "Armure très lourde inconnue", stars: 2, material: "Fer, autre..."}]
 		])],
 		["Baguette", new Map([
-			[3, {name: "Baguette standard", stars: 1, material: "Bois"}]
+			[3, {name: "Baguette inconnue", stars: 1, material: "Bois"}]
 		])],
 		["Bijou", new Map([
-			[5, {name: "Bijou standard", stars: 3, material: null}]
+			[5, {name: "Bijou inconnu", stars: 3, material: null}]
 		])],
 		["Bottes", new Map([
 			[3, {name: "Jambières en fourrure / Sandales", stars: 0, material: "Cuir, autre..."}],
 			[5, {name: "Bottes", stars: 0, material: "Cuir"}],
-			[15, {name: "Jambières lourdes", stars: 3, material: "Bois, Cuir, Fer, Pierre, autre..."}]
+			[15, {name: "Jambières lourdes inconnues", stars: 3, material: "Bois, Cuir, Fer, Pierre, autre..."}]
 		])],
 		["Bouclier", new Map([
 			[5, {name: "Targe", stars: 0, material: null}],
-			[10, {name: "Bouclier léger", stars: 3, material: "Bois, Cuir, Fer, Pierre, autre..."}],
-			[20, {name: "Bouclier lourd", stars: 3, material: "Bois, Fer, Pierren autre..."}],
+			[10, {name: "Bouclier léger inconnu", stars: 3, material: "Bois, Cuir, Fer, Pierre, autre..."}],
+			[20, {name: "Bouclier lourd inconnu", stars: 3, material: "Bois, Fer, Pierren autre..."}],
 			[35, {name: "Bouclier à pointes", stars: 5, material: null}]
 		])],
 		["Casque", new Map([
-			[3, {name: "Casque léger", stars: 0, material: "Cuir, Fer, Tissus, autre..."}],
+			[3, {name: "Casque léger inconnu", stars: 0, material: "Cuir, Fer, Tissus, autre..."}],
 			[7, {name: "Casque à cornes", stars: 0, material: null}],
 			[10, {name: "Casque à pointes", stars: 3, material: null}],
 			[15, {name: "Heaume", stars: 3, material: null}]
 		])],
 		["Talisman", new Map([
-			[3, {name: "Talisman standard", stars: 2, material: "Bois  Fer, Pierre, autre..."}],
+			[3, {name: "Talisman inconnu", stars: 2, material: "Bois  Fer, Pierre, autre..."}],
 			[5, {name: "Gorgeron en métal", stars: 1, material: null}],
 			[6, {name: "Collier de dents", stars: 0, material: null}]
+		])],
+		["Corps", new Map([
+			[23.8, {name: "Cadavre de Fourmi Ouvrière ???", stars: 1, material: null}],
+			[30.6, {name: "Cadavre de Fourmi Guerrière ???", stars: 1, material: null}],
+			[40, {name: "Cadavre de Zombi invoqué ???", stars: 0, material: null}],
+			[90, {name: "Cadavre de Djinn / Ours hibou ???", stars: 1, material: null}],
+			[100, {name: "Cadavre d'Ent ???", stars: 1, material: null}],
+			[105, {name: "Cadavre d'Abishaii ???", stars: 0, material: null}],
+			[110, {name: "Cadavre d'Hellrot ???", stars: 0, material: null}],
+			[190, {name: "Cadavre de Ver Géant Carnivore ???", stars: 1, material: null}],
+			[232, {name: "Cadavre de Titan ???", stars: 1, material: null}],
 		])]
 	]);
 	nameToExpectedMaterial: Map<string, string> = new Map([
@@ -116,6 +123,7 @@ export class GuildplacesService extends Service {
 		["Anneau de voyage", ""],
 		["Anneau Spirituel", ""],
 		["Anneau Trollique", ""],
+
 		["Crochet", "Fer"],
 		["Dague", "Fer"],
 		["Epée bâtarde", "Fer"],
@@ -142,6 +150,7 @@ export class GuildplacesService extends Service {
 		["Morgenstern", "Fer"],
 		["Pic", "Fer"],
 		["Torche", "Bois"],
+
 		["Arbalète composite", "Bois"],
 		["Arbalète légère", "Bois"],
 		["Arbalète lourde", "Bois"],
@@ -165,7 +174,7 @@ export class GuildplacesService extends Service {
 		["Pioche", "Fer"],
 		["Vorpale", "Fer"],
 		["Vouge", "Fer"],
-		["Cape", "Tissus"],
+
 		["Cape", "Tissus"],
 		["Culotte en cuir", "Cuir"],
 		["Robe de sorcier", "Tissus"],
@@ -195,10 +204,12 @@ export class GuildplacesService extends Service {
 		["Clibanion", "Fer"],
 		["Crevice", "Fer"],
 		["Haubert de mailles", "Fer"],
+
 		["Baguette de Golbenstein", "Bois"],
 		["Baguette de Tsoin Tsoin", "Bois"],
 		["Baguette de Zénie", "Bois"],
 		["Noire baguette", "Bois"],
+
 		["Ankh Spectral", ""],
 		["Bijou-Fétiche", ""],
 		["Bijou-Totem", ""],
@@ -213,12 +224,14 @@ export class GuildplacesService extends Service {
 		["Pendentif-Chasseur", ""],
 		["Phalère Epineuse", ""],
 		["Tiare Obscure", ""],
+
 		["Bottes", "Cuir"],
 		["Jambières en bois", "Bois"],
 		["Jambières en cuir", "Cuir"],
 		["Jambières en mailles", "Fer"],
 		["Jambières en métal", "Fer"],
 		["Sandales", "Cuir"],
+
 		["Targe", "Fer"],
 		["Clipeus", "Cuir"],
 		["Peltè", "Bois"],
@@ -228,6 +241,7 @@ export class GuildplacesService extends Service {
 		["Ecu en métal", "Fer"],
 		["Rondache en métal", "Fer"],
 		["Bouclier à pointes", "Fer"],
+
 		["Bacinet", "Fer"],
 		["Barbute", "Fer"],
 		["Cagoule", "Tissus"],
@@ -241,6 +255,7 @@ export class GuildplacesService extends Service {
 		["Lorgnons", "Verre"],
 		["Masque d'Alowin", "Tissus"],
 		["Turban", "Tissus"],
+
 		["Amulette magnétique ", ""],
 		["Attrape-rêves", ""],
 		["Aurine", ""],
@@ -257,6 +272,7 @@ export class GuildplacesService extends Service {
 		["Pectoral", ""],
 		["Phylactère", ""],
 		["Ruban d'Alowin", ""],
+
 		["Aiguille", "Fer"],
 		["Ciseau à bois", "Bois"],
 		["Creuset", "Fer"],
@@ -267,7 +283,19 @@ export class GuildplacesService extends Service {
 		["Poinçon", "Fer"]
 	]);
 	nameToExpectedMaterialContains = [
-		{name: "en Pierre", materiau: "Pierre"}
+		{name: "en Pierre", materiau: "Pierre"},
+		{name: "en Obsidienne", materiau: "Obsidienne"},
+		{name: "en Opale", materiau: "Opale"},
+		{name: "en Saphir", materiau: "Saphir"},
+		{name: "en Diamant", materiau: "Diamant"},
+		{name: "en Emeraude", materiau: "Emeraude"},
+		{name: "en Rubis", materiau: "Rubis"},
+		{name: "en Adamantium", materiau: "Adamantium"},
+		{name: "en Argent", materiau: "Argent"},
+		{name: "en Cuivre", materiau: "Cuivre"},
+		{name: "en Mithril", materiau: "Mithril"},
+		{name: "en Or", materiau: "Or"},
+		{name: "en Etain", materiau: "Etain"}
 	];
 
 	constructor(injector: Injector,
@@ -305,7 +333,7 @@ export class GuildplacesService extends Service {
 
 			// fix rondins
 			if (json[i].Type === "Matériau" && json[i].Nom === "Rondin" && !json[i].Qualite) {
-				json[i].Qualite = -1;
+				json[i].Qualite = 2;
 				json[i].Matiere = "Bois";
 			}
 
@@ -315,69 +343,89 @@ export class GuildplacesService extends Service {
 			}
 
 			// category, desc, types
-			if (json[i].Qualite) {
-				if (["Composant", "Fleur", "Racine"].indexOf(json[i].Type) > -1) {
-					json[i].Category = "Compo & Fleurs";
-				}
-				else {
-					json[i].Category = "Matériaux";
-					if (!json[i].Matiere) {
-						json[i].Matiere = json[i].Nom;
-					}
-				}
-				json[i].Desc = null;
-				json[i].Type = null;
-			} else if (["Fleur", "Racine"].indexOf(json[i].Type) > -1) {
-				json[i].Category = "Compo & Fleurs";
-				json[i].Desc = null;
-				json[i].Type = null;
-			} else if (["Nourriture", "Potion", "Outil", "Corps"].indexOf(json[i].Type) > -1) {
-				json[i].Category = json[i].Type;
-				if (!(json[i].Type === "Potion")) {
-					json[i].Desc = null;
-				}
-				if (["Nourriture", "Potion", "Outil"].indexOf(json[i].Type) > -1) {
+			switch (json[i].Type) {
+				case "Fleur":
+				case "Racine":
+				case "Graine":
+				case "Mousse":
+				case "Champignon":
+				case "Plante Grasse":
+				case "Baie": {
+					json[i].Category = "Plante";
 					json[i].Taille = null;
+					json[i].Desc = null;
+					break;
 				}
-				if (!(["Outil"].indexOf(json[i].Type) > -1)) {
-					json[i].Type = null;
+				case "Potion":
+				case "Spécial": {
+					json[i].Category = json[i].Type;
+					json[i].Taille = null;
+					break;
 				}
-			} else {
-				json[i].Category = "Équipement";
-				json[i].Taille = null;
-				if (json[i].Matiere) {
-					json[i].Nom = json[i].Nom + " en " + json[i].Matiere;
+				case "Outil":
+				case "Parchemin":
+				case "Composant":
+				case "Corps":
+				case "Nourriture": {
+					json[i].Category = json[i].Type;
+					json[i].Taille = null;
+					json[i].Desc = null;
+					break;
+				}
+				default: {
+					if (json[i].Qualite) {
+						json[i].Category = "Materiaux";
+						json[i].Desc = null;
+						if (!json[i].Matiere) {
+							json[i].Matiere = json[i].Nom;
+						}
+					} else {
+						json[i].Category = "Équipement";
+						json[i].Taille = null;
+						if (json[i].Matiere == "Pierre") {
+							json[i].Nom += " en Pierre";
+						}
+						if (json[i].Type == "Arme 1 Main") {
+							json[i].Type = "Arme à 1 main";
+						} else if (json[i].Type == "Arme 2 mains") {
+							json[i].Type = "Arme à 2 mains";
+						}
+					}
+					break;
 				}
 			}
 
 			// waight expectation
-			if (!json[i].Identifie && ["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
-				if (this.weightToExpected.get(json[i].Type)) {
-					if (this.weightToExpected.get(json[i].Type).get(json[i].Poids)) {
-						json[i].Nom = this.weightToExpected.get(json[i].Type).get(json[i].Poids).name;
-						json[i].Stars = this.weightToExpected.get(json[i].Type).get(json[i].Poids).stars;
-						json[i].Matiere = this.weightToExpected.get(json[i].Type).get(json[i].Poids).material;
+			if (!json[i].Identifie) {
+				if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
+					if (this.weightToExpected.get(json[i].Type)) {
+						const tmp = this.weightToExpected.get(json[i].Type);
+						if (tmp.get(json[i].Poids)) {
+							json[i].Nom = tmp.get(json[i].Poids).name;
+							json[i].Stars = tmp.get(json[i].Poids).stars;
+							json[i].Matiere = tmp.get(json[i].Poids).material;
+						} else {
+							json[i].Nom = "???";
+							json[i].Stars = 5;
+						}
+					}
+				} else if (json[i].Category == "Corps") {
+					const tmp = this.weightToExpected.get(json[i].Type);
+					if (tmp.get(json[i].Poids)) {
+						json[i].Nom = tmp.get(json[i].Poids).name;
+						json[i].Stars = tmp.get(json[i].Poids).stars;
 					} else {
-						json[i].Nom = "???";
-						json[i].Stars = 5;
+						json[i].Nom = "Cadavre inconnu";
+						json[i].Stars = 2;
 					}
-					if (["Outil"].indexOf(json[i].Type) > -1) {
-						json[i].Type = null;
-					}
-				} else {
-					console.log("Weight to expected " + json[i].Type + " not done");
 				}
-			}
-			else if (json[i].Identifie && json[i].Category === "Outil") {
-				json[i].Type = null;
 			}
 
 			// carats
 			if (json[i].Taille && json[i].Matiere) {
 				if (json[i].Matiere === "Bois") {
 					json[i].Carats = json[i].Taille;
-				}
-				else {
+				} else {
 					json[i].Carats = json[i].Taille * (json[i].Qualite ? this.carats.get(json[i].Qualite) : 3);
 				}
 			}
@@ -386,44 +434,44 @@ export class GuildplacesService extends Service {
 			if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
 
 				// material expectation
-				let mat = this.nameToExpectedMaterial.get(json[i].Nom);
-
-				// name to material
+				let mat = json[i].Matiere;
+				if (!mat) {
+					mat = this.nameToExpectedMaterial.get(json[i].Nom);
+					json[i].Matiere = mat;
+				}
 				if (!mat) {
 					this.nameToExpectedMaterialContains.forEach((materialContained) => {
 						if (json[i].Nom.indexOf(materialContained.name) > -1) {
 							mat = materialContained.materiau;
+							json[i].Matiere = mat;
 						}
-					})
+					});
 				}
-
-				let factor = 1;
-				factor += (this.recyclage.niveau - 1) * 0.5;
-				let mult = 1;
-				if (this.recyclage.atelier) {
-					mult += 0.25;
-				}
-				if (this.recyclage.crochetGriffe) {
-					mult += 0.25;
-				}
-				factor *= mult;
-
 				if (mat) {
-					json[i].Matiere = mat;
+					let factor = 1;
+					factor += (this.recyclage.niveau - 1) * 0.5;
+					let mult = 1;
+					if (this.recyclage.atelier) {
+						mult += 0.25;
+					}
+					if (this.recyclage.crochetGriffe) {
+						mult += 0.25;
+					}
+					factor *= mult;
+
 					switch (json[i].Matiere) {
 						case "Bois":
 							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * 0.9 * factor));
 							break;
-						case "":
-						case null:
-							json[i].Carats = null;
-							break;
-						//default:
 						case "Cuir":
 						case "Fer":
 						case "Pierre":
 						case "Tissus":
 							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * factor));
+							break;
+						case "":
+						case null:
+							json[i].Carats = null;
 							break;
 					}
 				}
