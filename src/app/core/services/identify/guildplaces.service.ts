@@ -31,73 +31,69 @@ export class GuildplacesService extends Service {
 			[5, {name: "Ciseau à bois", stars: 0, material: null}],
 			[10, {name: "Alambic", stars: 0, material: null}],
 			[20, {name: "Marteau de forgeron / de tailleur", stars: 0, material: "Fer, Pierre"}],
-			[40, {name: "Hache de bucheron", stars: 3, material: null}],
+			[40, {name: "Hache de bucheron", stars: 1, material: null}],
 			[60, {name: "Creuset", stars: 0, material: null}]
 		])],
 		["Anneau", new Map([
-			[2, {name: "Anneau inconnu", stars: 3, material: null}]
+			[2, {name: "Anneau inconnu", stars: 4, material: "Argent, Cuivre, Etain, Fer, ???"}]
 		])],
 		["Arme à 1 main", new Map([
-			[5, {name: "Coutelas (os, pierre) / Corchet / Dague / Griffes / Racine / Torche", stars: 1, material: "Bois, Fer, Pierre, autre..."}],
-			[7.5, {name: "Epée de bois / Fouet", stars: 4, material: "Bois, Cuir"}],
+			[5, {name: "Coutelas (os, pierre) / Corchet / Dague / Griffes / Racine / Torche", stars: 1, material: "Bois, Fer, Pierre, Composant"}],
+			[7.5, {name: "Epée de bois / Fouet", stars: 0, material: "Bois, Cuir"}],
 			[10, {name: "Epée courte / Hachette / Gourdin", stars: 0, material: "Bois, Fer"}],
-			[15, {
-				name: "Cimeterre en pierre / Épieu / Gourdin clouté / Hache de lancer / Lame / Lame d'os / Machette / Pic", stars: 2, material: "Bois, Fer, Pierre, autre..."
-			}],
+			[15, {name: "Gourdin clouté / Lame d'os / Machette / Pic", stars: 1, material: "Bois, Fer, Pierre, Composant"}],
 			[20, {name: "Épée longue / Hache d'armes / Masse d'armes", stars: 0, material: "Bois, Fer"}],
-			[25, {name: "Fléau d'armes", stars: 0, material: null}],
-			[30, {name: "Épée bâtarde / Marteau de guerre / Morgenstern", stars: 1, material: "Bois, Fer"}]
+			[25, {name: "Fléau d'armes", stars: 2, material: null}],
+			[30, {name: "Épée bâtarde / Marteau de guerre / Morgenstern", stars: 0, material: "Bois, Fer"}]
 		])],
 		["Arme à 2 mains", new Map([
 			[7.5, {name: "Bâtons de parade", stars: 0, material: null}],
 			[8, {name: "Bâton lesté", stars: 0, material: null}],
-			[10, {name: "Arc court", stars: 3, material: null}],
-			[15, {name: "Hachoir en bois", stars: 4, material: null}],
-			[20, {name: "Bâton de feu", stars: 5, material: null}],
-			[30, {
-				name: "Épée à deux mains / Grande hache / Hache de bataille / de guerre / en os / en pierre", stars: 3, material: "Fer, Pierre, autre..."
-			}],
-			[35, {name: "Arbalète composite / Chaîne cloutée", stars: 4, material: "Bois, Fer"}],
-			[40, {name: "Massue trolle, Pioche, Vouge", stars: 2, material: "Bois, Fer"}],
-			[45, {name: "Arbalète lourde, Faux", stars: 4, material: "Bois, Fer"}],
-			[50, {name: "Vorpale", stars: 5, material: null}],
-			[60, {name: "Lance-feu", stars: 5, material: null}]
+			[10, {name: "Arc court", stars: 2, material: null}],
+			[15, {name: "Hachoir en bois", stars: 0, material: null}],
+			[20, {name: "Bâton de feu", stars: 3, material: null}],
+			[30, {name: "Épée à deux mains / Grande hache / Hache de bataille / de guerre en os / en pierre", stars: 0, material: "Fer, Pierre, Composant"}],
+			[35, {name: "Arbalète composite / Chaîne cloutée", stars: 2, material: "Bois, Fer"}],
+			[40, {name: "Massue trolle, Pioche, Vouge", stars: 1, material: "Bois, Fer"}],
+			[45, {name: "Arbalète lourde, Faux", stars: 2, material: "Bois, Fer"}],
+			[50, {name: "Vorpale", stars: 2, material: null}],
+			[60, {name: "Lance-feu", stars: 3, material: null}]
 		])],
 		["Armure", new Map([
 			[3, {name: "Vêtement léger inconnu", stars: 0, material: "Cuir, Tissus"}],
 			[5, {name: "Pagne en cuir", stars: 0, material: null}],
-			[7, {name: "Vêtement lourd inconnu", stars: 0, material: "Cuir, Fer, Tissus, autre..."}],
-			[12, {name: "Armure légère inconnue", stars: 1, material: "Cuir, Fer, autre..."}],
-			[20, {name: "Armure intermédiaire inconnue", stars: 1, material: "Cuir, Fer, autre..."}],
-			[40, {name: "Armure lourde inconnue", stars: 3, material: "Bois, Fer, Pierre, autre..."}],
-			[60, {name: "Armure très lourde inconnue", stars: 2, material: "Fer, autre..."}]
+			[7, {name: "Vêtement lourd inconnu", stars: 0, material: "Cuir, Fer, Tissus, Composant"}],
+			[12, {name: "Armure légère inconnue", stars: 0, material: "Cuir, Fer, Composant"}],
+			[20, {name: "Armure intermédiaire inconnue", stars: 0, material: "Cuir, Fer, Composant"}],
+			[40, {name: "Armure lourde inconnue", stars: 0, material: "Bois, Fer, Pierre, Composant"}],
+			[60, {name: "Armure très lourde inconnue", stars: 0, material: "Fer, Composant"}]
 		])],
 		["Baguette", new Map([
 			[3, {name: "Baguette inconnue", stars: 1, material: "Bois"}]
 		])],
 		["Bijou", new Map([
-			[5, {name: "Bijou inconnu", stars: 3, material: null}]
+			[5, {name: "Bijou inconnu", stars: 4, material: "Adamantium, Argent, Cuivre, Etain, Fer, Mithril, Or, Diamant, Opale, Rubis, Saphir"}]
 		])],
 		["Bottes", new Map([
-			[3, {name: "Jambières en fourrure / Sandales", stars: 0, material: "Cuir, autre..."}],
+			[3, {name: "Jambières en fourrure / Sandales", stars: 0, material: "Cuir, Composant"}],
 			[5, {name: "Bottes", stars: 0, material: "Cuir"}],
-			[15, {name: "Jambières lourdes inconnues", stars: 3, material: "Bois, Cuir, Fer, Pierre, autre..."}]
+			[15, {name: "Jambières lourdes inconnues", stars: 0, material: "Bois, Cuir, Fer, Pierre, Composant"}]
 		])],
 		["Bouclier", new Map([
 			[5, {name: "Targe", stars: 0, material: null}],
-			[10, {name: "Bouclier léger inconnu", stars: 3, material: "Bois, Cuir, Fer, Pierre, autre..."}],
-			[20, {name: "Bouclier lourd inconnu", stars: 3, material: "Bois, Fer, Pierren autre..."}],
-			[35, {name: "Bouclier à pointes", stars: 5, material: null}]
+			[10, {name: "Bouclier léger inconnu", stars: 0, material: "Bois, Cuir, Fer, Pierre, Composant"}],
+			[20, {name: "Bouclier lourd inconnu", stars: 0, material: "Bois, Fer, Pierre, Composant"}],
+			[35, {name: "Bouclier à pointes", stars: 3, material: null}]
 		])],
 		["Casque", new Map([
-			[3, {name: "Casque léger inconnu", stars: 0, material: "Cuir, Fer, Tissus, autre..."}],
+			[3, {name: "Casque léger inconnu", stars: 0, material: "Cuir, Fer, Tissus, Composant"}],
 			[7, {name: "Casque à cornes", stars: 0, material: null}],
-			[10, {name: "Casque à pointes", stars: 3, material: null}],
-			[15, {name: "Heaume", stars: 3, material: null}]
+			[10, {name: "Casque à pointes", stars: 2, material: null}],
+			[15, {name: "Heaume", stars: 2, material: null}]
 		])],
 		["Talisman", new Map([
-			[3, {name: "Talisman inconnu", stars: 2, material: "Bois  Fer, Pierre, autre..."}],
-			[5, {name: "Gorgeron en métal", stars: 1, material: null}],
+			[3, {name: "Talisman inconnu", stars: 0, material: "Bois, Fer, Pierre, Composant, Plante"}],
+			[5, {name: "Gorgeron en métal", stars: 0, material: null}],
 			[6, {name: "Collier de dents", stars: 0, material: null}]
 		])],
 		["Corps", new Map([
@@ -110,20 +106,27 @@ export class GuildplacesService extends Service {
 			[110, {name: "Cadavre d'Hellrot ???", stars: 0, material: null}],
 			[190, {name: "Cadavre de Ver Géant Carnivore ???", stars: 1, material: null}],
 			[232, {name: "Cadavre de Titan ???", stars: 1, material: null}],
+		])],
+		["Parchemin", new Map([
+			[9, {name: "Parchemin inconnu", stars: 5, material: null}]
 		])]
 	]);
 	nameToExpectedMaterial: Map<string, string> = new Map([
-		["Anapside", ""],
-		["Anneau Barbare", ""],
-		["Anneau de Courage", ""],
-		["Anneau de dureté", ""],
-		["Anneau de Protection", ""],
-		["Anneau de Sagesse", ""],
-		["Anneau de Savoir", ""],
-		["Anneau de voyage", ""],
-		["Anneau Spirituel", ""],
-		["Anneau Trollique", ""],
+		["Anapside", "???"],
+		["Anneau Barbare", null],
+		["Anneau de Courage", "Argent"],
+		["Anneau de dureté", "Argent"],
+		["Anneau de Protection", "???"],
+		["Anneau de Sagesse", "Argent"],
+		["Anneau de Savoir", "Argent"],
+		["Anneau de voyage", "???"],
+		["Anneau Spirituel", "Argent"],
+		["Anneau Trollique", "???"],
+		["Bague de fiançailles", "???"],
 
+		//["Cimeterre en Pierre", "Pierre"],
+		//["Coutelas en Pierre", "Pierre"],
+		["Coutelas en os", "Fer"],
 		["Crochet", "Fer"],
 		["Dague", "Fer"],
 		["Epée bâtarde", "Fer"],
@@ -143,7 +146,8 @@ export class GuildplacesService extends Service {
 		["Hache de lancer", "Fer"],
 		["Hachette", "Fer"],
 		["Kama", "Fer"],
-		["Lame", "Fer"],
+		//["Lame en Pierre", "Pierre"],
+		["Lame d'os", "Composant"],
 		["Machette", "Fer"],
 		["Marteau de guerre", "Bois"],
 		["Masse d'arme", "Bois"],
@@ -167,7 +171,8 @@ export class GuildplacesService extends Service {
 		["Faux", "Fer"],
 		["Grande hache", "Fer"],
 		["Hache de bataille", "Fer"],
-		["Hache de guerre", "Fer"],
+		//["Hache de guerre en Pierre", "Pierre"],
+		["Hache de guerre en os", "Composant"],
 		["Hachoir en bois", "Bois"],
 		["Lance-feu", "Fer"],
 		["Massue trolle", "Bois"],
@@ -186,61 +191,76 @@ export class GuildplacesService extends Service {
 		["Manteau de sorcier", "Tissus"],
 		["Pagne de mailles", "Fer"],
 		["Toge", "Tissus"],
-		["Toison", "Cuir"],
+		["Toison", "Composant"],
 		["Armure de cuir", "Cuir"],
 		["Brigandine", "Cuir"],
 		["Chemise d'Alowin", "Cuir"],
+		["Chemise d'ossements", "Composant"],
+		["Fourrure", "Composant"],
 		["Plastron", "Fer"],
 		["Chemise de mailles", "Fer"],
 		["Cuir bouilli", "Cuir"],
+		//["Cuirasse en Pierre", "Pierre"],
 		["Cuirasse", "Fer"],
 		["Gambison", "Cuir"],
 		["Tunique d'écailles", "Fer"],
 		["Armure de bois", "Bois"],
+		["Armure de peaux", "Composant"],
+		//["Armure en Pierre", "Pierre"],
 		["Cotte de mailles", "Fer"],
 		["Cuirasse d'écailles", "Fer"],
+		["Cuirasse d'ossements", "Composant"],
 		["Armure d'anneaux", "Fer"],
 		["Armure de plates", "Fer"],
 		["Clibanion", "Fer"],
 		["Crevice", "Fer"],
+		["Haubert d'ossements", "Composant"],
 		["Haubert de mailles", "Fer"],
 
 		["Baguette de Golbenstein", "Bois"],
 		["Baguette de Tsoin Tsoin", "Bois"],
 		["Baguette de Zénie", "Bois"],
-		["Noire baguette", "Bois"],
+		["Noire Baguette", "Bois"],
 
-		["Ankh Spectral", ""],
-		["Bijou-Fétiche", ""],
-		["Bijou-Totem", ""],
-		["Breloques Familiales", ""],
-		["Bricole d'Alowin", ""],
-		["Collier des Anciens", ""],
-		["Diadème Nébuleux", ""],
-		["Fibule Champêtre", ""],
-		["Magatama", ""],
-		["Médaillon Protecteur", ""],
-		["Menthalite", ""],
-		["Pendentif-Chasseur", ""],
-		["Phalère Epineuse", ""],
-		["Tiare Obscure", ""],
+		["Ankh Spectral", "Argent"],
+		["Bijou-Fétiche", "Opale, Saphir, Adamantium"],
+		["Bijou-Totem", "Diamant, Rubis, Mithril"],
+		["Breloques Familiales", "Etain"],
+		["Bricole d'Alowin", "Or"],
+		["Collier des Anciens", "Argent"],
+		["Diadème Nébuleux", "Argent"],
+		["Fibule Champêtre", "Fer"],
+		["Magatama", "Fer"],
+		["Médaillon Protecteur", "Etain"],
+		["Menthalite", "Etain"],
+		["Pendentif-Chasseur", "Or"],
+		["Phalère Epineuse", "Cuivre"],
+		["Tiare Obscure", "Cuivre"],
 
 		["Bottes", "Cuir"],
+		//["Jambières en Pierre", "Pierre"],
 		["Jambières en bois", "Bois"],
 		["Jambières en cuir", "Cuir"],
+		["Jambières en fourrure", "Composant"],
 		["Jambières en mailles", "Fer"],
 		["Jambières en métal", "Fer"],
+		["Jambières en os", "Composant"],
 		["Sandales", "Cuir"],
 
-		["Targe", "Fer"],
-		["Clipeus", "Cuir"],
-		["Peltè", "Bois"],
-		["Rondache en bois", "Bois"],
 		["Aspis", "Bois"],
+		["Bouclier à pointes", "Fer"],
+		["Clipeus", "Cuir"],
 		["Ecu en bois", "Bois"],
 		["Ecu en métal", "Fer"],
+		["Egide", "Composant"],
+		//["Parma en Pierre", "Pierre"],
+		["Pavois en os", "Composant"],
+		//["Pavois en Pierre", "Pierre"],
+		["Peltè", "Bois"],
+		["Rondache en bois", "Bois"],
 		["Rondache en métal", "Fer"],
-		["Bouclier à pointes", "Fer"],
+		["Rondache en os", "Composant"],
+		["Targe", "Fer"],
 
 		["Bacinet", "Fer"],
 		["Barbute", "Fer"],
@@ -249,31 +269,40 @@ export class GuildplacesService extends Service {
 		["Casque à pointes", "Fer"],
 		["Casque en cuir", "Cuir"],
 		["Casque en métal", "Fer"],
+		["Casque en os", "Composant"],
 		["Cerebro", "Fer"],
 		["Chapeau pointu", "Tissus"],
 		["Heaume", "Fer"],
 		["Lorgnons", "Verre"],
 		["Masque d'Alowin", "Tissus"],
+		["Scalp", "Composant"],
 		["Turban", "Tissus"],
 
-		["Amulette magnétique ", ""],
-		["Attrape-rêves", ""],
-		["Aurine", ""],
-		["Branches tressées", ""],
-		["Cercle parfait", ""],
-		["Colletin", ""],
-		["Collier à fleurs", ""],
+		["Amulette magnétique ", "Fer"],
+		["Attrape-rêves", "Tissus"],
+		["Aurine", "Or"],
+		["Branches tressées", "Bois"],
+		["Cercle parfait", "Fer"],
+		["Colletin", "Fer"],
+		["Collier à fleurs", "Plante"],
 		["Collier à pointes", "Fer"],
-		["Gorgerin", ""],
+		["Collier de dents", "Composant"],
+		["Collier en os", "Composant"],
+		//["Collier en Pierre", "Pierre"],
+		["Gorgerin", "Fer"],
 		["Gorgeron en cuir", "Cuir"],
 		["Gorgeron en métal", "Fer"],
-		["Jaseran", ""],
-		["Mâlâ", ""],
-		["Pectoral", ""],
-		["Phylactère", ""],
-		["Ruban d'Alowin", ""],
+		["Jaseran", "Fer"],
+		["Mâlâ", "Bois"],
+		["Parure d'ossements", "Composant"],
+		["Pectoral", "Fer"],
+		["Phylactère", "Fer"],
+		["Ruban d'Alowin", "Fer"],
+		//["Talisman en Pierre", "Pierre"],
+		//["Torque en Pierre", "Pierre"],
 
 		["Aiguille", "Fer"],
+		["Alambic", "???"],
 		["Ciseau à bois", "Bois"],
 		["Creuset", "Fer"],
 		["Hache de bucheron", "Fer"],
@@ -374,7 +403,7 @@ export class GuildplacesService extends Service {
 				}
 				default: {
 					if (json[i].Qualite) {
-						json[i].Category = "Materiaux";
+						json[i].Category = "Matériaux";
 						json[i].Desc = null;
 						if (!json[i].Matiere) {
 							json[i].Matiere = json[i].Nom;
@@ -395,7 +424,7 @@ export class GuildplacesService extends Service {
 				}
 			}
 
-			// waight expectation
+			// weight expectation
 			if (!json[i].Identifie) {
 				if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
 					if (this.weightToExpected.get(json[i].Type)) {
@@ -421,7 +450,7 @@ export class GuildplacesService extends Service {
 				}
 			}
 
-			// carats
+			// material carats
 			if (json[i].Taille && json[i].Matiere) {
 				if (json[i].Matiere === "Bois") {
 					json[i].Carats = json[i].Taille;
@@ -430,14 +459,34 @@ export class GuildplacesService extends Service {
 				}
 			}
 
-			// estimation carats
+			// equipment material expectation
 			if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
-
-				// material expectation
 				let mat = json[i].Matiere;
 				if (!mat) {
 					mat = this.nameToExpectedMaterial.get(json[i].Nom);
-					json[i].Matiere = mat;
+					if (mat) {
+						json[i].Matiere = mat;
+					} else {
+						// TODO : anneau barbare
+						if (json[i].Nom == "Anneau Barbare") {
+							if (json[i].Desc.indexOf("ATT:+1") > -1) {
+								if (json[i].Desc.indexOf("DEG:+1")) {
+									json[i].Matiere = "Fer";
+									mat = "Fer";
+								} else {
+									json[i].Matiere = "???";
+								}
+							} else {
+								if (json[i].Desc.indexOf("DEG:+1")) {
+									json[i].Matiere = "Etain";
+									mat = "Etain";
+								} else {
+									json[i].Matiere = "Cuivre";
+									mat = "Cuivre";
+								}
+							}
+						}
+					}
 				}
 				if (!mat) {
 					this.nameToExpectedMaterialContains.forEach((materialContained) => {
@@ -460,19 +509,15 @@ export class GuildplacesService extends Service {
 					factor *= mult;
 
 					switch (json[i].Matiere) {
-						case "Bois":
-							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * 0.9 * factor));
-							break;
-						case "Cuir":
-						case "Fer":
-						case "Pierre":
-						case "Tissus":
-							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * factor));
-							break;
-						case "":
+						case "Composant":
+						case "Plante":
 						case null:
 							json[i].Carats = null;
 							break;
+						default:
+							json[i].Carats = Math.max(1, Math.floor(json[i].Poids * 0.9 * factor));
+							break;
+
 					}
 				}
 			}

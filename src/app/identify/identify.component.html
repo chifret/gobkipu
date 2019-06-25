@@ -15,21 +15,21 @@
 
         <!--<label class="sr-only" for="niveauRecyclageInput">Niveau</label>-->
         <!--<div class="input-group mb-1 mr-sm-1">-->
-            <!--<div class="input-group-prepend">-->
-                <!--<div class="input-group-text">Niveau</div>-->
-            <!--</div>-->
-            <!--<input #niveauRecyclageInput type="number" class="form-control" id="niveauRecyclageInput" style="width:75px" placeholder="Niveau comp." value="recyclage.niveau" min="1" max="4" (change)="updateRecyclage()">-->
+        <!--<div class="input-group-prepend">-->
+        <!--<div class="input-group-text">Niveau</div>-->
+        <!--</div>-->
+        <!--<input #niveauRecyclageInput type="number" class="form-control" id="niveauRecyclageInput" style="width:75px" placeholder="Niveau comp." value="recyclage.niveau" min="1" max="4" (change)="updateRecyclage()">-->
         <!--</div>-->
 
 
         <!--<div class="form-check form-check-inline">-->
-            <!--<input #atelierCheckbox class="form-check-input" type="checkbox" id="atelierCheckbox" value="recyclage.atelier" (change)="updateRecyclage()">-->
-            <!--<label class="form-check-label" for="atelierCheckbox">Atelier de recyclage ?</label>-->
+        <!--<input #atelierCheckbox class="form-check-input" type="checkbox" id="atelierCheckbox" value="recyclage.atelier" (change)="updateRecyclage()">-->
+        <!--<label class="form-check-label" for="atelierCheckbox">Atelier de recyclage ?</label>-->
         <!--</div>-->
 
         <!--<div class="form-check form-check-inline">-->
-            <!--<input #griffesCrochetCheckbox class="form-check-input" type="checkbox" id="griffesCrochetCheckbox" value="recyclage.griffesCrochet" (change)="updateRecyclage()">-->
-            <!--<label class="form-check-label" for="griffesCrochetCheckbox">Griffes ou crochet ?</label>-->
+        <!--<input #griffesCrochetCheckbox class="form-check-input" type="checkbox" id="griffesCrochetCheckbox" value="recyclage.griffesCrochet" (change)="updateRecyclage()">-->
+        <!--<label class="form-check-label" for="griffesCrochetCheckbox">Griffes ou crochet ?</label>-->
         <!--</div>-->
         <!--<button type="button" class="btn btn-secondary" (click)="preset('z');">testt</button>-->
     </form>
@@ -47,7 +47,10 @@
     <wj-flex-grid-column header="Category" binding="Category" [width]="100"></wj-flex-grid-column>
     <wj-flex-grid-column header="Type" binding="Type" [width]="80"></wj-flex-grid-column>
     <wj-flex-grid-column header="Description" binding="Desc" [width]="200"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Poids" binding="Poids" [width]="50">
+    <wj-flex-grid-column header="Poids" binding="Poids" [width]="50" [aggregate]="1">
+        <ng-template wjFlexGridCellTemplate [cellType]="'Group'" let-cell="cell">
+            {{ cell.value }} min
+        </ng-template>
         <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
             {{ item.Poids }} min
         </ng-template>
@@ -57,5 +60,5 @@
     <wj-flex-grid-column header="Qualité" binding="Qualite" [dataMap]="dtmQuality" [width]="90"></wj-flex-grid-column>
     <wj-flex-grid-column header="Taille" binding="Taille" [width]="55"></wj-flex-grid-column>
     <wj-flex-grid-column header="Carats" binding="Carats" [width]="55" [aggregate]="1"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Localisation" binding="Localisation" [width]="150" [aggregate]="1"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Localisation" binding="Localisation" [width]="150"></wj-flex-grid-column>
 </qeos-grid>

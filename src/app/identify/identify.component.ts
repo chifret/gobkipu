@@ -111,6 +111,7 @@ export class IdentifyComponent implements OnInit {
 				this.cvMain.sortDescriptions.push(new SortDescription('Poids', false));
 				// group
 				this.cvMain.groupDescriptions.clear();
+				this.cvMain.groupDescriptions.push((new PropertyGroupDescription('Matiere') as GroupDescription));
 				// collapse
 				this.grid.collapseGroupsToLevel(this.grid.collectionView.groupDescriptions.slice().length);
 				break;
