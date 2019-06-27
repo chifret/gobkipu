@@ -39,7 +39,14 @@ export class ViewComponent {
 		{type: "Casque à cornes", value: 1},
 		{type: "Cagoule", value: 1},
 		{type: "Turban", value: 1},
+		{type: "Casque à pointes", value: 1},
+
+		{type: "Collier de dents", value: 1},
+		{type: "Collier à pointes", value: 1},
+
 		{type: "Toison", value: 1},
+
+		{type: "Targe", value: 1},
 	];
 
 	valuesMateriaux: { type: string, value: number }[] = [
@@ -81,10 +88,17 @@ export class ViewComponent {
 		{type: "Cadavre ", value: 3}
 	];
 
-	followers: string[] = ["Créature mécanique", "CrÃ©ature mÃ©canique", "Arme dansante", "Pixie", "Esprit rôdeur"];
+	followers: string[] = ["Créature mécanique", "CrÃ©ature mÃ©canique", "Arme dansante", "Pixie", "Esprit-rôdeur"];
 
 	@ViewChild("table", {static: true}) table: ElementRef;
 	@ViewChild("tooltip", {static: true}) tooltip: ElementRef;
+
+	private static setCellDist(cell: HTMLDivElement, minDist: number): number {
+		minDist = 20 - (Math.min(5, Math.max(0, minDist - 2)) * 2);
+		cell.style.width = minDist + "px";
+		cell.style.height = minDist + "px";
+		return minDist;
+	}
 
 	renderView(viewable: ViewableClass) {
 
@@ -93,6 +107,10 @@ export class ViewComponent {
 		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
 		(this.table.nativeElement as HTMLDivElement).style.width = "auto";
 		(this.table.nativeElement as HTMLDivElement).style.height = "auto";
+
+		console.log(this.viewable.viewerLevel);
+		console.log(this.viewable.viewerAllies);
+		console.log(this.viewable.viewerSearches);
 
 		for (let y = this.viewable.position.maxY; y >= this.viewable.position.minY; y--) {
 			let row = document.createElement("div") as HTMLDivElement;
@@ -113,18 +131,30 @@ export class ViewComponent {
 				// ------------------------------------------- créatures -------------------------------------------
 				let infoC: HTMLDivElement = null;
 				let minDist: number = null;
+				let maxLevel: number = null;
+				let isSearched = false;
 				let hasFollower = false;
 				let hasMonster = false;
 				this.viewable.creatures.forEach((creature) => {
 					if (creature.posX == x && creature.posY == y) {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - creature.posN);
+						const diffDist = Math.abs(this.viewable.position.avgPosN - creature.posN);
+						let diffLevel = null;
+						if (this.viewable.viewerLevel) {
+							diffLevel = creature.level - this.viewable.viewerLevel;
+						}
 						if (this.followers.indexOf(creature.race) > -1) {
 							hasFollower = true;
 						} else {
 							hasMonster = true;
+							if (maxLevel === null || maxLevel < diffLevel) {
+								maxLevel = diffLevel;
+							}
 						}
-						if (minDist === null || minDist > diffLevel) {
-							minDist = diffLevel;
+						if (minDist === null || minDist > diffDist) {
+							minDist = diffDist;
+						}
+						if (this.viewable.viewerSearches && this.viewable.viewerSearches.indexOf(creature.name) > -1) {
+							isSearched = true;
 						}
 						if (!infoC) {
 							infoC = document.createElement("div") as HTMLDivElement;
@@ -134,23 +164,40 @@ export class ViewComponent {
 							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
 								this.showMonsterInfo(e, x, y);
 							});
-							infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+							infoC.addEventListener("mouseleave", () => {
 								this.hideInfo();
 							});
 						}
 					}
 				});
 				if (infoC) {
-					let lang: number = this.setCellDist(infoC, minDist);
+					let lang: number = ViewComponent.setCellDist(infoC, minDist);
 					if (hasMonster) {
+						let red = "red";
+						if (maxLevel) {
+							if (maxLevel >= 8) {
+								red = "#a50f15";
+							} else if (maxLevel >= 0) {
+								red = "#cb181d";
+							} else if (maxLevel >= -8) {
+								red = "#ef3b2c";
+							} else if (maxLevel >= -18) {
+								red = "#fb6a4a";
+							} else {
+								red = "#fc9272";
+							}
+						}
 						if (hasFollower) {
 							lang = Math.sqrt(2 * (lang * lang)) / 2;
-							infoC.style.background = "repeating-linear-gradient(45deg, red, red " + lang + "px, aquamarine " + lang + "px, aquamarine " + 2 * lang + "px)";
+							infoC.style.background = "repeating-linear-gradient(45deg, " + red + ", " + red + " " + lang + "px, aquamarine " + lang + "px, aquamarine " + 2 * lang + "px)";
 						} else {
-							infoC.style.backgroundColor = "red";
+							infoC.style.backgroundColor = red;
 						}
 					} else {
 						infoC.style.backgroundColor = "aquamarine";
+					}
+					if (isSearched) {
+						infoC.style.boxShadow = "0px 0px 40px #ef3b2c, 0px 0px 40px #ef3b2c, 0px 0px 40px #ef3b2c";
 					}
 					cell.appendChild(infoC);
 				}
@@ -158,11 +205,21 @@ export class ViewComponent {
 				// ------------------------------------------- gobelins -------------------------------------------
 				infoC = null;
 				minDist = null;
+				let hasRegularGobs = false;
+				let hasAllies = false;
+				let hasGod = false;
 				this.viewable.gobelins.forEach((gobelin) => {
 					if (gobelin.posX == x && gobelin.posY == y) {
+						if (gobelin.num <= 14) {
+							hasGod = true;
+						} else if (viewable.viewerAllies && viewable.viewerAllies.indexOf(gobelin.num) > -1) {
+							hasAllies = true;
+						} else {
+							hasRegularGobs = true;
+						}
 						if (gobelin.dist == -1) {
 							cell.style.border = "1px solid white";
-							cell.style.boxShadow = "0px 0px 15px white";
+							cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
 						}
 						const diffLevel = Math.abs(this.viewable.position.avgPosN - gobelin.posN);
 						if (minDist === null || minDist > diffLevel) {
@@ -172,12 +229,11 @@ export class ViewComponent {
 							infoC = document.createElement("div") as HTMLDivElement;
 							infoC.style.position = "absolute";
 							infoC.style.top = "0";
-							infoC.style.backgroundColor = "greenyellow";
 							infoC.style.left = "0";
 							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
 								this.showGobInfo(e, x, y);
 							});
-							infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+							infoC.addEventListener("mouseleave", () => {
 								this.hideInfo();
 							});
 						}
@@ -185,7 +241,46 @@ export class ViewComponent {
 					}
 				});
 				if (infoC) {
-					this.setCellDist(infoC, minDist);
+					let lang: number = ViewComponent.setCellDist(infoC, minDist);
+					if (hasGod) {
+						if (hasAllies) {
+							if (hasRegularGobs) {
+								lang = Math.sqrt(2 * (lang * lang)) / 3;
+								infoC.style.background = "repeating-linear-gradient(45deg, limegreen, limegreen " + lang + "px, " +
+									"greenyellow " + lang + "px, greenyellow " + 2 * lang + "px," +
+									"white " + 2 * lang + "px, white " + 3 * lang + "px)";
+							} else {
+								lang = Math.sqrt(2 * (lang * lang)) / 2;
+								infoC.style.background = "repeating-linear-gradient(45deg, greenyellow, greenyellow " + lang + "px, white " + lang + "px, white " + 2 * lang + "px)";
+							}
+						} else {
+							if (hasRegularGobs) {
+								lang = Math.sqrt(2 * (lang * lang)) / 2;
+								infoC.style.background = "repeating-linear-gradient(45deg, limegreen, limegreen " + lang + "px, white " + lang + "px, white " + 2 * lang + "px)";
+							} else {
+								infoC.style.backgroundColor = "white";
+							}
+						}
+					} else {
+						if (hasAllies) {
+							if (hasRegularGobs) {
+								lang = Math.sqrt(2 * (lang * lang)) / 2;
+								infoC.style.background = "repeating-linear-gradient(45deg, limegreen, limegreen " + lang + "px, greenyellow " + lang + "px, greenyellow " + 2 * lang + "px)";
+							} else {
+								infoC.style.backgroundColor = "greenyellow";
+							}
+						} else {
+							if (hasRegularGobs) {
+								infoC.style.backgroundColor = "limegreen";
+							} else {
+								// cannot happens
+								console.log("I said it cannot happens");
+							}
+						}
+					}
+					if (hasGod) {
+						infoC.style.boxShadow = "0px 0px 15px white";
+					}
 					cell.appendChild(infoC);
 				}
 
@@ -233,14 +328,14 @@ export class ViewComponent {
 							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
 								this.showTreasorsInfo(e, x, y);
 							});
-							infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+							infoC.addEventListener("mouseleave", () => {
 								this.hideInfo();
 							});
 						}
 					}
 				});
 				if (infoC) {
-					this.setCellDist(infoC, minDist);
+					ViewComponent.setCellDist(infoC, minDist);
 					switch (maxValue) {
 						case 1:
 							infoC.style.backgroundColor = "#a98600";
@@ -253,11 +348,11 @@ export class ViewComponent {
 							break;
 						case 4:
 							infoC.style.backgroundColor = "#f8ed62";
-							infoC.style.boxShadow = "0px 0px 15px #fff9ae";
+							infoC.style.boxShadow = "0px 0px 15px #f8ed62";
 							break;
 						case 5:
 							infoC.style.backgroundColor = "#fff9ae";
-							infoC.style.boxShadow = "0px 0px 40px white";
+							infoC.style.boxShadow = "0px 0px 40px #f8ed62, 0px 0px 40px #f8ed62, 0px 0px 40px #f8ed62";
 							break;
 					}
 					cell.appendChild(infoC);
@@ -276,19 +371,19 @@ export class ViewComponent {
 							infoC = document.createElement("div") as HTMLDivElement;
 							infoC.style.position = "absolute";
 							infoC.style.bottom = "0";
-							infoC.style.backgroundColor = "green";
+							infoC.style.backgroundColor = "#8fa245";
 							infoC.style.right = "0";
 							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
 								this.showPlantsInfo(e, x, y);
 							});
-							infoC.addEventListener("mouseleave", (e: MouseEvent) => {
+							infoC.addEventListener("mouseleave", () => {
 								this.hideInfo();
 							});
 						}
 					}
 				});
 				if (infoC) {
-					this.setCellDist(infoC, minDist);
+					ViewComponent.setCellDist(infoC, minDist);
 					cell.appendChild(infoC);
 				}
 
@@ -308,7 +403,7 @@ export class ViewComponent {
 					cell.addEventListener("mouseenter", (e: MouseEvent) => {
 						this.showLieuxInfo(e, x, y);
 					});
-					cell.addEventListener("mouseleave", (e: MouseEvent) => {
+					cell.addEventListener("mouseleave", () => {
 						this.hideInfo();
 					});
 				}
@@ -384,13 +479,6 @@ export class ViewComponent {
 
 	hideInfo(): void {
 		(this.tooltip.nativeElement as HTMLDivElement).style.display = "none";
-	}
-
-	private setCellDist(cell: HTMLDivElement, minDist: number): number {
-		minDist = 20 - (Math.min(5, Math.max(0, minDist - 2)) * 2);
-		cell.style.width = minDist + "px";
-		cell.style.height = minDist + "px";
-		return minDist;
 	}
 
 	private setTooltip(e: MouseEvent, txt: string): void {

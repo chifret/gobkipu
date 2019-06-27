@@ -23,6 +23,9 @@ export class ViewableClass {
 	tresors: Map<number, TresorClass> = new Map();
 	lieux: Map<number, LieuxClass> = new Map();
 	plantes: Map<number, PlanteClass> = new Map();
+	viewerLevel: number = null;
+	viewerAllies: number[] = [];
+	viewerSearches: string[] = [];
 
 	constructor(
 		position: {
@@ -42,12 +45,18 @@ export class ViewableClass {
 		gobelins: Map<number, CreatureClass>,
 		tresors: Map<number, TresorClass>,
 		lieux: Map<number, LieuxClass>,
-		plantes: Map<number, PlanteClass>) {
+		plantes: Map<number, PlanteClass>,
+		viewerLevel: number = null,
+		viewerAllies: number[] = null,
+		viewerSearches: string[] = null) {
 		this.creatures = creatures;
 		this.lieux = lieux;
 		this.gobelins = gobelins;
 		this.plantes = plantes;
 		this.position = position;
 		this.tresors = tresors;
+		this.viewerLevel = viewerLevel;
+		this.viewerAllies = viewerAllies;
+		this.viewerSearches = viewerSearches;
 	}
 }

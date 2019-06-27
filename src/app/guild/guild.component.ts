@@ -21,7 +21,7 @@ export class GuildComponent implements OnInit {
 
 	lastId: number = null;
 
-	@ViewChild("viewComponent", { static: true }) viewComponent: ViewComponent;
+	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
 				private clanService: ClanService,
@@ -39,7 +39,21 @@ export class GuildComponent implements OnInit {
 
 	view(id: number, force = false) {
 		this.viewService.get(id, force).subscribe((res) => {
-			this.viewComponent.renderView(this.viewService.getViewable(res));
+			const viewable = this.viewService.getViewable(res);
+
+			const viewerSearches = ["Bulette"];
+			const viewerAllies: number[] = [];
+			this.guildMembers.forEach(guildMember => {
+				viewerAllies.push(guildMember.Id);
+				if (guildMember.Id == id) {
+					viewable.viewerLevel = guildMember.Niveau;
+				}
+			});
+
+			viewable.viewerAllies = viewerAllies;
+			viewable.viewerSearches = viewerSearches;
+
+			this.viewComponent.renderView(viewable);
 			this.processed = true;
 			this.lastId = id;
 		});

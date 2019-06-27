@@ -23,7 +23,7 @@ export class TeamComponent implements OnInit {
 
 	lastId: number = null;
 
-	@ViewChild("viewComponent", { static: true }) viewComponent: ViewComponent;
+	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
 				private meuteService: MeuteService,
@@ -41,7 +41,23 @@ export class TeamComponent implements OnInit {
 
 	view(id: number, force = false) {
 		this.viewService.get(id, force).subscribe((res) => {
-			this.viewComponent.renderView(this.viewService.getViewable(res));
+			const viewable = this.viewService.getViewable(res);
+
+			let viewerLevel = 0;
+			const viewerSearches = ["Bulette"];
+			const viewerAllies: number[] = [];
+			this.teamMembers.forEach(teamMember => {
+				viewerAllies.push(teamMember.Id);
+				viewerLevel += teamMember.Niveau;
+			});
+			viewerLevel = Math.round(viewerLevel / this.teamMembers.length) + Math.floor(this.teamMembers.length / 2);
+
+			viewable.viewerLevel = viewerLevel;
+			viewable.viewerAllies = viewerAllies;
+			viewable.viewerSearches = viewerSearches;
+
+			this.viewComponent.renderView(viewable);
+
 			this.processed = true;
 			this.lastId = id;
 		});
@@ -63,8 +79,23 @@ export class TeamComponent implements OnInit {
 						});
 					});
 			});
-		console.log(meuteView);
-		this.viewComponent.renderView(this.viewService.getViewable(meuteView));
+		const viewable = this.viewService.getViewable(meuteView);
+
+		let viewerLevel = 0;
+		const viewerSearches = ["Bulette"];
+		const viewerAllies: number[] = [];
+		this.teamMembers.forEach(teamMember => {
+			viewerAllies.push(teamMember.Id);
+			viewerLevel += teamMember.Niveau;
+		});
+		viewerLevel = Math.round(viewerLevel / this.teamMembers.length) + Math.floor(this.teamMembers.length / 2);
+
+		viewable.viewerLevel = viewerLevel;
+		viewable.viewerAllies = viewerAllies;
+		viewable.viewerSearches = viewerSearches;
+
+		this.viewComponent.renderView(viewable);
+
 		this.processed = true;
 		this.lastId = -1;
 	}
