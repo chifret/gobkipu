@@ -7,6 +7,7 @@ import { LoginComponent } from "./login/login.component";
 import { TeamComponent } from "./team/team.component";
 import { CopyPasteViewComponent } from "./view/copypaste-view.component";
 import {GuildComponent} from "./guild/guild.component";
+import {ProfileComponent} from "app/profile/profile.component";
 
 export const routes: Routes = [
     {
@@ -37,6 +38,10 @@ export const routes: Routes = [
         path: "login",
         component: LoginComponent
     },
+	{
+		path: "profile/:id",
+		component: ProfileComponent
+	},
     {
         path: "",
 		redirectTo: "/team",

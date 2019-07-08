@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 
 import {LoginService} from '../core/services/login.service';
-import {ClanService} from '../core/services/clan/clan.service';
+import {GuildService} from 'app/core/services/clan/guild.service';
 import {ViewComponent} from '../view/view.component';
 import {ViewService} from '../core/services/view/view.service';
 import {GobsTypings} from "../core/typings/gobs.typings";
@@ -24,7 +24,7 @@ export class GuildComponent implements OnInit {
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
-				private clanService: ClanService,
+				private clanService: GuildService,
 				private viewService: ViewService) {
 		this.getData(false);
 	};
@@ -128,7 +128,7 @@ export class GuildComponent implements OnInit {
 
 	private update() {
 		if (this.guildMembers) {
-			this.guildMembers = ClanService.update(this.guildMembers);
+			this.guildMembers = GuildService.update(this.guildMembers);
 		}
 		setTimeout(() => {
 			this.update()

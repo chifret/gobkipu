@@ -14,7 +14,7 @@ import {DlaUtils} from "../../utils/business/dla.utils";
 
 
 @Injectable()
-export class ClanService extends Service {
+export class GuildService extends Service {
 
 	numerics = ["CT", "Id", "IdClan", "N", "Niveau", "PA", "PI", "PV", "PX", "PXPerso", "X", "Y", "Z"];
 	floats = [];
@@ -46,7 +46,7 @@ export class ClanService extends Service {
 					}
 				}
 			}
-			gobs.push(ClanService.enrichment(gob));
+			gobs.push(GuildService.enrichment(gob));
 		}
 		return gobs;
 	}
@@ -62,7 +62,7 @@ export class ClanService extends Service {
 	static update(items: GobsTypings[]): GobsTypings[] {
 		if (items) {
 			for (let i = 0; i < items.length; i++) {
-				items[i] = ClanService.enrichment(items[i]);
+				items[i] = GuildService.enrichment(items[i]);
 			}
 			localStorage.setItem("clanmembres", JSON.stringify(items));
 		}
@@ -77,7 +77,7 @@ export class ClanService extends Service {
 			// console.log("get distant");
 			return combineLatest(this.get1(), this.get2())
 				.pipe(map(([one, two]) => {
-					const json = ClanService.concat(one, two);
+					const json = GuildService.concat(one, two);
 					localStorage.setItem("clanmembres", JSON.stringify(json));
 					return json;
 				}));

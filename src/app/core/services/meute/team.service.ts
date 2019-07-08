@@ -14,7 +14,7 @@ import {DlaUtils} from "../../utils/business/dla.utils";
 
 
 @Injectable()
-export class MeuteService extends Service {
+export class TeamService extends Service {
 
 	numerics = ["CT", "Id", "IdMeute", "N", "Niveau", "PA", "PI", "PV", "PX", "PXPerso", "X", "Y", "Z"];
 	floats = [];
@@ -46,7 +46,7 @@ export class MeuteService extends Service {
 					}
 				}
 			}
-			gobs.push(MeuteService.enrichment(gob));
+			gobs.push(TeamService.enrichment(gob));
 		}
 		return gobs;
 	}
@@ -102,7 +102,7 @@ export class MeuteService extends Service {
 	static update(items: GobsTypings[]): GobsTypings[] {
 		if (items) {
 			for (let i = 0; i < items.length; i++) {
-				items[i] = MeuteService.enrichment(items[i]);
+				items[i] = TeamService.enrichment(items[i]);
 			}
 			localStorage.setItem("meutemembres", JSON.stringify(items));
 		}
@@ -117,7 +117,7 @@ export class MeuteService extends Service {
 			// console.log("get distant");
 			return combineLatest(this.get1(), this.get2())
 				.pipe(map(([one, two]) => {
-					const json = MeuteService.concat(one, two);
+					const json = TeamService.concat(one, two);
 					localStorage.setItem("meutemembres", JSON.stringify(json));
 					return json;
 				}));

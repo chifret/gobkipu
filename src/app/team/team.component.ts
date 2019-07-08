@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 
 import {LoginService} from '../core/services/login.service';
-import {MeuteService} from '../core/services/meute/meute.service';
+import {TeamService} from 'app/core/services/meute/team.service';
 import {ViewComponent} from '../view/view.component';
 import {ViewService} from '../core/services/view/view.service';
 import {ViewTyping} from '../core/typings/view.typings';
@@ -26,7 +26,7 @@ export class TeamComponent implements OnInit {
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
-				private meuteService: MeuteService,
+				private meuteService: TeamService,
 				private viewService: ViewService) {
 		this.getData(false);
 	};
@@ -171,7 +171,7 @@ export class TeamComponent implements OnInit {
 
 	private update() {
 		if (this.teamMembers) {
-			this.teamMembers = MeuteService.update(this.teamMembers);
+			this.teamMembers = TeamService.update(this.teamMembers);
 		}
 		setTimeout(() => {
 			this.update()

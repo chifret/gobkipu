@@ -1,0 +1,87 @@
+<h1>{{ gob.Nom }}</h1>
+<p>
+    <small>{{ gob.Race }} {{ gob.Niveau }}</small>
+</p>
+<table>
+    <tr>
+        <td>Durée DLA</td>
+        <td>{{ gob.DLADuration }}</td>
+    </tr>
+    <tr>
+        <td>Poids mathos</td>
+        <td>{{ gob.BPDLA }}</td>
+    </tr>
+    <tr>
+        <td>Bonus</td>
+        <td>{{ gob.BMDLA }}</td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>Next DLA</td>
+        <td>{{ gob.DLA | date:'dd/MM/yyyy HH:mm' }}</td>
+    </tr>
+    <tr>
+        <td>Over Next DLA</td>
+        <td>{{ gob.nextDLA | date:'dd/MM/yyyy HH:mm' }}</td>
+    </tr>
+    <tr>
+        <td>Position</td>
+        <td>{{ gob.X }} / {{ gob.Y }} / {{ gob.N }}</td>
+    </tr>
+</table>
+<hr/>
+<table>
+    <tr>
+        <td>Carac</td>
+        <td>Valeur
+        <td>Détail</td>
+        <td>Moyenne</td>
+    </tr>
+    <tr>
+        <td>Vue</td>
+        <td>{{ gob.PER + gob.BPPER + gob.BMPER }}
+        <td>
+            <small>{{ gob.PER }} + {{ gob.BPPER }} + {{ gob.BMPER }}</small>
+        </td>
+    </tr>
+    <tr>
+        <td>Points de vie</td>
+        <td>{{ gob.PV }} / {{ gob.PVMax + gob.BPPVMax + gob.BMPVMax }}</td>
+        <td>
+            <small>{{ gob.PVMax }} + {{ gob.BPPVMax }} + {{ gob.BMPVMax }}</small>
+        </td>
+    </tr>
+    <tr>
+        <td>Régénération</td>
+        <td>{{ gob.REG }} d3 + {{ gob.BPREG + gob.BMREG }}</td>
+        <td>
+            <small>{{ gob.REG }} d3 + {{ gob.BPREG }} + {{ gob.BMREG }}</small>
+        </td>
+        <td>{{ gob.REG * 2 + gob.BPREG + gob.BMREG }}</td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>Attaque</td>
+        <td>{{ gob.ATT }} d6 + {{ gob.BPATT + gob.BMATT }}</td>
+        <td>
+            <small>{{ gob.ATT }} d6 + {{ gob.BPATT }} + {{ gob.BMATT }}</small>
+        </td>
+        <td>{{ gob.ATT * 3.5 + gob.BPATT + gob.BMATT }}</td>
+    </tr>
+    <tr>
+        <td>Esquive</td>
+        <td>{{ gob.ESQ }} d6 + {{ gob.BPESQ + gob.BMESQ }}</td>
+        <td>
+            <small>{{ gob.ESQ }} d6 + {{ gob.BPESQ }} + {{ gob.BMESQ }}</small>
+        </td>
+        <td>{{ gob.ESQ * 3.5 + gob.BPESQ + gob.BMESQ }}</td>
+    </tr>
+    <tr>
+        <td>Dégâts</td>
+        <td>{{ gob.DEG }} d3 + {{ gob.BPDEG + gob.BMDEG }}</td>
+        <td>
+            <small>{{ gob.DEG }} d3 + {{ gob.BPDEG }} + {{ gob.BMDEG }}</small>
+        </td>
+        <td>{{ gob.DEG * 2 + gob.BPDEG + gob.BMDEG }} / {{ (gob.DEG * 2 + gob.BPDEG + gob.BMDEG) * 1.5 }}</td>
+    </tr>
+</table>

@@ -25,13 +25,14 @@ import {PlacesService} from './core/services/places/places.service';
 import {GuildplacesService} from './core/services/identify/guildplaces.service';
 import {ItemsService} from './core/services/identify/items.service';
 import {LoginService} from './core/services/login.service';
-import {MeuteService} from './core/services/meute/meute.service';
+import {TeamService} from 'app/core/services/meute/team.service';
 import {CopyPasteViewComponent} from './view/copypaste-view.component';
 import {ViewService} from './core/services/view/view.service';
 import {QeosGridComponent} from './core/components/QeosGrid/qeosgrid.component';
 import {QeosGridPanelsComponent} from './core/components/QeosGridPanels/qeosgridpanels.component';
 import {RecyclageService} from "./core/services/identify/recyclage.service";
-import {ClanService} from "./core/services/clan/clan.service";
+import {GuildService} from "app/core/services/clan/guild.service";
+import {ProfileComponent} from "app/profile/profile.component";
 
 @NgModule({
 	imports: [
@@ -56,15 +57,16 @@ import {ClanService} from "./core/services/clan/clan.service";
 		LoginComponent,
 		WjFilterPanelComponent,
 		QeosGridComponent,
-		QeosGridPanelsComponent
+		QeosGridPanelsComponent,
+		ProfileComponent
 	],
 	providers: [
 		PlacesService,
 		GuildplacesService,
 		ItemsService,
 		LoginService,
-		MeuteService,
-		ClanService,
+		TeamService,
+		GuildService,
 		ViewService,
 		RecyclageService
 	],
