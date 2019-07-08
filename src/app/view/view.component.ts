@@ -1,97 +1,34 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 
 import {ViewableClass} from "../core/classes/viewable.class";
+import {AssetssService} from "app/core/services/assets/assets.service";
+import {Subscription} from "rxjs";
+import {SubscriptionUtils} from "app/core/utils/subscription.utils";
 
 @Component({
 	selector: 'view-component',
 	templateUrl: './view.component.html'
 })
-export class ViewComponent {
+export class ViewComponent implements OnDestroy {
 
 	viewable: ViewableClass;
 	processed = false;
-
-	values: { type: string, value: number }[] = [
-		{type: "Corps", value: 1},
-		{type: "Parchemin", value: 5},
-		{type: "Outil", value: 2},
-		{type: "Nourriture", value: 2},
-		{type: "Anneau", value: 4},
-		{type: "Bijou", value: 4},
-		{type: "CT", value: 1},
-		{type: "Potion", value: 2},
-		{type: "Talisman", value: 1},
-		{type: "Casque", value: 1},
-		{type: "Armure", value: 3},
-		{type: "Bottes", value: 3},
-		{type: "Baguette", value: 3},
-		{type: "Bouclier", value: 3},
-		{type: "Arme 1 Main", value: 3},
-		{type: "Arme 2 mains", value: 3},
-		{type: "Un tas de Canines de Trõll", value: 2},
-		{type: "Une poignée de Canines de Trõll", value: 1},
-
-		{type: "Rondin", value: 2},
-		{type: "Cuir", value: 2},
-		{type: "Tissus", value: 2},
-		{type: "Tas de Terre", value: 2},
-
-		{type: "Casque à cornes", value: 1},
-		{type: "Cagoule", value: 1},
-		{type: "Turban", value: 1},
-		{type: "Casque à pointes", value: 1},
-
-		{type: "Collier de dents", value: 1},
-		{type: "Collier à pointes", value: 1},
-
-		{type: "Toison", value: 1},
-
-		{type: "Targe", value: 1},
-	];
-
-	valuesMateriaux: { type: string, value: number }[] = [
-		{type: " centaines de Canines de Trõll", value: 3},
-		{type: " en métal", value: 1},
-		{type: " en cuir", value: 1},
-		{type: " en cuir", value: 1},
-		{type: " Adamantium", value: 5},
-		{type: " Pierre", value: 2},
-		{type: " Fer", value: 2},
-		{type: " Argent", value: 5},
-		{type: "d'Argent", value: 5},
-		{type: " Cuivre", value: 5},
-		{type: " Mithril", value: 5},
-		{type: " Or", value: 5},
-		{type: "d'Or", value: 5},
-		{type: " Etain", value: 5},
-		{type: "d'Etain", value: 5},
-		{type: "Diamant", value: 5},
-		{type: "Emeraude", value: 5},
-		{type: "Obsidienne", value: 5},
-		{type: "Opale", value: 5},
-		{type: "Rubis", value: 5},
-		{type: "Saphir", value: 5},
-		{type: " de la Viverne", value: 5},
-		{type: " du Centaure", value: 5},
-		{type: " du Titan", value: 5},
-		{type: " du Sphinx", value: 5},
-		{type: " du Lézard Géant", value: 5},
-		{type: " du Griffon", value: 5},
-		{type: " du Minotaure", value: 5},
-		{type: " de l'Oni", value: 5},
-		{type: " du Golem", value: 5},
-		{type: " du Galopin", value: 5},
-		{type: " du Dragon", value: 5},
-		{type: " du Phoenix", value: 5},
-		{type: " de l'Ombre", value: 5},
-		{type: " de Maître", value: 5},
-		{type: "Cadavre ", value: 3}
-	];
-
-	followers: string[] = ["Créature mécanique", "CrÃ©ature mÃ©canique", "Arme dansante", "Pixie", "Esprit-rôdeur"];
-
 	@ViewChild("table", {static: true}) table: ElementRef;
 	@ViewChild("tooltip", {static: true}) tooltip: ElementRef;
+	protected readonly namePartToMaterialSubscription: Subscription = null;
+	protected namePartToMaterial: { name: string, material: string, value: number }[] = null;
+	protected readonly nameToMaterialSubscription: Subscription = null;
+	protected nameToMaterial: Map<string, { material: string, value: number }> = null;
+	protected followers: string[] = ["Créature mécanique", "Arme dansante", "Pixie", "Esprit-rôdeur"];
+
+	constructor(protected assetsService: AssetssService) {
+		this.namePartToMaterialSubscription = this.assetsService.getNamePartToMatrial().subscribe(data => {
+			this.namePartToMaterial = data;
+		});
+		this.nameToMaterialSubscription = this.assetsService.getNameToMatrial().subscribe(data => {
+			this.nameToMaterial = data;
+		})
+	}
 
 	private static setCellDist(cell: HTMLDivElement, minDist: number): number {
 		minDist = 20 - (Math.min(5, Math.max(0, minDist - 2)) * 2);
@@ -100,17 +37,17 @@ export class ViewComponent {
 		return minDist;
 	}
 
-	renderView(viewable: ViewableClass) {
+	ngOnDestroy(): void {
+		SubscriptionUtils.unsubs(this.namePartToMaterialSubscription);
+		SubscriptionUtils.unsubs(this.nameToMaterialSubscription);
+	}
 
+	renderView(viewable: ViewableClass) {
 		this.viewable = viewable;
 		(this.table.nativeElement as HTMLDivElement).innerHTML = "";
 		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
 		(this.table.nativeElement as HTMLDivElement).style.width = "auto";
 		(this.table.nativeElement as HTMLDivElement).style.height = "auto";
-
-		console.log(this.viewable.viewerLevel);
-		console.log(this.viewable.viewerAllies);
-		console.log(this.viewable.viewerSearches);
 
 		for (let y = this.viewable.position.maxY; y >= this.viewable.position.minY; y--) {
 			let row = document.createElement("div") as HTMLDivElement;
@@ -294,27 +231,26 @@ export class ViewComponent {
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
 						}
-						let itemValue = 2;
+						let itemValue = 3;
 
 						let found = false;
-						for (let v = 0; v < this.valuesMateriaux.length; v++) {
-							if (tresor.name.indexOf(this.valuesMateriaux[v].type) > -1) {
-								found = true;
-								itemValue = this.valuesMateriaux[v].value;
-								break;
-							}
+						let tmp = this.nameToMaterial.get(tresor.name);
+						if (tmp) {
+							found = true;
+							itemValue = tmp.value;
 						}
+
 						if (!found) {
-							for (let v = 0; v < this.values.length; v++) {
-								if (tresor.name === this.values[v].type) {
+							for (let v = 0; v < this.namePartToMaterial.length; v++) {
+								if (tresor.name.indexOf(this.namePartToMaterial[v].name) > -1) {
 									found = true;
-									itemValue = this.values[v].value;
+									itemValue = this.namePartToMaterial[v].value;
 									break;
 								}
 							}
 						}
 						if (!found) {
-							console.log(tresor.name);
+							console.log(tresor.name + " not listed !");
 						}
 
 						if (!maxValue || maxValue < itemValue) {
@@ -337,6 +273,9 @@ export class ViewComponent {
 				if (infoC) {
 					ViewComponent.setCellDist(infoC, minDist);
 					switch (maxValue) {
+						case 0:
+							infoC.style.backgroundColor = "#7f5f00";
+							break;
 						case 1:
 							infoC.style.backgroundColor = "#a98600";
 							break;
@@ -417,12 +356,8 @@ export class ViewComponent {
 			scale = (this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50);
 		}
 		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(" + scale + ")";
-		// console.log(this.table.nativeElement);
-		// console.log((this.table.nativeElement as HTMLDivElement).parentElement);
-		// (this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.table.nativeElement as HTMLDivElement).clientHeight * scale + "px";
 		(this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.viewable.position.maxY - this.viewable.position.minY + 1) * 50 * scale + "px";
 		(this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
-		//(this.table.nativeElement as HTMLDivElement).style.height = (this.table.nativeElement as HTMLDivElement).clientHeight * scale + "px";
 
 		this.processed = true;
 	}

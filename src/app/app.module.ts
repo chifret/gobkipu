@@ -33,6 +33,7 @@ import {QeosGridPanelsComponent} from './core/components/QeosGridPanels/qeosgrid
 import {RecyclageService} from "./core/services/identify/recyclage.service";
 import {GuildService} from "app/core/services/clan/guild.service";
 import {ProfileComponent} from "app/profile/profile.component";
+import {AssetssService} from "app/core/services/assets/assets.service";
 
 @NgModule({
 	imports: [
@@ -68,7 +69,8 @@ import {ProfileComponent} from "app/profile/profile.component";
 		TeamService,
 		GuildService,
 		ViewService,
-		RecyclageService
+		RecyclageService,
+		AssetssService
 	],
 	entryComponents: [
 		QeosGridPanelsComponent,

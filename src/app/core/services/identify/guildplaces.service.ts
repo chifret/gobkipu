@@ -1,4 +1,4 @@
-import {Injectable, Injector} from "@angular/core";
+import {Injectable, Injector, OnDestroy} from "@angular/core";
 import {Observable} from 'rxjs/Rx';
 
 import {Service} from "../service";
@@ -6,9 +6,12 @@ import {CsvUtils} from "../../utils/csv.utils";
 import {GuildPlaceItemsTypings} from "../../typings/guildplaceitems.typings";
 import {LoginService} from "../login.service";
 import {RecyclageService} from "./recyclage.service";
+import {AssetssService} from "app/core/services/assets/assets.service";
+import {Subscription} from "rxjs";
+import {SubscriptionUtils} from "app/core/utils/subscription.utils";
 
 @Injectable()
-export class GuildplacesService extends Service {
+export class GuildplacesService extends Service implements OnDestroy {
 
 	recyclage: { niveau: number, atelier: boolean, crochetGriffe: boolean };
 	numerics = ["Id", "Poids", "Prix", "Qualite", "Taille"];
@@ -111,236 +114,35 @@ export class GuildplacesService extends Service {
 			[9, {name: "Parchemin inconnu", stars: 5, material: null}]
 		])]
 	]);
-	nameToExpectedMaterial: Map<string, string> = new Map([
-		["Anapside", "???"],
-		["Anneau Barbare", null],
-		["Anneau de Courage", "Argent"],
-		["Anneau de dureté", "Argent"],
-		["Anneau de Protection", "???"],
-		["Anneau de Sagesse", "Argent"],
-		["Anneau de Savoir", "Argent"],
-		["Anneau de voyage", "???"],
-		["Anneau Spirituel", "Argent"],
-		["Anneau Trollique", "???"],
-		["Bague de fiançailles", "???"],
-
-		//["Cimeterre en Pierre", "Pierre"],
-		//["Coutelas en Pierre", "Pierre"],
-		["Coutelas en os", "Fer"],
-		["Crochet", "Fer"],
-		["Dague", "Fer"],
-		["Epée bâtarde", "Fer"],
-		["Epée courte", "Fer"],
-		["Epée de bois", "Bois"],
-		["Epée longue", "Fer"],
-		["Epieu", "Bois"],
-		["Fléau d'armes", "Fer"],
-		["Fouet", "Cuir"],
-		["Gantelet", "Fer"],
-		["Gourdin", "Bois"],
-		["Gourdin clouté", "Bois"],
-		["Griffes", "Fer"],
-		["Grosse racine", "Bois"],
-		["Hache d'armes", "Fer"],
-		["Hache de guerre naine", "Fer"],
-		["Hache de lancer", "Fer"],
-		["Hachette", "Fer"],
-		["Kama", "Fer"],
-		//["Lame en Pierre", "Pierre"],
-		["Lame d'os", "Composant"],
-		["Machette", "Fer"],
-		["Marteau de guerre", "Bois"],
-		["Masse d'arme", "Bois"],
-		["Morgenstern", "Fer"],
-		["Pic", "Fer"],
-		["Torche", "Bois"],
-
-		["Arbalète composite", "Bois"],
-		["Arbalète légère", "Bois"],
-		["Arbalète lourde", "Bois"],
-		["Arc composite", "Bois"],
-		["Arc court", "Bois"],
-		["Arc long", "Bois"],
-		["Baton de combat", "Fer"],
-		["Bâton de feu", "Fer"],
-		["Bâton lesté", "Bois"],
-		["Bâtons de parade", "Bois"],
-		["Chaîne cloutée", "Fer"],
-		["Epée à deux mains", "Fer"],
-		["Espadon", "Fer"],
-		["Faux", "Fer"],
-		["Grande hache", "Fer"],
-		["Hache de bataille", "Fer"],
-		//["Hache de guerre en Pierre", "Pierre"],
-		["Hache de guerre en os", "Composant"],
-		["Hachoir en bois", "Bois"],
-		["Lance-feu", "Fer"],
-		["Massue trolle", "Bois"],
-		["Pioche", "Fer"],
-		["Vorpale", "Fer"],
-		["Vouge", "Fer"],
-
-		["Cape", "Tissus"],
-		["Culotte en cuir", "Cuir"],
-		["Robe de sorcier", "Tissus"],
-		["Tablier d'artisan", "Cuir"],
-		["Tunique", "Tissus"],
-		["Pagne en cuir", "Cuir"],
-		["Cotte d'ouvrier", "Fer"],
-		["Manteau de mage", "Tissus"],
-		["Manteau de sorcier", "Tissus"],
-		["Pagne de mailles", "Fer"],
-		["Toge", "Tissus"],
-		["Toison", "Composant"],
-		["Armure de cuir", "Cuir"],
-		["Brigandine", "Cuir"],
-		["Chemise d'Alowin", "Cuir"],
-		["Chemise d'ossements", "Composant"],
-		["Fourrure", "Composant"],
-		["Plastron", "Fer"],
-		["Chemise de mailles", "Fer"],
-		["Cuir bouilli", "Cuir"],
-		//["Cuirasse en Pierre", "Pierre"],
-		["Cuirasse", "Fer"],
-		["Gambison", "Cuir"],
-		["Tunique d'écailles", "Fer"],
-		["Armure de bois", "Bois"],
-		["Armure de peaux", "Composant"],
-		//["Armure en Pierre", "Pierre"],
-		["Cotte de mailles", "Fer"],
-		["Cuirasse d'écailles", "Fer"],
-		["Cuirasse d'ossements", "Composant"],
-		["Armure d'anneaux", "Fer"],
-		["Armure de plates", "Fer"],
-		["Clibanion", "Fer"],
-		["Crevice", "Fer"],
-		["Haubert d'ossements", "Composant"],
-		["Haubert de mailles", "Fer"],
-
-		["Baguette de Golbenstein", "Bois"],
-		["Baguette de Tsoin Tsoin", "Bois"],
-		["Baguette de Zénie", "Bois"],
-		["Noire Baguette", "Bois"],
-
-		["Ankh Spectral", "Argent"],
-		["Bijou-Fétiche", "Opale, Saphir, Adamantium"],
-		["Bijou-Totem", "Diamant, Rubis, Mithril"],
-		["Breloques Familiales", "Etain"],
-		["Bricole d'Alowin", "Or"],
-		["Collier des Anciens", "Argent"],
-		["Diadème Nébuleux", "Argent"],
-		["Fibule Champêtre", "Fer"],
-		["Magatama", "Fer"],
-		["Médaillon Protecteur", "Etain"],
-		["Menthalite", "Etain"],
-		["Pendentif-Chasseur", "Or"],
-		["Phalère Epineuse", "Cuivre"],
-		["Tiare Obscure", "Cuivre"],
-
-		["Bottes", "Cuir"],
-		//["Jambières en Pierre", "Pierre"],
-		["Jambières en bois", "Bois"],
-		["Jambières en cuir", "Cuir"],
-		["Jambières en fourrure", "Composant"],
-		["Jambières en mailles", "Fer"],
-		["Jambières en métal", "Fer"],
-		["Jambières en os", "Composant"],
-		["Sandales", "Cuir"],
-
-		["Aspis", "Bois"],
-		["Bouclier à pointes", "Fer"],
-		["Clipeus", "Cuir"],
-		["Ecu en bois", "Bois"],
-		["Ecu en métal", "Fer"],
-		["Egide", "Composant"],
-		//["Parma en Pierre", "Pierre"],
-		["Pavois en os", "Composant"],
-		//["Pavois en Pierre", "Pierre"],
-		["Peltè", "Bois"],
-		["Rondache en bois", "Bois"],
-		["Rondache en métal", "Fer"],
-		["Rondache en os", "Composant"],
-		["Targe", "Fer"],
-
-		["Bacinet", "Fer"],
-		["Barbute", "Fer"],
-		["Cagoule", "Tissus"],
-		["Casque à cornes", "Fer"],
-		["Casque à pointes", "Fer"],
-		["Casque en cuir", "Cuir"],
-		["Casque en métal", "Fer"],
-		["Casque en os", "Composant"],
-		["Cerebro", "Fer"],
-		["Chapeau pointu", "Tissus"],
-		["Heaume", "Fer"],
-		["Lorgnons", "Verre"],
-		["Masque d'Alowin", "Tissus"],
-		["Scalp", "Composant"],
-		["Turban", "Tissus"],
-
-		["Amulette magnétique ", "Fer"],
-		["Attrape-rêves", "Tissus"],
-		["Aurine", "Or"],
-		["Branches tressées", "Bois"],
-		["Cercle parfait", "Fer"],
-		["Colletin", "Fer"],
-		["Collier à fleurs", "Plante"],
-		["Collier à pointes", "Fer"],
-		["Collier de dents", "Composant"],
-		["Collier en os", "Composant"],
-		//["Collier en Pierre", "Pierre"],
-		["Gorgerin", "Fer"],
-		["Gorgeron en cuir", "Cuir"],
-		["Gorgeron en métal", "Fer"],
-		["Jaseran", "Fer"],
-		["Mâlâ", "Bois"],
-		["Parure d'ossements", "Composant"],
-		["Pectoral", "Fer"],
-		["Phylactère", "Fer"],
-		["Ruban d'Alowin", "Fer"],
-		//["Talisman en Pierre", "Pierre"],
-		//["Torque en Pierre", "Pierre"],
-
-		["Aiguille", "Fer"],
-		["Alambic", "???"],
-		["Ciseau à bois", "Bois"],
-		["Creuset", "Fer"],
-		["Hache de bucheron", "Fer"],
-		["Marteau de forgeron", "Fer"],
-		["Marteau de joaillier", "Fer"],
-		["Marteau de tailleur", "Pierre"],
-		["Poinçon", "Fer"]
-	]);
-	nameToExpectedMaterialContains = [
-		{name: "en Pierre", materiau: "Pierre"},
-		{name: "en Obsidienne", materiau: "Obsidienne"},
-		{name: "en Opale", materiau: "Opale"},
-		{name: "en Saphir", materiau: "Saphir"},
-		{name: "en Diamant", materiau: "Diamant"},
-		{name: "en Emeraude", materiau: "Emeraude"},
-		{name: "en Rubis", materiau: "Rubis"},
-		{name: "en Adamantium", materiau: "Adamantium"},
-		{name: "en Argent", materiau: "Argent"},
-		{name: "en Cuivre", materiau: "Cuivre"},
-		{name: "en Mithril", materiau: "Mithril"},
-		{name: "en Or", materiau: "Or"},
-		{name: "en Etain", materiau: "Etain"}
-	];
+	protected readonly namePartToMaterialSubscription: Subscription = null;
+	protected namePartToMaterial: { name: string, material: string, value: number }[] = null;
+	protected readonly nameToMaterialSubscription: Subscription = null;
+	protected nameToMaterial: Map<string, { material: string, value: number }> = null;
 
 	constructor(injector: Injector,
-				private recyclageService: RecyclageService) {
+				protected recyclageService: RecyclageService,
+				protected assetsService: AssetssService) {
 		super(injector);
 		this.recyclage = this.recyclageService.get()[0];
+		this.namePartToMaterialSubscription = this.assetsService.getNamePartToMatrial().subscribe(data => {
+			this.namePartToMaterial = data;
+		});
+		this.nameToMaterialSubscription = this.assetsService.getNameToMatrial().subscribe(data => {
+			this.nameToMaterial = data;
+		});
+	}
+
+	ngOnDestroy(): void {
+		SubscriptionUtils.unsubs(this.namePartToMaterialSubscription);
+		SubscriptionUtils.unsubs(this.nameToMaterialSubscription);
 	}
 
 	public get(force: boolean = false): Observable<GuildPlaceItemsTypings[]> {
 		if (localStorage.getItem("guildplaceitems") && !force) {
-			// console.log("get local");
 			const json = JSON.parse(localStorage.getItem("guildplaceitems"));
 			// this.enrichment(json);
 			return Observable.of(json);
 		} else {
-			// console.log("get distant");
 			const token = LoginService.getToken();
 			if (token) {
 				return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
@@ -463,11 +265,10 @@ export class GuildplacesService extends Service {
 			if (["Équipement", "Outil"].indexOf(json[i].Category) > -1) {
 				let mat = json[i].Matiere;
 				if (!mat) {
-					mat = this.nameToExpectedMaterial.get(json[i].Nom);
+					mat = this.nameToMaterial.get(json[i].Nom).material;
 					if (mat) {
 						json[i].Matiere = mat;
 					} else {
-						// TODO : anneau barbare
 						if (json[i].Nom == "Anneau Barbare") {
 							if (json[i].Desc.indexOf("ATT:+1") > -1) {
 								if (json[i].Desc.indexOf("DEG:+1")) {
@@ -489,10 +290,11 @@ export class GuildplacesService extends Service {
 					}
 				}
 				if (!mat) {
-					this.nameToExpectedMaterialContains.forEach((materialContained) => {
+					this.namePartToMaterial.forEach((materialContained) => {
 						if (json[i].Nom.indexOf(materialContained.name) > -1) {
-							mat = materialContained.materiau;
+							mat = materialContained.material;
 							json[i].Matiere = mat;
+							json[i].Stars = materialContained.value;
 						}
 					});
 				}

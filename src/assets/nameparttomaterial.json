@@ -1,0 +1,48 @@
+[
+	{"name": "Pierre", "material": "Pierre", "value": 2},
+    {"name": "Rondin", "material": "Pierre", "value": 2},
+    {"name": "Cuir", "material": "Pierre", "value": 2},
+    {"name": "Tissus", "material": "Pierre", "value": 2},
+    {"name": "Terre", "material": "Pierre", "value": 2},
+    {"name": "Pétrole", "material": "Mithril", "value": 5},
+    {"name": "Titane", "material": "Mithril", "value": 5},
+    {"name": "Sable", "material": "Mithril", "value": 5},
+    {"name": "Goudron", "material": "Mithril", "value": 5},
+
+	{"name": "Obsidienne", "material": "Obsidienne", "value": 5},
+	{"name": "Opale", "material": "Opale", "value": 5},
+	{"name": "Saphir", "material": "Saphir", "value": 5},
+	{"name": "Diamant", "material": "Diamant", "value": 5},
+	{"name": "Emeraude", "material": "Emeraude", "value": 5},
+	{"name": "Rubis", "material": "Rubis", "value": 5},
+	{"name": "Adamantium", "material": "Adamantium", "value": 5},
+	{"name": "Argent", "material": "Argent", "value": 5},
+	{"name": "Cuivre", "material": "Cuivre", "value": 5},
+	{"name": "Mithril", "material": "Mithril", "value": 5},
+	{"name": " Or", "material": "Or", "value": 5},
+    {"name": "d'Or", "material": "Or", "value": 5},
+	{"name": "Etain", "material": "Etain", "value": 5},
+
+    {"name": " en métal",  "material": "Fer", "value": 1},
+    {"name": " en cuir",  "material": "Cuir", "value": 1},
+    {"name": " en os",  "material": "Composant", "value": 2},
+
+    {"name": " de la Viverne", "material": null, "value": 5},
+    {"name": " du Centaure", "material": null, "value": 5},
+    {"name": " du Titan", "material": null, "value": 5},
+    {"name": " du Sphinx", "material": null, "value": 5},
+    {"name": " du Lézard Géant", "material": null, "value": 5},
+    {"name": " du Griffon", "material": null, "value": 5},
+    {"name": " du Minotaure", "material": null, "value": 5},
+    {"name": " de l'Oni", "material": null, "value": 5},
+    {"name": " du Golem", "material": null, "value": 5},
+    {"name": " du Galopin", "material": null, "value": 5},
+    {"name": " du Dragon", "material": null, "value": 5},
+    {"name": " du Phoenix", "material": null, "value": 5},
+    {"name": " de l'Ombre","material": null,  "value": 5},
+    {"name": " de Maître", "material": null, "value": 5},
+
+    {"name": " centaines de Canines de Trõll", "material": null, "value": 3},
+
+    {"name": "Cadavre ", "material": null, "value": 2}
+]
