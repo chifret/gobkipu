@@ -15,18 +15,18 @@ export class ViewComponent implements OnDestroy {
 	processed = false;
 	@ViewChild("table", {static: true}) table: ElementRef;
 	@ViewChild("tooltip", {static: true}) tooltip: ElementRef;
-	protected readonly namePartToMaterialSubscription: Subscription = null;
-	protected namePartToMaterial: { name: string, material: string, value: number }[] = null;
-	protected readonly nameToMaterialSubscription: Subscription = null;
-	protected nameToMaterial: Map<string, { material: string, value: number }> = null;
+	protected readonly namepartToItemSubscription: Subscription = null;
+	protected namepartToItem: { name: string, material: string, value: number }[] = null;
+	protected readonly nameToItemSubscription: Subscription = null;
+	protected nameToItem: Map<string, { material: string, value: number }> = null;
 	protected followers: string[] = ["Créature mécanique", "Arme dansante", "Pixie", "Esprit-rôdeur"];
 
 	constructor(protected assetsService: AssetssService) {
-		this.namePartToMaterialSubscription = this.assetsService.getNamePartToMatrial().subscribe(data => {
-			this.namePartToMaterial = data;
+		this.namepartToItemSubscription = this.assetsService.getNamepartToItem().subscribe(data => {
+			this.namepartToItem = data;
 		});
-		this.nameToMaterialSubscription = this.assetsService.getNameToMatrial().subscribe(data => {
-			this.nameToMaterial = data;
+		this.nameToItemSubscription = this.assetsService.getNameToItem().subscribe(data => {
+			this.nameToItem = data;
 		})
 	}
 
@@ -38,8 +38,8 @@ export class ViewComponent implements OnDestroy {
 	}
 
 	ngOnDestroy(): void {
-		SubscriptionUtils.unsubs(this.namePartToMaterialSubscription);
-		SubscriptionUtils.unsubs(this.nameToMaterialSubscription);
+		SubscriptionUtils.unsubs(this.namepartToItemSubscription);
+		SubscriptionUtils.unsubs(this.nameToItemSubscription);
 	}
 
 	renderView(viewable: ViewableClass) {
@@ -234,17 +234,17 @@ export class ViewComponent implements OnDestroy {
 						let itemValue = 3;
 
 						let found = false;
-						let tmp = this.nameToMaterial.get(tresor.name);
+						let tmp = this.nameToItem.get(tresor.name);
 						if (tmp) {
 							found = true;
 							itemValue = tmp.value;
 						}
 
 						if (!found) {
-							for (let v = 0; v < this.namePartToMaterial.length; v++) {
-								if (tresor.name.indexOf(this.namePartToMaterial[v].name) > -1) {
+							for (let v = 0; v < this.namepartToItem.length; v++) {
+								if (tresor.name.indexOf(this.namepartToItem[v].name) > -1) {
 									found = true;
-									itemValue = this.namePartToMaterial[v].value;
+									itemValue = this.namepartToItem[v].value;
 									break;
 								}
 							}

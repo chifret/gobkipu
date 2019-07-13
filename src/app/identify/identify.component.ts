@@ -1,7 +1,6 @@
 import {Component, ElementRef, Injector, OnInit, ViewChild} from '@angular/core';
 
-import {GuildplacesService} from './../core/services/identify/guildplaces.service';
-import {ItemsService} from '../core/services/identify/items.service';
+import {GuildplacesService} from 'app/core/services/identify/guildplaces.service';
 import {CollectionView, GroupDescription, PropertyGroupDescription, SortDescription} from 'wijmo/wijmo';
 import {Subscription} from 'rxjs';
 import {DataMap} from 'wijmo/wijmo.grid';
@@ -36,13 +35,8 @@ export class IdentifyComponent implements OnInit {
 	@ViewChild("griffesCrochetCheckbox", { static: false }) griffesCrochetCheckbox: ElementRef;
 
 	constructor(protected injector: Injector,
-				protected itemsService: ItemsService,
 				protected guildplacesService: GuildplacesService,
 				protected recyclageService: RecyclageService) {
-		this.subsMain = this.guildplacesService.get().subscribe((res) => {
-			this.cvMain = new CollectionView(res);
-		});
-		this.recyclage = recyclageService.get()[0];
 	}
 
 	initGrid() {
@@ -50,6 +44,11 @@ export class IdentifyComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.subsMain = this.guildplacesService.get().subscribe((res) => {
+			this.cvMain = new CollectionView(res);
+		});
+		this.recyclage = this.recyclageService.get()[0];
+
 		this.grid.filter.filterColumns = [
 			"Identifie", "Category", "Type", "Matiere", "Poids", "Localisation", "Qualite"
 		];
@@ -66,6 +65,7 @@ export class IdentifyComponent implements OnInit {
 		switch (preset) {
 			case "e":
 				// filter
+				// noinspection JSNonASCIINames,NonAsciiCharacters
 				this.grid.filter.filterDefinition = JSON.stringify({
 					"defaultFilterType": 3,
 					"filters": [
@@ -117,6 +117,7 @@ export class IdentifyComponent implements OnInit {
 				break;
 			case "r":
 				// filter
+				// noinspection JSNonASCIINames,NonAsciiCharacters
 				this.grid.filter.filterDefinition = JSON.stringify({
 					"defaultFilterType": 3,
 					"filters": [
@@ -137,6 +138,7 @@ export class IdentifyComponent implements OnInit {
 				break;
 			case "m":
 				// filter
+				// noinspection JSNonASCIINames,NonAsciiCharacters
 				this.grid.filter.filterDefinition = JSON.stringify({
 					"defaultFilterType": 3,
 					"filters": [{"binding": "Category", "type": "value", "filterText": "", "showValues": {"Matériaux": true}}]
@@ -158,13 +160,13 @@ export class IdentifyComponent implements OnInit {
 		}
 		this.grid.select(0, 0);
 	}
-
-	updateRecyclage() {
-		console.log(this.niveauRecyclageInput.nativeElement.value + " " + this.atelierCheckbox.nativeElement.checked + " " + this.griffesCrochetCheckbox.nativeElement.checked);
-		this.recyclageService.set({
-			niveau: this.niveauRecyclageInput.nativeElement.value,
-			atelier: this.atelierCheckbox.nativeElement.checked,
-			crochetGriffe: this.griffesCrochetCheckbox.nativeElement.checked
-		});
-	}
+	//
+	// updateRecyclage() {
+	// 	console.log(this.niveauRecyclageInput.nativeElement.value + " " + this.atelierCheckbox.nativeElement.checked + " " + this.griffesCrochetCheckbox.nativeElement.checked);
+	// 	this.recyclageService.set({
+	// 		niveau: this.niveauRecyclageInput.nativeElement.value,
+	// 		atelier: this.atelierCheckbox.nativeElement.checked,
+	// 		crochetGriffe: this.griffesCrochetCheckbox.nativeElement.checked
+	// 	});
+	// }
 }

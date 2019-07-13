@@ -84,7 +84,7 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
         super.ngOnInit();
         this.setGridPanels();
         this.showMarquee = true;
-        this.showAlternatingRows = true;
+        this.alternatingRowStep = 2;
         this.showSelectedHeaders = HeadersVisibility.Column;
         this.isReadOnly = true;
 

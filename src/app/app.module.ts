@@ -34,6 +34,7 @@ import {RecyclageService} from "./core/services/identify/recyclage.service";
 import {GuildService} from "app/core/services/clan/guild.service";
 import {ProfileComponent} from "app/profile/profile.component";
 import {AssetssService} from "app/core/services/assets/assets.service";
+import {FollowersComponent} from "app/followers/followers.component";
 
 @NgModule({
 	imports: [
@@ -59,7 +60,8 @@ import {AssetssService} from "app/core/services/assets/assets.service";
 		WjFilterPanelComponent,
 		QeosGridComponent,
 		QeosGridPanelsComponent,
-		ProfileComponent
+		ProfileComponent,
+		FollowersComponent,
 	],
 	providers: [
 		PlacesService,

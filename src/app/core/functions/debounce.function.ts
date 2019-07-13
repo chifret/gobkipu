@@ -1,5 +1,3 @@
-"use strict";
-
 export function debounce(func: () => void, timer: any, wait = 50): any {
     clearTimeout(timer);
     return setTimeout(() => func(), wait);

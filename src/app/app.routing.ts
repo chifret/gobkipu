@@ -8,6 +8,7 @@ import { TeamComponent } from "./team/team.component";
 import { CopyPasteViewComponent } from "./view/copypaste-view.component";
 import {GuildComponent} from "./guild/guild.component";
 import {ProfileComponent} from "app/profile/profile.component";
+import {FollowersComponent} from "app/followers/followers.component";
 
 export const routes: Routes = [
     {
@@ -41,6 +42,10 @@ export const routes: Routes = [
 	{
 		path: "profile/:id",
 		component: ProfileComponent
+	},
+	{
+		path: "followers",
+		component: FollowersComponent
 	},
     {
         path: "",
