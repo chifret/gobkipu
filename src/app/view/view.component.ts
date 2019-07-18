@@ -93,6 +93,10 @@ export class ViewComponent implements OnDestroy {
 						if (this.viewable.viewerSearches && this.viewable.viewerSearches.indexOf(creature.name) > -1) {
 							isSearched = true;
 						}
+						if (creature.dist == -1) {
+							cell.style.border = "1px solid white";
+							cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
+						}
 						if (!infoC) {
 							infoC = document.createElement("div") as HTMLDivElement;
 							infoC.style.position = "absolute";
@@ -147,7 +151,7 @@ export class ViewComponent implements OnDestroy {
 				let hasGod = false;
 				this.viewable.gobelins.forEach((gobelin) => {
 					if (gobelin.posX == x && gobelin.posY == y) {
-						if (gobelin.num <= 14) {
+						if (gobelin.num > 0 && gobelin.num <= 14) {
 							hasGod = true;
 						} else if (viewable.viewerAllies && viewable.viewerAllies.indexOf(gobelin.num) > -1) {
 							hasAllies = true;

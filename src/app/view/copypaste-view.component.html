@@ -1,10 +1,16 @@
 <h1>Vue 2D</h1>
-<div *ngIf="!processed">
-    <h3>Copier-coller :</h3>
-    <textarea #textarea style="width: 600px; height: 300px;"></textarea>
-    <br />
-    <small class="form-text text-muted">Clic dans la fenêtre de vue Gobland, Ctrl+A, Ctrl+C, et Ctrl+V dans la zone texte ci-dessus.</small>
-    <br />
-    <button (click)="view()">Voir</button>
+<div [ngStyle]="{ 'display': processed ? 'none' : '' }">
+    <form>
+        <div class="form-group">
+            <label for="cc">Vue</label>
+            <textarea #textarea class="form-control" id="cc" rows="18"></textarea>
+            <small class="form-text text-muted">Clic dans la fenêtre de vue Gobland, Ctrl+A, Ctrl+C, et Ctrl+V dans la zone texte ci-dessus.</small>
+        </div>
+    </form>
+    <button (click)="view()" class="btn btn-primary">Voir</button>
 </div>
+
 <view-component #viewComponent></view-component>
+<!--<div [ngStyle]="{ 'display': !processed ? 'none' : '' }">-->
+<!--    <button (click)="reset()" class="btn btn-warning">Retour</button>-->
+<!--</div>-->

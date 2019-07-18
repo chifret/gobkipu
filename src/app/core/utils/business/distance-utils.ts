@@ -1,8 +1,12 @@
-import { PositionClass } from '../../classes/position.class';
+import {PositionClass} from '../../classes/position.class';
 
 export class DistanceUtils {
     static calculateTotalDistanceForElement(element: any, p1: PositionClass, p2: PositionClass, tp: boolean): void {
-        element.distance = DistanceUtils.calculateTotalDistance(p1, p2, tp);
+    	if(tp){
+			element.distanceTp = DistanceUtils.calculateTotalDistance(p1, p2, true);
+		}else{
+			element.distance = DistanceUtils.calculateTotalDistance(p1, p2, false);
+		}
     }
 
     static calculateTotalDistance(p1: PositionClass, p2: PositionClass, tp: boolean): number {

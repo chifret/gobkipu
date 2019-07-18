@@ -1,43 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 
-import {LoginService} from '../core/services/login.service';
 import {PlusminusEnum} from "app/core/enums/plusminus.enum";
 import {SkilllevelEnum} from "app/core/enums/skilllevel.enum";
 import {isEven, isOdd} from "app/core/functions/calculation.function";
+import {FollowersService} from "app/core/services/followers/followers.service";
 
 @Component({
 	selector: 'followers-component',
 	templateUrl: './followers.component.html'
 })
-export class FollowersComponent implements OnInit {
+export class FollowersComponent {
 
+	processed = false;
+	order: string = null;
+	usualGobView: number = null;
+	usualFollowerView: number = null;
+	@ViewChild("textarea", {static: false}) textarea: ElementRef;
 
-	constructor(private loginService: LoginService) {
+	constructor(protected followersService: FollowersService) {
+		this.usualGobView = followersService.getGobUsualView();
+		this.usualFollowerView = followersService.getFollowerUsualView();
 	};
 
-	ngOnInit(): void {
-		this.calculateSteps(
-			22,
-			7,
-			SkilllevelEnum.apprenti,
-			{x: 100, y: 100, n: 100},
-			{x: PlusminusEnum.plus, y: PlusminusEnum.plus, n: PlusminusEnum.plus}
-		);
-		// this.calculateSteps(
-		// 	3,
-		// 	0,
-		// 	SkilllevelEnum.apprenti,
-		// 	{x: 0, y: 0, n: 0},
-		// 	null
-		// );
-	}
-
-	calculateSteps(
+	private static calculateSteps(
 		_gobView: number,
 		_spyView: number,
 		skillLevel: SkilllevelEnum,
 		position: { x: number, y: number, n: number },
-		directiions: { x: PlusminusEnum, y: PlusminusEnum, n: PlusminusEnum }
+		directions: { x: PlusminusEnum, y: PlusminusEnum, n: PlusminusEnum }
 	): { x: number, y: number, n: number }[] {
 		let positions: { x: number, y: number, n: number }[] = [];
 
@@ -80,7 +70,7 @@ export class FollowersComponent implements OnInit {
 			x = 0;
 			y = 0;
 			xDir = +1;
-			yDir = -1;
+			yDir = +1;
 		} else if (isEven(outFloors) && isOdd(outFloorRows)) {
 			x = outFloorRows - 1;
 			y = 0;
@@ -95,9 +85,9 @@ export class FollowersComponent implements OnInit {
 
 		for (let i = 0; i < outFloorRows * outFloorRows * outFloors; i++) {
 			positions.push({
-				x: position.x + 1 + spyView.h + (spyView.h * 2 + 1) * x,
-				y: position.y + 1 + spyView.h + (spyView.h * 2 + 1) * y,
-				n: position.n + 1 + spyView.v + (spyView.v * 2 + 1) * n + gobView.v
+				x: position.x + (1 + spyView.h + (spyView.h * 2 + 1) * x) * (directions.x === PlusminusEnum.plus ? 1 : -1),
+				y: position.y + (1 + spyView.h + (spyView.h * 2 + 1) * y) * (directions.y === PlusminusEnum.plus ? 1 : -1),
+				n: position.n + (gobView.v + 1 + spyView.v + (spyView.v * 2 + 1) * n) * (directions.n === PlusminusEnum.plus ? 1 : -1)
 			});
 			y += yDir;
 			if (y < 0 || y > outFloorRows - 1) {
@@ -130,9 +120,9 @@ export class FollowersComponent implements OnInit {
 
 			if (isFirstPart) {
 				positions.push({
-					x: position.x + 1 + gobView.h + spyView.h + (spyView.h * 2 + 1) * x,
-					y: position.y + 1 + spyView.h + (spyView.h * 2 + 1) * y,
-					n: position.n + gobView.v - spyView.v - (spyView.v * 2 + 1) * (groundFloors - 1 - n)
+					x: position.x + (1 + gobView.h + spyView.h + (spyView.h * 2 + 1) * x) * (directions.x === PlusminusEnum.plus ? 1 : -1),
+					y: position.y + (1 + spyView.h + (spyView.h * 2 + 1) * y) * (directions.y === PlusminusEnum.plus ? 1 : -1),
+					n: position.n + (gobView.v - spyView.v - (spyView.v * 2 + 1) * (groundFloors - 1 - n)) * (directions.n === PlusminusEnum.plus ? 1 : -1)
 				});
 				x += xDir;
 				if (x < 0 || x > groundFloorsRows - 1) {
@@ -155,9 +145,9 @@ export class FollowersComponent implements OnInit {
 				}
 			} else {
 				positions.push({
-					x: position.x + gobView.h - spyView.h - (spyView.h * 2 + 1) * (x - (groundFloorsRowsRest - 1)),
-					y: position.y + 1 + gobView.h + spyView.h + (spyView.h * 2 + 1) * y,
-					n: position.n + gobView.v - spyView.v - (spyView.v * 2 + 1) * (groundFloors - 1 - n)
+					x: position.x + (gobView.h - spyView.h + (spyView.h * 2 + 1) * (x - (groundFloorsRowsRest - 1))) * (directions.x === PlusminusEnum.plus ? 1 : -1),
+					y: position.y + (1 + gobView.h + spyView.h + (spyView.h * 2 + 1) * y) * (directions.y === PlusminusEnum.plus ? 1 : -1),
+					n: position.n + (gobView.v - spyView.v - (spyView.v * 2 + 1) * (groundFloors - 1 - n)) * (directions.n === PlusminusEnum.plus ? 1 : -1)
 				});
 				x += xDir;
 				if (x < 0 || x > groundFloorsRowsRest - 1) {
@@ -172,7 +162,7 @@ export class FollowersComponent implements OnInit {
 					} else if (y > groundFloorsRows - 1) {
 						// go to part 1
 						isFirstPart = true;
-						x = groundFloorsRows - 1;
+						x = 0;
 						y = outFloorRows - 1;
 						xDir = 1;
 						yDir = -1;
@@ -192,5 +182,88 @@ export class FollowersComponent implements OnInit {
 		console.log(positions);
 
 		return positions;
+	}
+
+	reset(): void {
+		this.processed = false;
+		(this.textarea.nativeElement as HTMLTextAreaElement).innerHTML = "";
+	}
+
+	calculate(): void {
+		this.order = "";
+		const lines = (this.textarea.nativeElement as HTMLTextAreaElement).value
+			.replace(/Ã©/g, "é")
+			.replace(/Ã/g, "à")
+			.split('\n');
+
+		let success = false;
+		let position = {x: 0, y: 0, n: 0};
+		let skillLevel: SkilllevelEnum = null;
+		let direction = {x: PlusminusEnum.moins, y: PlusminusEnum.moins, n: PlusminusEnum.moins};
+		lines.forEach(line => {
+			line = line.trim();
+			if (line.indexOf("Vous AVEZ RÉUSSI à utiliser cette compétence en tant que ") > -1) {
+				line = line.substring(57, line.length);
+				line = line.substring(0, line.indexOf(" "));
+				console.log(line + "---");
+				switch (line) {
+					case "Apprenti":
+						skillLevel = SkilllevelEnum.apprenti;
+						break;
+					case "Compagnon":
+						skillLevel = SkilllevelEnum.compagnon;
+						break;
+					case "Maître":
+						skillLevel = SkilllevelEnum.maitre;
+						break;
+					case "Grand Maître":
+						skillLevel = SkilllevelEnum.grandMaitre;
+				}
+			} else if (line.indexOf("Vous êtiez en ") > -1) {
+				line = line.substring(14, line.length);
+				position.x = parseInt(line.substr(2, line.indexOf(" ") - 2));
+				line = line.substr(line.indexOf(" ") + 1, line.length);
+				position.y = parseInt(line.substr(2, line.indexOf(" ") - 2));
+				line = line.substr(line.indexOf(" ") + 1, line.length);
+				position.n = parseInt(line.substr(2, line.length));
+			} else if (line.indexOf("Vous avez trouvé la trace d'une plante hors de votre vue.") > -1) {
+				success = true;
+			} else if (line.indexOf("elle se trouve plus en ") > -1) {
+				line = line.substring(23, line.length);
+				let pos = line.substring(0, line.indexOf(","));
+				if (pos == "Osten") {
+					direction.x = PlusminusEnum.plus;
+				}
+				line = line.substring(pos.length + 10, line.length);
+				pos = line.substring(0, line.indexOf(","));
+				if (pos == "Nordi") {
+					direction.y = PlusminusEnum.plus;
+				}
+				line = line.substring(pos.length + 10, line.length - 1);
+				if (line == "Haut") {
+					direction.n = PlusminusEnum.plus;
+				}
+			}
+		});
+
+		if (!success) {
+			return;
+		}
+
+		this.followersService.setGobUsualView(this.usualGobView);
+		this.followersService.setFollowerUsualView(this.usualFollowerView);
+		const steps = FollowersComponent.calculateSteps(
+			this.usualGobView,
+			this.usualFollowerView,
+			skillLevel,
+			position,
+			direction
+		);
+
+		steps.forEach(step => {
+			this.order += "move(" + step.x + ", " + step.y + ", " + step.x + ");\r\n";
+			this.order += "scout();\r\n";
+		});
+		this.processed = true;
 	}
 }

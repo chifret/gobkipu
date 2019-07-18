@@ -35,6 +35,7 @@ import {GuildService} from "app/core/services/clan/guild.service";
 import {ProfileComponent} from "app/profile/profile.component";
 import {AssetssService} from "app/core/services/assets/assets.service";
 import {FollowersComponent} from "app/followers/followers.component";
+import {FollowersService} from "app/core/services/followers/followers.service";
 
 @NgModule({
 	imports: [
@@ -72,7 +73,8 @@ import {FollowersComponent} from "app/followers/followers.component";
 		GuildService,
 		ViewService,
 		RecyclageService,
-		AssetssService
+		AssetssService,
+		FollowersService
 	],
 	entryComponents: [
 		QeosGridPanelsComponent,

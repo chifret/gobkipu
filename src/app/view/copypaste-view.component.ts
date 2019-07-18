@@ -13,8 +13,8 @@ export class CopyPasteViewComponent {
 
 	processed = false;
 	viewable: ViewableClass;
-	@ViewChild("textarea", { static: false }) textarea: ElementRef;
-	@ViewChild("viewComponent", { static: true }) viewComponent: ViewComponent;
+	@ViewChild("textarea", {static: false}) textarea: ElementRef;
+	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
 	private static getNameAndNum(str: string): { name: string, num: number } {
 		try {
@@ -56,15 +56,22 @@ export class CopyPasteViewComponent {
 		lines.forEach(line => {
 			// todo dev
 			line = line.trim();
+			if (line == "") {
+				return;
+			}
 			let goOn = true;
-			if (line.indexOf("Créatures | Trésors | Lieux/Décors | Plantes") > 5) {
+			if (line.indexOf("Créatures | Trésors | Lieux") > 5) {
 				current = line.substr(0, line.indexOf("\t")).trim();
 				goOn = false;
 			}
 			if (goOn) {
 				switch (current) {
 					case null:
-						if (line.indexOf("Ma position actuelle est ") > -1) {
+						if (line.indexOf("a position actuelle est ") > -1) {
+							let isFollower = false;
+							if (line.indexOf("Sa position actuelle est ") > -1) {
+								isFollower = true;
+							}
 							line = line.substr(31, line.length);
 							posX = parseInt(line.substr(0, line.indexOf(",")));
 							line = line.substr(line.indexOf(",") + 6, line.length);
@@ -73,16 +80,26 @@ export class CopyPasteViewComponent {
 							posN = parseInt(line.substr(0, line.length));
 							const creatureTmp = new CreatureClass();
 							creatureTmp.dist = -1;
-							creatureTmp.num = 0;
+							creatureTmp.num = -1;
 							creatureTmp.level = 0;
-							creatureTmp.name = "Player";
-							creatureTmp.type = 1;
+							creatureTmp.race = "Créature mécanique";
+							creatureTmp.name = "YOU";
 							creatureTmp.posX = posX;
 							creatureTmp.posY = posY;
 							creatureTmp.posN = posN;
-							this.viewable.gobelins.set(creatureTmp.num, creatureTmp);
+							if (isFollower) {
+								creatureTmp.type = 0;
+								this.viewable.creatures.set(creatureTmp.num, creatureTmp);
+							} else {
+								creatureTmp.type = 1;
+								this.viewable.gobelins.set(creatureTmp.num, creatureTmp);
+							}
 						} else if (line.indexOf("L'affichage est limité à ") > -1) {
 							line = line.substr(25, line.length);
+							horiz = parseInt(line.substr(0, line.indexOf("cases horizontalement") - 1));
+							verti = parseInt(line.substr(line.indexOf("cases horizontalement") + 24, line.indexOf("verticalement") - 28));
+						} else if (line.indexOf("Sa vue porte à ") > -1) {
+							line = line.substr(15, line.length);
 							horiz = parseInt(line.substr(0, line.indexOf("cases horizontalement") - 1));
 							verti = parseInt(line.substr(line.indexOf("cases horizontalement") + 24, line.indexOf("verticalement") - 28));
 						}
@@ -111,24 +128,54 @@ export class CopyPasteViewComponent {
 		this.processed = true;
 	}
 
+	reset(): void {
+		this.processed = false;
+		(this.textarea.nativeElement as HTMLTextAreaElement).innerHTML = "";
+	}
+
 	private parseCreature(line: string): void {
 		try {
-			const cols = line.split("\t").map(item => item.trim());
-			const id = CopyPasteViewComponent.getNameAndNum(cols[2]);
-			if (!id.num) {
-				return;
-			}
-			if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
-				console.log(cols);
-				this.viewable.gobelins.set(id.num, {
-					dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
-					posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
-				})
+			const cols = this.lineSplit(line);
+			if (cols.length == 9) {
+				// gob view
+				const id = CopyPasteViewComponent.getNameAndNum(cols[2]);
+				if (!id.num) {
+					return;
+				}
+				if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
+					console.log(cols);
+					this.viewable.gobelins.set(id.num, {
+						dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
+						posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
+					})
+				} else {
+					this.viewable.creatures.set(id.num, {
+						dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
+						posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
+					});
+				}
 			} else {
-				this.viewable.creatures.set(id.num, {
-					dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
-					posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
-				});
+				// follower view
+				const id = CopyPasteViewComponent.getNameAndNum(cols[1]);
+				if (!id.num) {
+					return;
+				}
+				if (CreaturetypesUtils.creatureIsGob(cols[3], id.num)) {
+					console.log(cols);
+					this.viewable.gobelins.set(id.num, {
+						dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 1, race: cols[3], clan: null,
+						posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
+						// dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 1, race: cols[3], clan: cols[4],
+						// posX: parseInt(cols[5]), posY: parseInt(cols[6]), posN: parseInt(cols[7])
+					})
+				} else {
+					this.viewable.creatures.set(id.num, {
+						dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 0, race: cols[3], clan: null,
+						posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
+						// dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 0, race: cols[3], clan: cols[4],
+						// posX: parseInt(cols[5]), posY: parseInt(cols[6]), posN: parseInt(cols[7])
+					});
+				}
 			}
 		} catch (e) {
 			return null;
@@ -137,7 +184,7 @@ export class CopyPasteViewComponent {
 
 	private parseTresor(line: string): void {
 		try {
-			const cols = line.split("\t").map(item => item.trim());
+			const cols = this.lineSplit(line);
 			if (!parseInt(cols[1])) {
 				return;
 			}
@@ -152,7 +199,7 @@ export class CopyPasteViewComponent {
 
 	private parseLieux(line: string): void {
 		try {
-			const cols = line.split("\t").map(item => item.trim());
+			const cols = this.lineSplit(line);
 			if (!parseInt(cols[1])) {
 				return;
 			}
@@ -167,7 +214,7 @@ export class CopyPasteViewComponent {
 
 	private parsePlantes(line: string): void {
 		try {
-			const cols = line.split("\t").map(item => item.trim());
+			const cols = this.lineSplit(line);
 			if (!parseInt(cols[1])) {
 				return;
 			}
@@ -178,5 +225,23 @@ export class CopyPasteViewComponent {
 		} catch (e) {
 			return null;
 		}
+	}
+
+	private lineSplit(line: string): string[] {
+		var count = (line.match(/\t\t/g) || []).length;
+		console.log(count);
+
+
+		let cols: string[];
+		if (count > 2) {
+			cols = line.split("\t\t").map(item => item.trim());
+		} else {
+			cols = line.split("\t").map(item => item.trim());
+		}
+		// let cols2: string[];
+		// if(cols[1]==""){
+		// 	cols.splice(1, 1);
+		// }
+		return cols;
 	}
 }

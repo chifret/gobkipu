@@ -23,12 +23,19 @@ export class TravelTravelComponent extends TravelClass {
         && element.x != null && element.y != null && element.z != null
         && (p0 || (!p0 && element.z <= 0))
         && (m10 || (!m10 && element.z >= -20))) {
-        DistanceUtils.calculateTotalDistanceForElement(element, new PositionClass(element.x, element.y, element.z), currentPosition, tp);
+		  DistanceUtils.calculateTotalDistanceForElement(element, new PositionClass(element.x, element.y, element.z), currentPosition, true);
+        DistanceUtils.calculateTotalDistanceForElement(element, new PositionClass(element.x, element.y, element.z), currentPosition, false);
         this.placeSearch.push(element);
       }
     });
-    this.placeSearch.sort(function (a, b) {
-      return a.distance - b.distance;
-    });
+    if(tp){
+		this.placeSearch.sort(function (a, b) {
+			return a.distanceTp - b.distanceTp;
+		});
+	}else {
+		this.placeSearch.sort(function (a, b) {
+			return a.distance - b.distance;
+		});
+	}
   }
 }
