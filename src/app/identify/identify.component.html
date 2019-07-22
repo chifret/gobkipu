@@ -35,7 +35,7 @@
     </form>
 </div>
 <qeos-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()" style="font-size:11px!important;text-shadow:none!important;">
-    <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="60"></wj-flex-grid-column>
+    <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="50"></wj-flex-grid-column>
     <wj-flex-grid-column header="IdT" binding="Identifie" [width]="45"></wj-flex-grid-column>
     <wj-flex-grid-column header="Stars" binding="Stars" [width]="40"></wj-flex-grid-column>
     <wj-flex-grid-column header="Nom" binding="Nom" [width]="150">
@@ -44,10 +44,10 @@
         </ng-template>
     </wj-flex-grid-column>
     <!--<wj-flex-grid-column header="Expected" binding="Expected" [width]="180"></wj-flex-grid-column>-->
-    <wj-flex-grid-column header="Category" binding="Category" [width]="100"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Category" binding="Category" [width]="75"></wj-flex-grid-column>
     <wj-flex-grid-column header="Type" binding="Type" [width]="80"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Description" binding="Desc" [width]="200"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Poids" binding="Poids" [width]="50" [aggregate]="1">
+    <wj-flex-grid-column header="Description" binding="Desc" [width]="190"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Pds" binding="Poids" [width]="52" [aggregate]="1">
         <ng-template wjFlexGridCellTemplate [cellType]="'Group'" let-cell="cell">
             {{ cell.value }} min
         </ng-template>
@@ -57,8 +57,9 @@
     </wj-flex-grid-column>
     <wj-flex-grid-column header="Magie" binding="Magie" [visible]="false"></wj-flex-grid-column>
     <wj-flex-grid-column header="Matière" binding="Matiere" [width]="80"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Qualité" binding="Qualite" [dataMap]="dtmQuality" [width]="90"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Taille" binding="Taille" [width]="55"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Carats" binding="Carats" [width]="55" [aggregate]="1"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Localisation" binding="Localisation" [width]="150"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Qualité" binding="Qualite" [dataMap]="dtmQuality" [width]="65"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Taille" binding="Taille" [width]="46"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Carats" binding="Carats" [width]="46" [aggregate]="1"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Localisation" binding="Localisation" [width]="115"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Reservation" binding="Reservation" [width]="115"></wj-flex-grid-column>
 </qeos-grid>

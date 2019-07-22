@@ -26,13 +26,13 @@ export class IdentifyComponent implements OnInit {
 		{key: 2, value: "Moyenne"},
 		{key: 3, value: "Normale"},
 		{key: 4, value: "Bonne"},
-		{key: 5, value: "Exceptionnelle"}
+		{key: 5, value: "Except."}
 	], "key", "value");
 
-	@ViewChild("grid", { static: true }) grid: QeosGridComponent;
-	@ViewChild("niveauRecyclageInput", { static: false }) niveauRecyclageInput: ElementRef;
-	@ViewChild("atelierCheckbox", { static: false }) atelierCheckbox: ElementRef;
-	@ViewChild("griffesCrochetCheckbox", { static: false }) griffesCrochetCheckbox: ElementRef;
+	@ViewChild("grid", {static: true}) grid: QeosGridComponent;
+	@ViewChild("niveauRecyclageInput", {static: false}) niveauRecyclageInput: ElementRef;
+	@ViewChild("atelierCheckbox", {static: false}) atelierCheckbox: ElementRef;
+	@ViewChild("griffesCrochetCheckbox", {static: false}) griffesCrochetCheckbox: ElementRef;
 
 	constructor(protected injector: Injector,
 				protected guildplacesService: GuildplacesService,
@@ -160,6 +160,7 @@ export class IdentifyComponent implements OnInit {
 		}
 		this.grid.select(0, 0);
 	}
+
 	//
 	// updateRecyclage() {
 	// 	console.log(this.niveauRecyclageInput.nativeElement.value + " " + this.atelierCheckbox.nativeElement.checked + " " + this.griffesCrochetCheckbox.nativeElement.checked);

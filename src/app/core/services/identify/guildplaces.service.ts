@@ -57,15 +57,16 @@ export class GuildplacesService extends Service {
 
 	public get(force: boolean = false): Observable<GuildPlaceItemsTypings[]> {
 		// noinspection JSDeprecatedSymbols
-		return combineLatest(this.namepartToItemObs, this.nameToItemObs, this.weightToItemObs, (namepartToItemResult, nameToItemResult, weightToItemResult) => ({
-			namepartToItemResult,
-			nameToItemResult,
-			weightToItemResult
-		}))
+		return combineLatest([this.namepartToItemObs, this.nameToItemObs, this.weightToItemObs],
+			(namepartToItemResult, nameToItemResult, weightToItemResult) => ({
+				namepartToItemResult,
+				nameToItemResult,
+				weightToItemResult
+			}))
 			.switchMap(() => {
 				if (localStorage.getItem("guildplaceitems") && !force) {
 					const json = JSON.parse(localStorage.getItem("guildplaceitems"));
-					this.enrichment(json);
+					// this.enrichment(json);
 					return Observable.of(json);
 				} else {
 					const token = LoginService.getToken();
@@ -73,9 +74,9 @@ export class GuildplacesService extends Service {
 						return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
 							.map((res: any) => {
 								const json = CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-								// this.enrichment(json);
-								localStorage.setItem("guildplaceitems", JSON.stringify(json));
 								this.enrichment(json);
+								localStorage.setItem("guildplaceitems", JSON.stringify(json));
+								// this.enrichment(json);
 								return json;
 							});
 					} else {
@@ -87,6 +88,11 @@ export class GuildplacesService extends Service {
 
 	private enrichment(json: GuildPlaceItemsTypings[]): GuildPlaceItemsTypings[] {
 		for (let i = 0; i < json.length; i++) {
+
+			// fix réservation
+			if (json[i].Reservation === "Tout le monde") {
+				json[i].Reservation = "";
+			}
 
 			// fix rondins
 			if (json[i].Type === "Matériau" && json[i].Nom === "Rondin" && !json[i].Qualite) {
@@ -111,10 +117,26 @@ export class GuildplacesService extends Service {
 					json[i].Category = "Plante";
 					json[i].Taille = null;
 					json[i].Desc = null;
-					json[i].Stars = 3;
+					json[i].Stars = 2;
 					break;
 				}
-				case "Potion":
+				case "Potion": {
+					json[i].Category = json[i].Type;
+					json[i].Taille = null;
+					if (json[i].Identifie) {
+						const duration = json[i].Desc.substring(json[i].Desc.length - 1, json[i].Desc.length);
+						if (duration === "0" && json[i].Desc.indexOf("PV") == 0) {
+							// console.log(json[i].Desc);
+							// console.log(json[i].Desc.substring(4, json[i].Desc.indexOf("D3")));
+							json[i].Stars = Math.min(5, parseInt(json[i].Desc.substring(4, json[i].Desc.indexOf("D3"))) / 2);
+						} else {
+							json[i].Stars = Math.min(5, Math.max(1, parseInt(duration)));
+						}
+					} else {
+						json[i].Stars = 1;
+					}
+					break;
+				}
 				case "Spécial": {
 					json[i].Category = json[i].Type;
 					json[i].Taille = null;
@@ -123,12 +145,25 @@ export class GuildplacesService extends Service {
 				}
 				case "Outil":
 				case "Composant":
-				case "Corps":
-				case "Nourriture": {
+				case "Corps": {
 					json[i].Category = json[i].Type;
 					json[i].Taille = null;
 					json[i].Desc = null;
 					json[i].Stars = 1;
+					break;
+				}
+				case "Nourriture": {
+					json[i].Category = json[i].Type;
+					json[i].Taille = null;
+					json[i].Desc = null;
+					if (json[i].Id < 650000) {
+						json[i].Stars = 0;
+					} else {
+						json[i].Stars = 3;
+						if (["Rations réduites", "Rations de survie"].indexOf(json[i].Nom) > -1) {
+							json[i].Stars--;
+						}
+					}
 					break;
 				}
 				case "Parchemin": {
@@ -187,10 +222,16 @@ export class GuildplacesService extends Service {
 						json[i].Nom = tmp.get(json[i].Poids).name;
 						json[i].Stars = tmp.get(json[i].Poids).value;
 					} else {
-						json[i].Nom = "Cadavre inconnu";
+						json[i].Nom = "Cadavre inconnu (non listé)";
 						json[i].Stars = 2;
 					}
 				}
+			}
+
+			// identified corpses not listed
+			if (json[i].Identifie && json[i].Category == "Corps" && this.weightToItem.get(json[i].Type) && !this.weightToItem.get(json[i].Type).get(json[i].Poids)) {
+				json[i].Nom += " (non listé)";
+				json[i].Stars = 3;
 			}
 
 			// material carats
@@ -208,27 +249,30 @@ export class GuildplacesService extends Service {
 				if (mat) {
 					this.namepartToItem.forEach((materialContained) => {
 						if (json[i].Matiere.indexOf(materialContained.name) > -1) {
-							json[i].Stars = materialContained.value;
+							json[i].Stars = materialContained.value - 1;
 						}
 					});
 				} else {
 					const matTmp = this.nameToItem.get(json[i].Nom);
-					if (matTmp) {
+					if (matTmp && matTmp.material) {
 						json[i].Matiere = matTmp.material;
 						json[i].Stars = matTmp.value;
+						mat = matTmp.material;
 					} else {
+						console.log(json[i].Nom);
 						if (json[i].Nom == "Anneau Barbare") {
 							if (json[i].Desc.indexOf("ATT:+1") > -1) {
-								if (json[i].Desc.indexOf("DEG:+1")) {
+								if (json[i].Desc.indexOf("DEG:+1") > -1) {
 									json[i].Matiere = "Fer";
 									json[i].Stars = 1;
 									mat = "Fer";
 								} else {
 									json[i].Matiere = "???";
 									json[i].Stars = 4;
+									mat = "???";
 								}
 							} else {
-								if (json[i].Desc.indexOf("DEG:+1")) {
+								if (json[i].Desc.indexOf("DEG:+1") > -1) {
 									json[i].Matiere = "Etain";
 									json[i].Stars = 4;
 									mat = "Etain";
@@ -250,6 +294,7 @@ export class GuildplacesService extends Service {
 						}
 					});
 				}
+
 				if (mat) {
 					let factor = 1;
 					factor += (this.recyclage.niveau - 1) * 0.5;
@@ -274,6 +319,16 @@ export class GuildplacesService extends Service {
 
 					}
 				}
+			}
+
+			// template
+			if (json[i].Category == "Équipement" && json[i].Magie != "") {
+				console.log("-" + json[i].Magie + "-");
+				this.namepartToItem.forEach((materialContained) => {
+					if (json[i].Magie.indexOf(materialContained.name) > -1) {
+						json[i].Stars = materialContained.value;
+					}
+				});
 			}
 		}
 		return json;

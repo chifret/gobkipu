@@ -115,7 +115,7 @@ export class TeamService extends Service {
 			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
 		} else {
 			// console.log("get distant");
-			return combineLatest(this.get1(), this.get2())
+			return combineLatest([this.get1(), this.get2()])
 				.pipe(map(([one, two]) => {
 					const json = TeamService.concat(one, two);
 					localStorage.setItem("meutemembres", JSON.stringify(json));

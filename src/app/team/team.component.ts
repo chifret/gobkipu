@@ -72,7 +72,7 @@ export class TeamComponent implements OnInit {
 				meuteMembres.forEach((meuteMembre) => {
 					test.push(this.viewService.get(meuteMembre.Id, force));
 				});
-				combineLatest(...test)
+				combineLatest(test)
 					.subscribe((results: ViewTyping[][]) => {
 						results.forEach((result: ViewTyping[]) => {
 							meuteView.push(...result);

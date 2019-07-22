@@ -75,7 +75,7 @@ export class GuildService extends Service {
 			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("clanmembres"), this.dates));
 		} else {
 			// console.log("get distant");
-			return combineLatest(this.get1(), this.get2())
+			return combineLatest([this.get1(), this.get2()])
 				.pipe(map(([one, two]) => {
 					const json = GuildService.concat(one, two);
 					localStorage.setItem("clanmembres", JSON.stringify(json));

@@ -171,16 +171,6 @@ export class FollowersComponent {
 			}
 		}
 
-
-		// ======================= return =======================
-
-		console.log("vue de " + gobView.h + "/" + gobView.v);
-		console.log("suivant de " + spyView.h + "/" + spyView.v);
-		console.log("portée de " + skillView.h + "/" + skillView.v);
-		console.log(groundFloors + " étages au même niveau de " + groundFloorsRows + " rangs (partie restante : " + groundFloorsRowsRest + ")");
-		console.log(outFloors + " étages au niveau différent de " + outFloorRows + " rangs");
-		console.log(positions);
-
 		return positions;
 	}
 
@@ -205,7 +195,6 @@ export class FollowersComponent {
 			if (line.indexOf("Vous AVEZ RÉUSSI à utiliser cette compétence en tant que ") > -1) {
 				line = line.substring(57, line.length);
 				line = line.substring(0, line.indexOf(" "));
-				console.log(line + "---");
 				switch (line) {
 					case "Apprenti":
 						skillLevel = SkilllevelEnum.apprenti;
@@ -261,7 +250,7 @@ export class FollowersComponent {
 		);
 
 		steps.forEach(step => {
-			this.order += "move(" + step.x + ", " + step.y + ", " + step.x + ");\r\n";
+			this.order += "move(" + step.x + ", " + step.y + ", " + step.n + ");\r\n";
 			this.order += "scout();\r\n";
 		});
 		this.processed = true;
