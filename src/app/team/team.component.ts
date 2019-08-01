@@ -9,6 +9,7 @@ import {GobsTypings} from "../core/typings/gobs.typings";
 import {combineLatest} from "rxjs/observable/combineLatest";
 import {PastateEnum} from "../core/enums/pastate.enum";
 import {DlastateEnum} from "../core/enums/dlastate.enum";
+import {DatePipe} from "@angular/common";
 
 @Component({
 	selector: 'team-component',
@@ -19,7 +20,7 @@ export class TeamComponent implements OnInit {
 	processed = false;
 	busy = false;
 	text = "Refresh";
-	teamMembers: GobsTypings[] = [];
+	gobs: GobsTypings[] = [];
 
 	lastId: number = null;
 
@@ -27,6 +28,7 @@ export class TeamComponent implements OnInit {
 
 	constructor(private loginService: LoginService,
 				private meuteService: TeamService,
+				private datePipe: DatePipe,
 				private viewService: ViewService) {
 		this.getData(false);
 	};
@@ -46,11 +48,11 @@ export class TeamComponent implements OnInit {
 			let viewerLevel = 0;
 			const viewerSearches = ["Bulette"];
 			const viewerAllies: number[] = [];
-			this.teamMembers.forEach(teamMember => {
-				viewerAllies.push(teamMember.Id);
-				viewerLevel += teamMember.Niveau;
+			this.gobs.forEach(gob => {
+				viewerAllies.push(gob.Id);
+				viewerLevel += gob.Niveau;
 			});
-			viewerLevel = Math.round(viewerLevel / this.teamMembers.length) + Math.floor(this.teamMembers.length / 2);
+			viewerLevel = Math.round(viewerLevel / this.gobs.length) + Math.floor(this.gobs.length / 2);
 
 			viewable.viewerLevel = viewerLevel;
 			viewable.viewerAllies = viewerAllies;
@@ -84,11 +86,11 @@ export class TeamComponent implements OnInit {
 		let viewerLevel = 0;
 		const viewerSearches = ["Bulette"];
 		const viewerAllies: number[] = [];
-		this.teamMembers.forEach(teamMember => {
+		this.gobs.forEach(teamMember => {
 			viewerAllies.push(teamMember.Id);
 			viewerLevel += teamMember.Niveau;
 		});
-		viewerLevel = Math.round(viewerLevel / this.teamMembers.length) + Math.floor(this.teamMembers.length / 2);
+		viewerLevel = Math.round(viewerLevel / this.gobs.length) + Math.floor(this.gobs.length / 2);
 
 		viewable.viewerLevel = viewerLevel;
 		viewable.viewerAllies = viewerAllies;
@@ -169,9 +171,49 @@ export class TeamComponent implements OnInit {
 		}
 	}
 
+	showDetails(teamMember: GobsTypings): void {
+		teamMember.showDetails = !teamMember.showDetails;
+	}
+
+	getDateFromSeconds(seconds: number): string {
+		let moreThanADay = false;
+		if (seconds >= 86400) {
+			seconds -= 86400;
+			moreThanADay = true;
+		}
+		let sign = true;
+		if (seconds < 0) {
+			seconds = -seconds;
+			sign = false;
+		}
+		let date = new Date(1970, 0, 1);
+		date.setSeconds(seconds);
+
+		return (!sign ? "-" : "") + (moreThanADay ? this.datePipe.transform(date, "HH:mm:ss") + "j " : "") + this.datePipe.transform(date, "HH:mm:ss");
+	}
+
+	getTotalDateFromSeconds(dla: number, matos: number, bonus: number): string {
+		let moreThanADay = false;
+
+		let seconds = dla + Math.max(0, matos + bonus);
+		if (seconds >= 86400) {
+			seconds -= 86400;
+			moreThanADay = true;
+		}
+		let sign = true;
+		if (seconds < 0) {
+			seconds = -seconds;
+			sign = false;
+		}
+		let date = new Date(1970, 0, 1);
+		date.setSeconds(seconds);
+
+		return (!sign ? "-" : "") + (moreThanADay ? this.datePipe.transform(date, "HH:mm:ss") + "j " : "") + this.datePipe.transform(date, "HH:mm:ss");
+	}
+
 	private update() {
-		if (this.teamMembers) {
-			this.teamMembers = TeamService.update(this.teamMembers);
+		if (this.gobs) {
+			this.gobs = TeamService.update(this.gobs);
 		}
 		setTimeout(() => {
 			this.update()
@@ -181,7 +223,7 @@ export class TeamComponent implements OnInit {
 	private getData(force: boolean): void {
 		if (LoginService.isConnected()) {
 			this.meuteService.get(force).subscribe((res) => {
-				this.teamMembers = res;
+				this.gobs = res;
 			})
 		}
 	}

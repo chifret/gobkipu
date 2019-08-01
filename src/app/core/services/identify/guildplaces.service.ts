@@ -222,7 +222,7 @@ export class GuildplacesService extends Service {
 						json[i].Nom = tmp.get(json[i].Poids).name;
 						json[i].Stars = tmp.get(json[i].Poids).value;
 					} else {
-						json[i].Nom = "Cadavre inconnu (non listé)";
+						json[i].Nom = "Cadavre inconnu";
 						json[i].Stars = 2;
 					}
 				}

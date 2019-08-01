@@ -41,6 +41,10 @@ body {
     text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
 }
 
+table, .table {
+    color: #fff;
+}
+
 .cover-container {
     width: 1200px;
 }
@@ -133,8 +137,19 @@ td {
     .mobHide {
         display: none;
     }
+
     .nomobHide {
         display: initial;
     }
 }
 
+.no-border{
+    border: none;
+    width: 100%;
+}
+
+
+.no-border, .no-border td {
+    border: none;
+    padding: .05rem .1rem;
+}

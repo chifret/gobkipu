@@ -1,5 +1,5 @@
 <h1>Meute</h1>
-<div *ngIf="teamMembers">
+<div *ngIf="gobs">
     <div class="form-group">
         <button type="button" class="btn btn-primary mb-2" (click)="refresh()" [disabled]="busy">{{text}}</button>
     </div>
@@ -20,45 +20,163 @@
                 <small><a href="javascript:void(0)" (click)="viewAll()">Vue<br/>générale</a></small>
             </th>
         </tr>
-        <tr *ngFor="let teamMember of teamMembers">
-            <td>
-                <b>{{ teamMember.Nom }}</b>
-                <span class="mobHide"><br/><small>({{ teamMember.Id }}) {{ teamMember.Tribu }} {{ teamMember.Niveau }}</small></span>
-            </td>
-            <td style="padding: 0;">
-                <div #pv style="width: 100%; border: 0; position:relative">
-                    <div style="width: 100%; height: 31px; padding: 2px;"
-                         [style.width.%]="(teamMember.PV / teamMember.PVMax) * 100"
-                         [style.backgroundColor]="getPVColor(teamMember.PV, teamMember.PVMax)">
+        <ng-container *ngFor="let gob of gobs">
+            <tr>
+                <td>
+                    <b (click)="showDetails(gob)">{{ gob.Nom }}</b>
+                    <span class="mobHide"><br/><small>({{ gob.Id }}) {{ gob.Tribu }} {{ gob.Niveau }}</small></span>
+                </td>
+                <td style="padding: 0;">
+                    <div #pv style="width: 100%; border: 0; position:relative">
+                        <div style="width: 100%; height: 31px; padding: 2px;"
+                             [style.width.%]="(gob.PV / gob.PVMax) * 100"
+                             [style.backgroundColor]="getPVColor(gob.PV, gob.PVMax)">
+                        </div>
+                        <div style="width: 100%; height: 31px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px; position: absolute; top: 0;">
+                            <span style="display: block;">{{ gob.PV }}<span class="mobHide"> / {{ gob.PVMax }}</span></span>
+                        </div>
                     </div>
-                    <div style="width: 100%; height: 31px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px; position: absolute; top: 0;">
-                        <span style="display: block;">{{ teamMember.PV }}<span class="mobHide"> / {{ teamMember.PVMax }}</span></span>
+                    <div #faim style="width: 100%; border: 0;">
+                        <div style="width: 100%; height:25px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px;"
+                             [style.backgroundColor]="getHungerColor(gob.Faim)">
+                            <small style="display: block;">{{ gob.Faim }}</small>
+                        </div>
                     </div>
-                </div>
-                <div #faim style="width: 100%; border: 0;">
-                    <div style="width: 100%; height:25px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px;"
-                         [style.backgroundColor]="getHungerColor(teamMember.Faim)">
-                        <small style="display: block;">{{ teamMember.Faim }}</small>
+                </td>
+                <td>{{ gob.X }} / {{ gob.Y }} / {{ gob.N }}</td>
+                <td [style.backgroundColor]="getPAColor(gob.paState)">{{ gob.PA }}</td>
+                <td>
+                    <span class="mobHide">{{ gob.DLA | date:'dd/MM/yyyy HH:mm' }}</span>
+                    <span class="nomobHide">{{ gob.DLA | date:'HH:mm' }}</span>
+                    <br/>
+                    <small>
+                        <span class="mobHide">{{ gob.nextDLA | date:'dd/MM/yyyy HH:mm' }}</span>
+                        <span class="nomobHide">{{ gob.nextDLA | date:'HH:mm' }}</span>
+                        <span *ngIf="gob.dlaState>0"> - <span [style.color]="getDLAColor(gob.dlaState)">■</span></span>
+                    </small>
+                </td>
+                <td>
+                    <a href="javascript:void(0)" (click)="view(gob.Id)">Vue</a>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="7" [ngStyle]="{'display': (gob.showDetails?'':'none')}">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <table class="no-border">
+                                    <tr>
+                                        <td style="text-align: left;">Durée DLA</td>
+                                        <td style="text-align: right;">{{ getDateFromSeconds(gob.DLADuration) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Poids mathos</td>
+                                        <td style="text-align: right;">{{ getDateFromSeconds(gob.BPDLA) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Bonus</td>
+                                        <td style="text-align: right;">{{ getDateFromSeconds(gob.BMDLA) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Blessures</td>
+                                        <!--                                        <td style="text-align: right;">{{ getDateFromSeconds(gob.BMDLA) }}</td>-->
+                                        <td style="text-align: right;">??:??:??</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Durée totale</td>
+                                        <td style="text-align: right;">{{ getTotalDateFromSeconds(gob.DLADuration, gob.BPDLA, gob.BMDLA) }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm">
+                                <table class="no-border">
+<!--                                    <tr>-->
+<!--                                        <td style="text-align: left;">Carac</td>-->
+<!--                                        <td>Valeur</td>-->
+<!--                                        <td>Moyenne</td>-->
+<!--                                    </tr>-->
+                                    <tr>
+                                        <td style="text-align: left;">Vue</td>
+                                        <td>{{ gob.PER }} + {{ gob.BPPER }} + {{ gob.BMPER }}
+                                        <td>
+                                            <small>{{ gob.PER + gob.BPPER + gob.BMPER }}</small>
+                                        </td>
+                                    </tr>
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td style="text-align: left;">PV</td>-->
+                                    <!--                                        <td>{{ gob.PVMax }} + {{ gob.BPPVMax }} + {{ gob.BMPVMax }}</td>-->
+                                    <!--                                        <td>-->
+                                    <!--                                            <small>{{ gob.PV }} / {{ gob.PVMax + gob.BPPVMax + gob.BMPVMax }}</small>-->
+                                    <!--                                        </td>-->
+                                    <!--                                    </tr>-->
+                                    <tr>
+                                        <td style="text-align: left;">Attaque</td>
+                                        <td>{{ gob.ATT }} d6 + {{ gob.BPATT }} + {{ gob.BMATT }}</td>
+                                        <td>
+                                            <small>{{ gob.ATT * 3.5 + gob.BPATT + gob.BMATT }}</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Dégâts</td>
+                                        <td>{{ gob.DEG }} d3 + {{ gob.BPDEG }} + {{ gob.BMDEG }}</td>
+                                        <td>
+                                            <small>{{ gob.DEG * 2 + gob.BPDEG + gob.BMDEG }} / {{ (gob.DEG * 2 + gob.BPDEG + gob.BMDEG) * 1.5 }}</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Armure</td>
+                                        <td>{{ gob.BPArm }} + {{ gob.BMArm }}</td>
+                                        <td>
+                                            <small>{{ gob.BPArm + gob.BMArm }}</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Esquive</td>
+                                        <td>{{ gob.ESQ }} d6 + {{ gob.BPESQ }} + {{ gob.BMESQ }}</td>
+                                        <td>
+                                            <small>{{ gob.ESQ * 3.5 + gob.BPESQ + gob.BMESQ }}</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: left;">Régén.</td>
+                                        <td>{{ gob.REG }} d3 + {{ gob.BPREG }} + {{ gob.BMREG }}</td>
+                                        <td>
+                                            <small>{{ gob.REG * 2 + gob.BPREG + gob.BMREG }}</small>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm">
+                                <table class="no-border">
+                                    <tr>
+                                        <td>Carac</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-sm">
+                                <table class="no-border">
+                                    <tr>
+                                        <td>Carac</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </td>
-            <td>{{ teamMember.X }} / {{ teamMember.Y }} / {{ teamMember.N }}</td>
-            <td [style.backgroundColor]="getPAColor(teamMember.paState)">{{ teamMember.PA }}</td>
-            <td>
-                <span class="mobHide">{{ teamMember.DLA | date:'dd/MM/yyyy HH:mm' }}</span>
-                <span class="nomobHide">{{ teamMember.DLA | date:'HH:mm' }}</span>
-                <br/>
-                <small>
-
-                    <span class="mobHide">{{ teamMember.nextDLA | date:'dd/MM/yyyy HH:mm' }}</span>
-                    <span class="nomobHide">{{ teamMember.nextDLA | date:'HH:mm' }}</span>
-                    <span *ngIf="teamMember.dlaState>0"> - <span [style.color]="getDLAColor(teamMember.dlaState)">■</span></span>
-                </small>
-            </td>
-            <td>
-                <a href="javascript:void(0)" (click)="view(teamMember.Id)">Vue</a>
-            </td>
-        </tr>
+                    <!--                    <div class="container">-->
+                    <!--                        <div class="row">-->
+                    <!--                            <div class="col">-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                    <!--                    <div class="container">-->
+                    <!--                        <div class="row">-->
+                    <!--                            <div class="col">-->
+                    <!--                            </div>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+                </td>
+            </tr>
+        </ng-container>
     </table>
 </div>
 <view-component #viewComponent></view-component>

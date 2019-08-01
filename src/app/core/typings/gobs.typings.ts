@@ -86,4 +86,5 @@ export class GobsTypings extends Gobs1Typings {
 	nextDLA: Date = null;
 	dlaState: DlastateEnum = null;
 	paState: PastateEnum = null;
+	showDetails: boolean = null;
 }

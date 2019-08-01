@@ -36,6 +36,7 @@ import {ProfileComponent} from "app/profile/profile.component";
 import {AssetssService} from "app/core/services/assets/assets.service";
 import {FollowersComponent} from "app/followers/followers.component";
 import {FollowersService} from "app/core/services/followers/followers.service";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
 	imports: [
@@ -65,6 +66,7 @@ import {FollowersService} from "app/core/services/followers/followers.service";
 		FollowersComponent,
 	],
 	providers: [
+		DatePipe,
 		PlacesService,
 		GuildplacesService,
 		ItemsService,
