@@ -119,10 +119,8 @@ export class CopyPasteViewComponent {
 				}
 			}
 		});
-		this.viewable.position.minX = posX - horiz;
-		this.viewable.position.maxX = posX + horiz;
-		this.viewable.position.minY = posY - horiz;
-		this.viewable.position.maxY = posY + horiz;
+		this.setPos(posX - horiz, posY - horiz);
+		this.setPos(posX + horiz, posY + horiz);
 		this.viewable.position.avgPosN = posN;
 		this.viewComponent.renderView(this.viewable);
 		this.processed = true;
@@ -136,12 +134,16 @@ export class CopyPasteViewComponent {
 	private parseCreature(line: string): void {
 		try {
 			const cols = this.lineSplit(line);
+			let x: number;
+			let y: number;
 			if (cols.length == 9) {
 				// gob view
 				const id = CopyPasteViewComponent.getNameAndNum(cols[2]);
 				if (!id.num) {
 					return;
 				}
+				x = parseInt(cols[6]);
+				y = parseInt(cols[7]);
 				if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
 					console.log(cols);
 					this.viewable.gobelins.set(id.num, {
@@ -160,23 +162,22 @@ export class CopyPasteViewComponent {
 				if (!id.num) {
 					return;
 				}
+				x = parseInt(cols[4]);
+				y = parseInt(cols[5]);
 				if (CreaturetypesUtils.creatureIsGob(cols[3], id.num)) {
 					console.log(cols);
 					this.viewable.gobelins.set(id.num, {
 						dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 1, race: cols[3], clan: null,
 						posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
-						// dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 1, race: cols[3], clan: cols[4],
-						// posX: parseInt(cols[5]), posY: parseInt(cols[6]), posN: parseInt(cols[7])
 					})
 				} else {
 					this.viewable.creatures.set(id.num, {
 						dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 0, race: cols[3], clan: null,
 						posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
-						// dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 0, race: cols[3], clan: cols[4],
-						// posX: parseInt(cols[5]), posY: parseInt(cols[6]), posN: parseInt(cols[7])
 					});
 				}
 			}
+			this.setPos(x, y);
 		} catch (e) {
 			return null;
 		}
@@ -188,10 +189,13 @@ export class CopyPasteViewComponent {
 			if (!parseInt(cols[1])) {
 				return;
 			}
+			const x = parseInt(cols[3]);
+			const y = parseInt(cols[4]);
 			this.viewable.tresors.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
-				posX: parseInt(cols[3]), posY: parseInt(cols[4]), posN: parseInt(cols[5])
+				posX: x, posY: y, posN: parseInt(cols[5])
 			});
+			this.setPos(x, y);
 		} catch (e) {
 			return null;
 		}
@@ -203,10 +207,13 @@ export class CopyPasteViewComponent {
 			if (!parseInt(cols[1])) {
 				return;
 			}
+			const x = parseInt(cols[4]);
+			const y = parseInt(cols[5]);
 			this.viewable.lieux.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]), type: cols[3],
-				posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
+				posX: x, posY: y, posN: parseInt(cols[6])
 			});
+			this.setPos(x, y);
 		} catch (e) {
 			return null;
 		}
@@ -218,10 +225,13 @@ export class CopyPasteViewComponent {
 			if (!parseInt(cols[1])) {
 				return;
 			}
+			const x = parseInt(cols[3]);
+			const y = parseInt(cols[4]);
 			this.viewable.plantes.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
-				posX: parseInt(cols[3]), posY: parseInt(cols[4]), posN: parseInt(cols[5])
+				posX: x, posY: y, posN: parseInt(cols[5])
 			});
+			this.setPos(x, y);
 		} catch (e) {
 			return null;
 		}
@@ -243,5 +253,20 @@ export class CopyPasteViewComponent {
 		// 	cols.splice(1, 1);
 		// }
 		return cols;
+	}
+
+	private setPos(x: number, y: number): void {
+		if (!this.viewable.position.minX || x < this.viewable.position.minX) {
+			this.viewable.position.minX = x;
+		}
+		if (!this.viewable.position.maxX || x > this.viewable.position.maxX) {
+			this.viewable.position.maxX = x;
+		}
+		if (!this.viewable.position.minY || y < this.viewable.position.minY) {
+			this.viewable.position.minY = y;
+		}
+		if (!this.viewable.position.maxY || y > this.viewable.position.maxY) {
+			this.viewable.position.maxY = y;
+		}
 	}
 }

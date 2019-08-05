@@ -332,23 +332,32 @@ export class ViewComponent implements OnDestroy {
 
 				// ------------------------------------------- lieux -------------------------------------------
 				let color: string = null;
+				let hasTree=false;
+				let hasBuilding=false;
 				this.viewable.lieux.forEach((lieu) => {
 					if (lieu.posX == x && lieu.posY == y) {
 						if (lieu.name === "Arbre" && !color) {
-							color = "green";
+							hasTree=true;
 						} else {
-							color = "purple";
+							hasBuilding=true;
 						}
 					}
 				});
-				if (color) {
-					cell.style.backgroundColor = color;
+				if(hasTree || hasBuilding){
 					cell.addEventListener("mouseenter", (e: MouseEvent) => {
 						this.showLieuxInfo(e, x, y);
 					});
 					cell.addEventListener("mouseleave", () => {
 						this.hideInfo();
 					});
+					if(hasTree && hasBuilding){
+						let lang = Math.sqrt(2 * (50 * 50)) / 2;
+						cell.style.background = "repeating-linear-gradient(45deg, green, green " + lang + "px, purple " + lang + "px, purple " + 2 * lang + "px)";
+					}else if(hasTree){
+						cell.style.backgroundColor = "green";
+					}else{
+						cell.style.backgroundColor = "purple";
+					}
 				}
 			}
 		}
