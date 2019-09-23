@@ -33,7 +33,8 @@
                              [style.backgroundColor]="getPVColor(gob.PV, gob.PVMax)">
                         </div>
                         <div style="width: 100%; height: 31px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px; position: absolute; top: 0;">
-                            <span style="display: block;">{{ gob.PV }}<span class="mobHide"> / {{ gob.PVMax }}</span></span>
+                            <span style="display: block;">{{ gob.PV }}<span
+                                    class="mobHide"> / {{ gob.PVMax }}</span></span>
                         </div>
                     </div>
                     <div #faim style="width: 100%; border: 0;">
@@ -43,7 +44,10 @@
                         </div>
                     </div>
                 </td>
-                <td>{{ gob.X }} / {{ gob.Y }} / {{ gob.N }}</td>
+                <td>
+                    <small class="nomobHide">{{ gob.X }}/{{ gob.Y }}/{{ gob.N }}</small>
+                    <span class="mobHide">{{ gob.X }} / {{ gob.Y }} / {{ gob.N }}</span>
+                </td>
                 <td [style.backgroundColor]="getPAColor(gob.paState)">{{ gob.PA }}</td>
                 <td>
                     <span class="mobHide">{{ gob.DLA | date:'dd/MM/yyyy HH:mm' }}</span>
@@ -90,11 +94,11 @@
                             </div>
                             <div class="col-sm">
                                 <table class="no-border">
-<!--                                    <tr>-->
-<!--                                        <td style="text-align: left;">Carac</td>-->
-<!--                                        <td>Valeur</td>-->
-<!--                                        <td>Moyenne</td>-->
-<!--                                    </tr>-->
+                                    <!--                                    <tr>-->
+                                    <!--                                        <td style="text-align: left;">Carac</td>-->
+                                    <!--                                        <td>Valeur</td>-->
+                                    <!--                                        <td>Moyenne</td>-->
+                                    <!--                                    </tr>-->
                                     <tr>
                                         <td style="text-align: left;">Vue</td>
                                         <td>{{ gob.PER }} + {{ gob.BPPER }} + {{ gob.BMPER }}
@@ -120,7 +124,8 @@
                                         <td style="text-align: left;">Dégâts</td>
                                         <td>{{ gob.DEG }} d3 + {{ gob.BPDEG }} + {{ gob.BMDEG }}</td>
                                         <td>
-                                            <small>{{ gob.DEG * 2 + gob.BPDEG + gob.BMDEG }} / {{ (gob.DEG * 2 + gob.BPDEG + gob.BMDEG) * 1.5 }}</small>
+                                            <small>{{ gob.DEG * 2 + gob.BPDEG + gob.BMDEG }}
+                                                / {{ (gob.DEG * 2 + gob.BPDEG + gob.BMDEG) * 1.5 }}</small>
                                         </td>
                                     </tr>
                                     <tr>
@@ -180,4 +185,7 @@
     </table>
 </div>
 <view-component #viewComponent></view-component>
-<button *ngIf="lastId" (click)="refreshView()">Refresh vue</button>
+<button type="button" class="btn btn-primary" *ngIf="lastId" (click)="refreshView()">Refresh vue</button> &nbsp;
+<button type="button" class="btn btn-primary" *ngIf="lastId" (click)="getPickOrder()">Ordre de ramassage</button>
+<br/><br/>
+<textarea *ngIf="order" [(ngModel)]="order" class="form-control" id="res" rows="18"></textarea>

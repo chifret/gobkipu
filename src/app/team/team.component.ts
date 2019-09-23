@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from "@angular/core";
 
-import {LoginService} from '../core/services/login.service';
-import {TeamService} from 'app/core/services/meute/team.service';
-import {ViewComponent} from '../view/view.component';
-import {ViewService} from '../core/services/view/view.service';
-import {ViewTyping} from '../core/typings/view.typings';
+import {LoginService} from "../core/services/login.service";
+import {TeamService} from "app/core/services/meute/team.service";
+import {ViewComponent} from "../view/view.component";
+import {ViewService} from "../core/services/view/view.service";
+import {ViewTyping} from "../core/typings/view.typings";
 import {GobsTypings} from "../core/typings/gobs.typings";
 import {combineLatest} from "rxjs/observable/combineLatest";
 import {PastateEnum} from "../core/enums/pastate.enum";
@@ -12,8 +12,8 @@ import {DlastateEnum} from "../core/enums/dlastate.enum";
 import {DatePipe} from "@angular/common";
 
 @Component({
-	selector: 'team-component',
-	templateUrl: './team.component.html'
+	selector: "team-component",
+	templateUrl: "./team.component.html"
 })
 export class TeamComponent implements OnInit {
 
@@ -23,6 +23,7 @@ export class TeamComponent implements OnInit {
 	gobs: GobsTypings[] = [];
 
 	lastId: number = null;
+	order: string = null;
 
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
@@ -31,7 +32,7 @@ export class TeamComponent implements OnInit {
 				private datePipe: DatePipe,
 				private viewService: ViewService) {
 		this.getData(false);
-	};
+	}
 
 	ngOnInit(): void {
 		this.update();
@@ -67,10 +68,10 @@ export class TeamComponent implements OnInit {
 
 	// could not do it in service...
 	viewAll(force = false) {
-		let meuteView: ViewTyping[] = [];
+		const meuteView: ViewTyping[] = [];
 		this.meuteService.get()
 			.subscribe((meuteMembres) => {
-				let test = [];
+				const test = [];
 				meuteMembres.forEach((meuteMembre) => {
 					test.push(this.viewService.get(meuteMembre.Id, force));
 				});
@@ -113,52 +114,52 @@ export class TeamComponent implements OnInit {
 	getPAColor(state: PastateEnum): string {
 		switch (state) {
 			case PastateEnum.Usable:
-				return 'green';
+				return "green";
 			case PastateEnum.Urgent:
 			case PastateEnum.CumulableUrgent:
-				return 'darkorange';
+				return "darkorange";
 			case PastateEnum.VeryUrgent:
 			case PastateEnum.CumulableVeryUrgent:
-				return 'darkred';
+				return "darkred";
 			case PastateEnum.Cumulable:
-				return 'darkkhaki';
+				return "darkkhaki";
 			case PastateEnum.Unusable:
-				return 'black';
+				return "black";
 			default:
-				return 'none';
+				return "none";
 		}
 	}
 
 	getDLAColor(state: DlastateEnum): string {
 		switch (state) {
 			case DlastateEnum.Shortened:
-				return 'yellow';
+				return "yellow";
 			case DlastateEnum.ShouldDelayAtMidnight:
-				return 'magenta';
+				return "magenta";
 			case DlastateEnum.WaitForMidnight:
-				return 'lightblue';
+				return "lightblue";
 			case DlastateEnum.ShouldActivateBeforeMidnight:
-				return 'green';
+				return "green";
 			default:
-				return 'none';
+				return "none";
 		}
 	}
 
 	getPVColor(pv: number, pvMax: number): string {
 		const pourcent = pv / pvMax * 100;
 		if (pourcent >= 95) {
-			return 'lawngreen';
+			return "lawngreen";
 		} else if (pourcent >= 70) {
-			return 'yellow';
+			return "yellow";
 		} else if (pourcent >= 40) {
-			return 'orange';
+			return "orange";
 		} else {
-			return 'red';
+			return "red";
 		}
 	}
 
 	getHungerColor(hunger: number): string {
-		if (hunger == 0) {
+		if (hunger === 0) {
 			return "#333";
 		} else if (hunger <= 15) {
 			return "rebeccapurple";
@@ -171,8 +172,8 @@ export class TeamComponent implements OnInit {
 		}
 	}
 
-	showDetails(teamMember: GobsTypings): void {
-		teamMember.showDetails = !teamMember.showDetails;
+	showDetails(gob: GobsTypings): void {
+		gob.showDetails = !gob.showDetails;
 	}
 
 	getDateFromSeconds(seconds: number): string {
@@ -186,7 +187,7 @@ export class TeamComponent implements OnInit {
 			seconds = -seconds;
 			sign = false;
 		}
-		let date = new Date(1970, 0, 1);
+		const date = new Date(1970, 0, 1);
 		date.setSeconds(seconds);
 
 		return (!sign ? "-" : "") + (moreThanADay ? this.datePipe.transform(date, "HH:mm:ss") + "j " : "") + this.datePipe.transform(date, "HH:mm:ss");
@@ -205,7 +206,7 @@ export class TeamComponent implements OnInit {
 			seconds = -seconds;
 			sign = false;
 		}
-		let date = new Date(1970, 0, 1);
+		const date = new Date(1970, 0, 1);
 		date.setSeconds(seconds);
 
 		return (!sign ? "-" : "") + (moreThanADay ? this.datePipe.transform(date, "HH:mm:ss") + "j " : "") + this.datePipe.transform(date, "HH:mm:ss");
@@ -216,7 +217,7 @@ export class TeamComponent implements OnInit {
 			this.gobs = TeamService.update(this.gobs);
 		}
 		setTimeout(() => {
-			this.update()
+			this.update();
 		}, 30000);
 	}
 
@@ -224,7 +225,11 @@ export class TeamComponent implements OnInit {
 		if (LoginService.isConnected()) {
 			this.meuteService.get(force).subscribe((res) => {
 				this.gobs = res;
-			})
+			});
 		}
+	}
+
+	getPickOrder() {
+		this.order = this.viewComponent.getPickOrder();
 	}
 }

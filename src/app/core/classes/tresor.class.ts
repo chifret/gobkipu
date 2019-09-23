@@ -5,4 +5,5 @@ export class TresorClass {
 	posX: number;
 	posY: number;
 	posN: number;
+	value = 0;
 }

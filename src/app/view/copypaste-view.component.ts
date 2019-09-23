@@ -1,17 +1,18 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, ViewChild} from "@angular/core";
 
-import {ViewComponent} from './view.component';
+import {ViewComponent} from "./view.component";
 import {ViewableClass} from "../core/classes/viewable.class";
 import {CreaturetypesUtils} from "../core/utils/business/creaturetypes.utils";
 import {CreatureClass} from "../core/classes/creature.class";
 
 @Component({
-	selector: 'copypaste-view-component',
-	templateUrl: './copypaste-view.component.html'
+	selector: "copypaste-view-component",
+	templateUrl: "./copypaste-view.component.html"
 })
 export class CopyPasteViewComponent {
 
 	processed = false;
+	order: string = null;
 	viewable: ViewableClass;
 	@ViewChild("textarea", {static: false}) textarea: ElementRef;
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
@@ -30,7 +31,7 @@ export class CopyPasteViewComponent {
 		// todo dev
 			.replace(/Ã©/g, "é")
 			.replace(/Ã/g, "à")
-			.split('\n');
+			.split("\n");
 
 		this.viewable = new ViewableClass(
 			{
@@ -145,11 +146,10 @@ export class CopyPasteViewComponent {
 				x = parseInt(cols[6]);
 				y = parseInt(cols[7]);
 				if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
-					console.log(cols);
 					this.viewable.gobelins.set(id.num, {
 						dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
 						posX: parseInt(cols[6]), posY: parseInt(cols[7]), posN: parseInt(cols[8])
-					})
+					});
 				} else {
 					this.viewable.creatures.set(id.num, {
 						dist: parseInt(cols[0]), level: parseInt(cols[3]), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
@@ -165,11 +165,10 @@ export class CopyPasteViewComponent {
 				x = parseInt(cols[4]);
 				y = parseInt(cols[5]);
 				if (CreaturetypesUtils.creatureIsGob(cols[3], id.num)) {
-					console.log(cols);
 					this.viewable.gobelins.set(id.num, {
 						dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 1, race: cols[3], clan: null,
 						posX: parseInt(cols[4]), posY: parseInt(cols[5]), posN: parseInt(cols[6])
-					})
+					});
 				} else {
 					this.viewable.creatures.set(id.num, {
 						dist: parseInt(cols[0]), level: parseInt(cols[2]), name: id.name, num: id.num, type: 0, race: cols[3], clan: null,
@@ -193,7 +192,7 @@ export class CopyPasteViewComponent {
 			const y = parseInt(cols[4]);
 			this.viewable.tresors.set(parseInt(cols[1]), {
 				dist: parseInt(cols[0]), name: cols[2], num: parseInt(cols[1]),
-				posX: x, posY: y, posN: parseInt(cols[5])
+				posX: x, posY: y, posN: parseInt(cols[5]), value: null
 			});
 			this.setPos(x, y);
 		} catch (e) {
@@ -238,9 +237,7 @@ export class CopyPasteViewComponent {
 	}
 
 	private lineSplit(line: string): string[] {
-		var count = (line.match(/\t\t/g) || []).length;
-		console.log(count);
-
+		let count = (line.match(/\t\t/g) || []).length;
 
 		let cols: string[];
 		if (count > 2) {
@@ -268,5 +265,9 @@ export class CopyPasteViewComponent {
 		if (!this.viewable.position.maxY || y > this.viewable.position.maxY) {
 			this.viewable.position.maxY = y;
 		}
+	}
+
+	getPickOrder() {
+		this.order = this.viewComponent.getPickOrder();
 	}
 }

@@ -1,15 +1,25 @@
-import {Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, ViewChild} from "@angular/core";
 
 import {ViewableClass} from "../core/classes/viewable.class";
 import {AssetssService} from "app/core/services/assets/assets.service";
 import {Subscription} from "rxjs";
 import {SubscriptionUtils} from "app/core/utils/subscription.utils";
+import {ViewUtils} from "../core/utils/view.utils";
 
 @Component({
-	selector: 'view-component',
-	templateUrl: './view.component.html'
+	selector: "view-component",
+	templateUrl: "./view.component.html"
 })
 export class ViewComponent implements OnDestroy {
+
+	constructor(protected assetsService: AssetssService) {
+		this.namepartToItemSubscription = this.assetsService.getNamepartToItem().subscribe(data => {
+			this.namepartToItem = data;
+		});
+		this.nameToItemSubscription = this.assetsService.getNameToItem().subscribe(data => {
+			this.nameToItem = data;
+		});
+	}
 
 	viewable: ViewableClass;
 	processed = false;
@@ -19,23 +29,7 @@ export class ViewComponent implements OnDestroy {
 	protected namepartToItem: { name: string, material: string, value: number }[] = null;
 	protected readonly nameToItemSubscription: Subscription = null;
 	protected nameToItem: Map<string, { material: string, value: number }> = null;
-	protected followers: string[] = ["Créature mécanique", "Arme dansante", "Pixie", "Esprit-rôdeur"];
-
-	constructor(protected assetsService: AssetssService) {
-		this.namepartToItemSubscription = this.assetsService.getNamepartToItem().subscribe(data => {
-			this.namepartToItem = data;
-		});
-		this.nameToItemSubscription = this.assetsService.getNameToItem().subscribe(data => {
-			this.nameToItem = data;
-		})
-	}
-
-	private static setCellDist(cell: HTMLDivElement, minDist: number): number {
-		minDist = 20 - (Math.min(5, Math.max(0, minDist - 2)) * 2);
-		cell.style.width = minDist + "px";
-		cell.style.height = minDist + "px";
-		return minDist;
-	}
+	protected followers: string[] = ["Créature mécanique", "Arme dansante", "Pixie", "Esprit-rôdeur", "Pierreux", "Squelette"];
 
 	ngOnDestroy(): void {
 		SubscriptionUtils.unsubs(this.namepartToItemSubscription);
@@ -50,12 +44,12 @@ export class ViewComponent implements OnDestroy {
 		(this.table.nativeElement as HTMLDivElement).style.height = "auto";
 
 		for (let y = this.viewable.position.maxY; y >= this.viewable.position.minY; y--) {
-			let row = document.createElement("div") as HTMLDivElement;
+			const row = document.createElement("div") as HTMLDivElement;
 			row.style.display = "table-row";
 			row.style.width = "auto";
 			(this.table.nativeElement as HTMLDivElement).appendChild(row);
 			for (let x = this.viewable.position.minX; x <= this.viewable.position.maxX; x++) {
-				let cell = document.createElement("div") as HTMLDivElement;
+				const cell = document.createElement("div") as HTMLDivElement;
 				cell.style.cssFloat = "left";
 				cell.style.display = "table-column";
 				cell.style.border = "1px solid #aaa";
@@ -73,13 +67,13 @@ export class ViewComponent implements OnDestroy {
 				let hasFollower = false;
 				let hasMonster = false;
 				this.viewable.creatures.forEach((creature) => {
-					if (creature.posX == x && creature.posY == y) {
+					if (creature.posX === x && creature.posY === y) {
 						const diffDist = Math.abs(this.viewable.position.avgPosN - creature.posN);
 						let diffLevel = null;
 						if (this.viewable.viewerLevel) {
 							diffLevel = creature.level - this.viewable.viewerLevel;
 						}
-						if (this.followers.indexOf(creature.race) > -1) {
+						if (this.followers.indexOf(creature.race) > -1 && creature.race !== creature.name) {
 							hasFollower = true;
 						} else {
 							hasMonster = true;
@@ -93,7 +87,7 @@ export class ViewComponent implements OnDestroy {
 						if (this.viewable.viewerSearches && this.viewable.viewerSearches.indexOf(creature.name) > -1) {
 							isSearched = true;
 						}
-						if (creature.dist == -1) {
+						if (creature.dist === -1) {
 							cell.style.border = "1px solid white";
 							cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
 						}
@@ -150,7 +144,7 @@ export class ViewComponent implements OnDestroy {
 				let hasAllies = false;
 				let hasGod = false;
 				this.viewable.gobelins.forEach((gobelin) => {
-					if (gobelin.posX == x && gobelin.posY == y) {
+					if (gobelin.posX === x && gobelin.posY === y) {
 						if (gobelin.num > 0 && gobelin.num <= 14) {
 							hasGod = true;
 						} else if (viewable.viewerAllies && viewable.viewerAllies.indexOf(gobelin.num) > -1) {
@@ -158,7 +152,7 @@ export class ViewComponent implements OnDestroy {
 						} else {
 							hasRegularGobs = true;
 						}
-						if (gobelin.dist == -1) {
+						if (gobelin.dist === -1) {
 							cell.style.border = "1px solid white";
 							cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
 						}
@@ -228,37 +222,37 @@ export class ViewComponent implements OnDestroy {
 				// ------------------------------------------- trésors -------------------------------------------
 				infoC = null;
 				minDist = null;
-				let maxValue: number = 0;
+				let maxValue = 0;
 				this.viewable.tresors.forEach((tresor) => {
-					if (tresor.posX == x && tresor.posY == y) {
+					if (tresor.posX === x && tresor.posY === y) {
 						const diffLevel = Math.abs(this.viewable.position.avgPosN - tresor.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
 						}
-						let itemValue = 3;
 
 						let found = false;
-						let tmp = this.nameToItem.get(tresor.name);
+						const tmp = this.nameToItem.get(tresor.name);
 						if (tmp) {
 							found = true;
-							itemValue = tmp.value;
+							tresor.value = tmp.value;
 						}
 
 						if (!found) {
 							for (let v = 0; v < this.namepartToItem.length; v++) {
 								if (tresor.name.indexOf(this.namepartToItem[v].name) > -1) {
 									found = true;
-									itemValue = this.namepartToItem[v].value;
+									tresor.value = this.namepartToItem[v].value;
 									break;
 								}
 							}
 						}
 						if (!found) {
+							tresor.value = 0;
 							console.log(tresor.name + " not listed !");
 						}
 
-						if (!maxValue || maxValue < itemValue) {
-							maxValue = itemValue;
+						if (!maxValue || maxValue < tresor.value) {
+							maxValue = tresor.value;
 						}
 						if (!infoC) {
 							infoC = document.createElement("div") as HTMLDivElement;
@@ -305,7 +299,7 @@ export class ViewComponent implements OnDestroy {
 				infoC = null;
 				minDist = null;
 				this.viewable.plantes.forEach((plante) => {
-					if (plante.posX == x && plante.posY == y) {
+					if (plante.posX === x && plante.posY === y) {
 						const diffLevel = Math.abs(this.viewable.position.avgPosN - plante.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
@@ -331,31 +325,31 @@ export class ViewComponent implements OnDestroy {
 				}
 
 				// ------------------------------------------- lieux -------------------------------------------
-				let color: string = null;
-				let hasTree=false;
-				let hasBuilding=false;
+				const color: string = null;
+				let hasTree = false;
+				let hasBuilding = false;
 				this.viewable.lieux.forEach((lieu) => {
-					if (lieu.posX == x && lieu.posY == y) {
+					if (lieu.posX === x && lieu.posY === y) {
 						if (lieu.name === "Arbre" && !color) {
-							hasTree=true;
+							hasTree = true;
 						} else {
-							hasBuilding=true;
+							hasBuilding = true;
 						}
 					}
 				});
-				if(hasTree || hasBuilding){
+				if (hasTree || hasBuilding) {
 					cell.addEventListener("mouseenter", (e: MouseEvent) => {
 						this.showLieuxInfo(e, x, y);
 					});
 					cell.addEventListener("mouseleave", () => {
 						this.hideInfo();
 					});
-					if(hasTree && hasBuilding){
-						let lang = Math.sqrt(2 * (50 * 50)) / 2;
+					if (hasTree && hasBuilding) {
+						const lang = Math.sqrt(2 * (50 * 50)) / 2;
 						cell.style.background = "repeating-linear-gradient(45deg, green, green " + lang + "px, purple " + lang + "px, purple " + 2 * lang + "px)";
-					}else if(hasTree){
+					} else if (hasTree) {
 						cell.style.backgroundColor = "green";
-					}else{
+					} else {
 						cell.style.backgroundColor = "purple";
 					}
 				}
@@ -378,7 +372,7 @@ export class ViewComponent implements OnDestroy {
 	showGobInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.gobelins.forEach((item) => {
-			if (item.posX == x && item.posY == y) {
+			if (item.posX === x && item.posY === y) {
 				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -388,7 +382,7 @@ export class ViewComponent implements OnDestroy {
 	showMonsterInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.creatures.forEach((item) => {
-			if (item.posX == x && item.posY == y) {
+			if (item.posX === x && item.posY === y) {
 				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -398,7 +392,7 @@ export class ViewComponent implements OnDestroy {
 	showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.tresors.forEach((item) => {
-			if (item.posX == x && item.posY == y) {
+			if (item.posX === x && item.posY === y) {
 				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -408,7 +402,7 @@ export class ViewComponent implements OnDestroy {
 	showPlantsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.plantes.forEach((item) => {
-			if (item.posX == x && item.posY == y) {
+			if (item.posX === x && item.posY === y) {
 				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -418,7 +412,7 @@ export class ViewComponent implements OnDestroy {
 	showLieuxInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.lieux.forEach((item) => {
-			if (item.posX == x && item.posY == y) {
+			if (item.posX === x && item.posY === y) {
 				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -434,5 +428,31 @@ export class ViewComponent implements OnDestroy {
 		(this.tooltip.nativeElement as HTMLDivElement).style.display = "";
 		(this.tooltip.nativeElement as HTMLDivElement).style.top = (e.pageY + 25) + "px";
 		(this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
+	}
+
+	getPickOrder(): string {
+		const map = new Map<number, { x: number, y: number, n: number }>();
+		this.viewable.tresors.forEach((treasure) => {
+			if (treasure.value >= 3) {
+				map.set(treasure.num, {x: treasure.posX, y: treasure.posY, n: treasure.posN});
+			}
+		});
+		if (map.size > 0) {
+			let order = "";
+			const posals = ViewUtils.getPath(map);
+			posals.forEach((pos) => {
+				order += "move(" + pos.posal.x + ", " + pos.posal.y + ", " + pos.posal.n + ");\n";
+				order += "pick(OBJECT, " + pos.id + ");\n";
+			});
+			return order;
+		}
+		return null;
+	}
+
+	private static setCellDist(cell: HTMLDivElement, minDist: number): number {
+		minDist = 20 - (Math.min(5, Math.max(0, minDist - 2)) * 2);
+		cell.style.width = minDist + "px";
+		cell.style.height = minDist + "px";
+		return minDist;
 	}
 }

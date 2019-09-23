@@ -11,6 +11,6 @@
 </div>
 
 <view-component #viewComponent></view-component>
-<!--<div [ngStyle]="{ 'display': !processed ? 'none' : '' }">-->
-<!--    <button (click)="reset()" class="btn btn-warning">Retour</button>-->
-<!--</div>-->
+<button type="button" class="btn btn-primary" *ngIf="processed" (click)="getPickOrder()">Ordre de ramassage</button>
+<br/><br/>
+<textarea *ngIf="order" [(ngModel)]="order" class="form-control" id="res" rows="18"></textarea>

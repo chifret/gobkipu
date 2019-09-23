@@ -1,33 +1,36 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from "@angular/core";
 
-import {LoginService} from '../core/services/login.service';
-import {GuildService} from 'app/core/services/clan/guild.service';
-import {ViewComponent} from '../view/view.component';
-import {ViewService} from '../core/services/view/view.service';
+import {LoginService} from "../core/services/login.service";
+import {GuildService} from "app/core/services/clan/guild.service";
+import {ViewComponent} from "../view/view.component";
+import {ViewService} from "../core/services/view/view.service";
 import {GobsTypings} from "../core/typings/gobs.typings";
 import {PastateEnum} from "../core/enums/pastate.enum";
 import {DlastateEnum} from "../core/enums/dlastate.enum";
+import {DatePipe} from "@angular/common";
 
 @Component({
-	selector: 'guild-component',
-	templateUrl: './guild.component.html'
+	selector: "guild-component",
+	templateUrl: "./guild.component.html"
 })
 export class GuildComponent implements OnInit {
 
 	processed = false;
 	busy = false;
 	text = "Refresh";
-	guildMembers: GobsTypings[] = [];
+	gobs: GobsTypings[] = [];
 
 	lastId: number = null;
+	order: string = null;
 
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
 	constructor(private loginService: LoginService,
 				private clanService: GuildService,
+				private datePipe: DatePipe,
 				private viewService: ViewService) {
 		this.getData(false);
-	};
+	}
 
 	ngOnInit(): void {
 		this.update();
@@ -43,9 +46,9 @@ export class GuildComponent implements OnInit {
 
 			const viewerSearches = ["Bulette"];
 			const viewerAllies: number[] = [];
-			this.guildMembers.forEach(guildMember => {
+			this.gobs.forEach(guildMember => {
 				viewerAllies.push(guildMember.Id);
-				if (guildMember.Id == id) {
+				if (guildMember.Id === id) {
 					viewable.viewerLevel = guildMember.Niveau;
 				}
 			});
@@ -66,54 +69,73 @@ export class GuildComponent implements OnInit {
 	getPAColor(state: PastateEnum): string {
 		switch (state) {
 			case PastateEnum.Usable:
-				return 'green';
+				return "green";
 			case PastateEnum.Urgent:
 			case PastateEnum.CumulableUrgent:
-				return 'darkorange';
+				return "darkorange";
 			case PastateEnum.VeryUrgent:
 			case PastateEnum.CumulableVeryUrgent:
-				return 'darkred';
+				return "darkred";
 			case PastateEnum.Cumulable:
-				return 'darkkhaki';
+				return "darkkhaki";
 			case PastateEnum.Unusable:
-				return 'black';
+				return "black";
 			default:
-				return 'none';
+				return "none";
 		}
 	}
 
 	getDLAColor(state: DlastateEnum): string {
 		switch (state) {
 			case DlastateEnum.Shortened:
-				return 'yellow';
+				return "yellow";
 			case DlastateEnum.ShouldDelayAtMidnight:
-				return 'magenta';
+				return "magenta";
 			case DlastateEnum.WaitForMidnight:
-				return 'lightblue';
+				return "lightblue";
 			case DlastateEnum.ShouldActivateBeforeMidnight:
-				return 'green';
+				return "green";
 			default:
-				return 'none';
+				return "none";
 		}
 	}
 
 	getPVColor(pv: number, pvMax: number): string {
 		const pourcent = pv / pvMax * 100;
 		if (pourcent >= 95) {
-			return 'lawngreen';
+			return "lawngreen";
 		}
 		if (pourcent >= 70) {
-			return 'yellow';
+			return "yellow";
 		}
 		if (pourcent >= 40) {
-			return 'orange';
+			return "orange";
 		} else {
-			return 'red';
+			return "red";
 		}
 	}
 
+	getTotalDateFromSeconds(dla: number, matos: number, bonus: number): string {
+		let moreThanADay = false;
+
+		let seconds = dla + Math.max(0, matos + bonus);
+		if (seconds >= 86400) {
+			seconds -= 86400;
+			moreThanADay = true;
+		}
+		let sign = true;
+		if (seconds < 0) {
+			seconds = -seconds;
+			sign = false;
+		}
+		const date = new Date(1970, 0, 1);
+		date.setSeconds(seconds);
+
+		return (!sign ? "-" : "") + (moreThanADay ? this.datePipe.transform(date, "HH:mm:ss") + "j " : "") + this.datePipe.transform(date, "HH:mm:ss");
+	}
+
 	getHungerColor(hunger: number): string {
-		if (hunger == 0) {
+		if (hunger === 0) {
 			return "#333";
 		} else if (hunger <= 15) {
 			return "rebeccapurple";
@@ -127,19 +149,44 @@ export class GuildComponent implements OnInit {
 	}
 
 	private update() {
-		if (this.guildMembers) {
-			this.guildMembers = GuildService.update(this.guildMembers);
+		if (this.gobs) {
+			this.gobs = GuildService.update(this.gobs);
 		}
 		setTimeout(() => {
-			this.update()
+			this.update();
 		}, 30000);
 	}
 
 	private getData(force: boolean): void {
 		if (LoginService.isConnected()) {
 			this.clanService.get(force).subscribe((res) => {
-				this.guildMembers = res;
-			})
+				this.gobs = res;
+			});
 		}
+	}
+
+	getDateFromSeconds(seconds: number): string {
+		let moreThanADay = false;
+		if (seconds >= 86400) {
+			seconds -= 86400;
+			moreThanADay = true;
+		}
+		let sign = true;
+		if (seconds < 0) {
+			seconds = -seconds;
+			sign = false;
+		}
+		const date = new Date(1970, 0, 1);
+		date.setSeconds(seconds);
+
+		return (!sign ? "-" : "") + (moreThanADay ? this.datePipe.transform(date, "HH:mm:ss") + "j " : "") + this.datePipe.transform(date, "HH:mm:ss");
+	}
+
+	showDetails(gob: GobsTypings): void {
+		gob.showDetails = !gob.showDetails;
+	}
+
+	getPickOrder() {
+		this.order = this.viewComponent.getPickOrder();
 	}
 }
