@@ -80,6 +80,7 @@
     [40, {"name": "Cadavre de Zombi invoqué ???", "value": 0, "material": null}],
     [45, {"name": "Cadavre de Nécrophage ???", "value": 1, "material": null}],
     [47.6, {"name": "Cadavre d'Ankheg ???", "value": 1, "material": null}],
+    [64.6, {"name": "Cadavre de Mille-pattes géant ???", "value": 1, "material": null}],
     [80, {"name": "Cadavre de Minotaure ???", "value": 1, "material": null}],
     [90, {"name": "Cadavre de Djinn / Ours hibou ???", "value": 1, "material": null}],
     [100, {"name": "Cadavre d'Ent / Tigre garou ???", "value": 1, "material": null}],

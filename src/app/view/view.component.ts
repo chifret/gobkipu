@@ -438,13 +438,33 @@ export class ViewComponent implements OnDestroy {
 			}
 		});
 		if (map.size > 0) {
-			let order = "";
-			const posals = ViewUtils.getPath(map);
-			posals.forEach((pos) => {
-				order += "move(" + pos.posal.x + ", " + pos.posal.y + ", " + pos.posal.n + ");\n";
-				order += "pick(OBJECT, " + pos.id + ");\n";
+			let posals: { id: number, posal: { x: number, y: number, n: number } }[] = null;
+			this.viewable.creatures.forEach((creature) => {
+				if (creature.dist === -1) {
+					posals = ViewUtils.getPath(map, {x: creature.posX, y: creature.posY, n: creature.posN});
+				}
 			});
-			return order;
+			if (!posals) {
+				this.viewable.gobelins.forEach((creature) => {
+					if (creature.dist === -1) {
+						posals = ViewUtils.getPath(map, {x: creature.posX, y: creature.posY, n: creature.posN});
+					}
+				});
+			}
+			if (!posals) {
+				posals = ViewUtils.getPath(map);
+			}
+
+			//const posals = ViewUtils.getPath(map, {x: 53, y: 29, n: -9});
+			if (posals.length > -1) {
+				let ids = "";
+				let move = "";
+				posals.forEach((pos) => {
+					move += "move(" + pos.posal.x + ", " + pos.posal.y + ", " + pos.posal.n + ");\n";
+					ids += (ids !== "" ? ", " : "") + pos.id;
+				});
+				return "foreach(objects() as o):\nif(in(id(o), array(" + ids + "))):\npick(OBJECT, id(o));\nendif;\nendforeach;\n" + move;
+			}
 		}
 		return null;
 	}

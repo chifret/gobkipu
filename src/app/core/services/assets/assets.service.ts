@@ -9,6 +9,7 @@ export class AssetssService extends Service {
 	private nameToItem: Map<string, { material: string, value: number }> = new Map();
 	private weightToItem: Map<string, Map<number, { name: string, value: number, material: string }>> = new Map();
 	private materialpartToItem: { name: string, material: string, value: number }[] = [];
+	private spells: string[] = [];
 
 	constructor(injector: Injector) {
 		super(injector);
@@ -61,6 +62,18 @@ export class AssetssService extends Service {
 				.map((res: any) => {
 					this.materialpartToItem = res;
 					return this.materialpartToItem;
+				});
+		}
+	}
+
+	public getSpells(): Observable<string[]> {
+		if (this.spells && this.spells.length > 0) {
+			return Observable.of(this.spells);
+		} else {
+			return this.http.get("./assets/spells.json")
+				.map((res: any) => {
+					this.spells = res;
+					return this.spells;
 				});
 		}
 	}

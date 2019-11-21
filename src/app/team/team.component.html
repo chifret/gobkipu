@@ -27,7 +27,7 @@
                     <span class="mobHide"><br/><small>({{ gob.Id }}) {{ gob.Tribu }} {{ gob.Niveau }}</small></span>
                 </td>
                 <td style="padding: 0;">
-                    <div #pv style="width: 100%; border: 0; position:relative">
+                    <div style="width: 100%; border: 0; position:relative">
                         <div style="width: 100%; height: 31px; padding: 2px;"
                              [style.width.%]="(gob.PV / gob.PVMax) * 100"
                              [style.backgroundColor]="getPVColor(gob.PV, gob.PVMax)">
@@ -37,7 +37,7 @@
                                     class="mobHide"> / {{ gob.PVMax }}</span></span>
                         </div>
                     </div>
-                    <div #faim style="width: 100%; border: 0;">
+                    <div style="width: 100%; border: 0;">
                         <div style="width: 100%; height:25px; text-shadow: #333 0 0.05rem 5px, #333 0 0.05rem 5px, #333 0 0.05rem 5px; padding: 2px;"
                              [style.backgroundColor]="getHungerColor(gob.Faim)">
                             <small style="display: block;">{{ gob.Faim }}</small>
@@ -67,98 +67,124 @@
                 <td colspan="7" [ngStyle]="{'display': (gob.showDetails?'':'none')}">
                     <div class="container">
                         <div class="row">
-                            <div class="col-sm">
-                                <table class="no-border">
+                            <div class="col-md-2 col-sm-4 col-xs-12">
+                                <table class="no-border" style="color: #7070f6">
                                     <tr>
-                                        <td style="text-align: left;">Durée DLA</td>
-                                        <td style="text-align: right;">{{ getDateFromSeconds(gob.DLADuration) }}</td>
+                                        <td style="text-align: center;"><i class="fas fa-history"></i></td>
+                                        <td style="text-align: right;font-weight: bold;">{{ getDateFromSeconds(gob.DLADuration) }}</td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: left;">Poids mathos</td>
+                                        <td style="text-align: center;"><i class="fas fa-plus"></i></td>
                                         <td style="text-align: right;">{{ getDateFromSeconds(gob.BPDLA) }}</td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: left;">Bonus</td>
+                                        <td style="text-align: center;"><i class="fas fa-minus"></i></td>
                                         <td style="text-align: right;">{{ getDateFromSeconds(gob.BMDLA) }}</td>
                                     </tr>
                                     <tr>
-                                        <td style="text-align: left;">Blessures</td>
-                                        <!--                                        <td style="text-align: right;">{{ getDateFromSeconds(gob.BMDLA) }}</td>-->
+                                        <td style="text-align: center;"><i class="fas fa-procedures"></i></td>
+                                        <!-- <td style="text-align: right;">{{ getDateFromSeconds(gob.BMDLA) }}</td>-->
                                         <td style="text-align: right;">??:??:??</td>
                                     </tr>
-                                    <tr>
-                                        <td style="text-align: left;">Durée totale</td>
-                                        <td style="text-align: right;">{{ getTotalDateFromSeconds(gob.DLADuration, gob.BPDLA, gob.BMDLA) }}</td>
+                                    <tr style="color: #8c8cff;">
+                                        <td style="text-align: center;"><i class="fas fa-stopwatch"></i></td>
+                                        <td style="text-align: right;font-weight: bold;">{{ getTotalDateFromSeconds(gob.DLADuration, gob.BPDLA, gob.BMDLA) }}</td>
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-sm">
+                            <div class="col-md-4 col-sm-8 col-xs-12">
                                 <table class="no-border">
-                                    <!--                                    <tr>-->
-                                    <!--                                        <td style="text-align: left;">Carac</td>-->
-                                    <!--                                        <td>Valeur</td>-->
-                                    <!--                                        <td>Moyenne</td>-->
-                                    <!--                                    </tr>-->
-                                    <tr>
-                                        <td style="text-align: left;">Vue</td>
-                                        <td>{{ gob.PER }} + {{ gob.BPPER }} + {{ gob.BMPER }}
+                                    <tr style="color:#ffb98c">
+                                        <td style="text-align: center;" [ngStyle]="{
+                                        'font-size': gob.CARAC === 'PER' ? '125%' : '100%',
+                                        'color': gob.CARAC === 'PER' ? '#ffb98c' : 'inherit'
+                                        }"><i class="fas fa-eye"></i></td>
                                         <td>
-                                            <small>{{ gob.PER + gob.BPPER + gob.BMPER }}</small>
+                                            <span style="color: #ffb98c;">{{ gob.PER }}</span>
+                                            {{ (gob.BPPER >= 0 ? "+" : "") + gob.BPPER}}
+                                            {{ (gob.BMPER >= 0 ? "+" : "") + gob.BMPER }}
+                                        <td>
+                                            <small><strong>{{ gob.PER + gob.BPPER + gob.BMPER }}</strong></small>
                                         </td>
                                     </tr>
-                                    <!--                                    <tr>-->
-                                    <!--                                        <td style="text-align: left;">PV</td>-->
-                                    <!--                                        <td>{{ gob.PVMax }} + {{ gob.BPPVMax }} + {{ gob.BMPVMax }}</td>-->
-                                    <!--                                        <td>-->
-                                    <!--                                            <small>{{ gob.PV }} / {{ gob.PVMax + gob.BPPVMax + gob.BMPVMax }}</small>-->
-                                    <!--                                        </td>-->
-                                    <!--                                    </tr>-->
-                                    <tr>
-                                        <td style="text-align: left;">Attaque</td>
-                                        <td>{{ gob.ATT }} d6 + {{ gob.BPATT }} + {{ gob.BMATT }}</td>
+                                    <tr style="color:#bb6cbb">
+                                        <td style="text-align: center;" [ngStyle]="{
+                                        'font-size': gob.CARAC === 'ATT' ? '125%' : '100%',
+                                        'color': gob.CARAC === 'ATT' ? '#d885d8' : 'inherit'
+                                        }"><i class="fas fa-crosshairs"></i></td>
                                         <td>
-                                            <small>{{ gob.ATT * 3.5 + gob.BPATT + gob.BMATT }}</small>
+                                            <span style="color: #d885d8;">{{ gob.ATT }} d6</span>
+                                            {{ (gob.BPATT >= 0 ? "+" : "") + gob.BPATT}}
+                                            {{ (gob.BMATT >= 0 ? "+" : "") + gob.BMATT }}
+                                        </td>
+                                        <td>
+                                            <small><strong>{{ gob.ATT * 3.5 + gob.BPATT + gob.BMATT }}</strong></small>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style="text-align: left;">Dégâts</td>
-                                        <td>{{ gob.DEG }} d3 + {{ gob.BPDEG }} + {{ gob.BMDEG }}</td>
+                                    <tr style="color:#f67070">
+                                        <td style="text-align: center;" [ngStyle]="{
+                                        'font-size': gob.CARAC === 'DEG' ? '125%' : '100%',
+                                        'color': gob.CARAC === 'DEG' ? '#ff8c8c' : 'inherit'
+                                        }"><i class="fas fa-fist-raised"></i></td>
                                         <td>
-                                            <small>{{ gob.DEG * 2 + gob.BPDEG + gob.BMDEG }}
-                                                / {{ (gob.DEG * 2 + gob.BPDEG + gob.BMDEG) * 1.5 }}</small>
+                                            <span style="color: #ff8c8c;">{{ gob.DEG }} d3</span>
+                                            {{ (gob.BPDEG >= 0 ? "+" : "") + gob.BPDEG}}
+                                            {{ (gob.BMDEG >= 0 ? "+" : "") + gob.BMDEG }}
+                                        </td>
+                                        <td>
+                                            <small><strong>{{ gob.DEG * 2 + gob.BPDEG + gob.BMDEG }}
+                                                /
+                                                <span style="color: #ff8c8c;"> {{ (gob.DEG * 2 + gob.BPDEG + gob.BMDEG) * 1.5 }}</span></strong></small>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style="text-align: left;">Armure</td>
-                                        <td>{{ gob.BPArm }} + {{ gob.BMArm }}</td>
+                                    <tr style="color:#f4f670">
+                                        <td style="text-align: center;" [ngStyle]="{
+                                        'font-size': gob.CARAC === 'ESQ' ? '125%' : '100%',
+                                        'color': gob.CARAC === 'ESQ' ? '#fdff8c' : 'inherit'
+                                        }"><i class="fas fa-bolt"></i></td>
                                         <td>
-                                            <small>{{ gob.BPArm + gob.BMArm }}</small>
+                                            <span style="color: #fdff8c;">{{ gob.ESQ }} d6</span>
+                                            {{ (gob.BPESQ >= 0 ? "+" : "") + gob.BPESQ }}
+                                            {{ (gob.BMESQ >= 0 ? "+" : "") + gob.BMESQ }}
+                                        </td>
+                                        <td>
+                                            <small><strong>{{ gob.ESQ * 3.5 + gob.BPESQ + gob.BMESQ }}</strong></small>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style="text-align: left;">Esquive</td>
-                                        <td>{{ gob.ESQ }} d6 + {{ gob.BPESQ }} + {{ gob.BMESQ }}</td>
+                                    <tr style="color:#70e3f6">
+                                        <td style="text-align: center;"><i class="fas fa-shield-alt"></i></td>
                                         <td>
-                                            <small>{{ gob.ESQ * 3.5 + gob.BPESQ + gob.BMESQ }}</small>
+                                            <span style="color: #8cefff;">{{ gob.BPArm }}</span>
+                                            {{ (gob.BMArm >= 0 ? "+" : "") + gob.BMArm }}
+                                        </td>
+                                        <td>
+                                            <small><strong>{{ gob.BPArm + gob.BMArm }}</strong></small>
                                         </td>
                                     </tr>
-                                    <tr>
-                                        <td style="text-align: left;">Régén.</td>
-                                        <td>{{ gob.REG }} d3 + {{ gob.BPREG }} + {{ gob.BMREG }}</td>
+                                    <tr style="color:#6dcf6d">
+                                        <td style="text-align: center;" [ngStyle]="{
+                                        'font-size': gob.CARAC === 'REG' ? '125%' : '100%',
+                                        'color': gob.CARAC === 'REG' ? '#83e883' : 'inherit'
+                                        }"><i class="fas fa-heartbeat"></i></td>
                                         <td>
-                                            <small>{{ gob.REG * 2 + gob.BPREG + gob.BMREG }}</small>
+                                            <span style="color: #83e883;">{{ gob.REG }} d3</span>
+                                            {{ (gob.BPREG >= 0 ? "+" : "") + gob.BPREG}}
+                                            {{ (gob.BMREG >= 0 ? "+" : "") + gob.BMREG }}
+                                        </td>
+                                        <td>
+                                            <small><strong>{{ gob.REG * 2 + gob.BPREG + gob.BMREG }}</strong></small>
                                         </td>
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-sm">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
                                 <table class="no-border">
                                     <tr>
                                         <td>Carac</td>
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-sm">
+                            <div class="col-md-3 col-sm-6 col-xs-12">
                                 <table class="no-border">
                                     <tr>
                                         <td>Carac</td>
@@ -188,4 +214,4 @@
 <button type="button" class="btn btn-primary" *ngIf="lastId" (click)="refreshView()">Refresh vue</button> &nbsp;
 <button type="button" class="btn btn-primary" *ngIf="lastId" (click)="getPickOrder()">Ordre de ramassage</button>
 <br/><br/>
-<textarea *ngIf="order" [(ngModel)]="order" class="form-control" id="res" rows="18"></textarea>
+<label for="res"></label><textarea *ngIf="order" [(ngModel)]="order" class="form-control" id="res" rows="18"></textarea>

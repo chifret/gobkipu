@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {Observable} from 'rxjs/Rx';
+import {Observable} from "rxjs/Rx";
 
 import {Service} from "../service";
 import {LoginService} from "../login.service";
@@ -7,14 +7,18 @@ import {CsvUtils} from "../../utils/csv.utils";
 import {GobsTypings} from "../../typings/gobs.typings";
 import {Gobs1Typings} from "../../typings/gobs1.typings";
 import {Gobs2Typings} from "../../typings/gobs2.typings";
-import {combineLatest} from 'rxjs/observable/combineLatest';
-import {map} from 'rxjs/operators/map';
+import {combineLatest} from "rxjs/observable/combineLatest";
+import {map} from "rxjs/operators/map";
 import {JsonUtils} from "../../utils/json.utils";
 import {DlaUtils} from "../../utils/business/dla.utils";
 
 
 @Injectable()
 export class TeamService extends Service {
+
+	constructor(injector: Injector) {
+		super(injector);
+	}
 
 	numerics = ["CT", "Id", "IdMeute", "N", "Niveau", "PA", "PI", "PV", "PX", "PXPerso", "X", "Y", "Z"];
 	floats = [];
@@ -24,11 +28,50 @@ export class TeamService extends Service {
 	floats2 = [];
 	dates2 = [];
 
-	constructor(injector: Injector) {
-		super(injector);
+	get(force: boolean = false): Observable<GobsTypings[]> {
+		if (localStorage.getItem("meutemembres") && !force) {
+			// console.log("get local");
+			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
+		} else {
+			let gobs: GobsTypings[] = null;
+			if (localStorage.getItem("meutemembres")) {
+				gobs = JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates);
+			}
+			// console.log("get distant");
+			return combineLatest([this.get1(), this.get2()])
+				.pipe(map(([one, two]) => {
+					const json = TeamService.concat(one, two, gobs);
+					localStorage.setItem("meutemembres", JSON.stringify(json));
+					return json;
+				}));
+		}
 	}
 
-	static concat(mm1: Gobs1Typings[], mm2: Gobs2Typings[]): GobsTypings[] {
+	private get1(): Observable<Gobs1Typings[]> {
+		const token = LoginService.getToken();
+		if (token) {
+			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile.php?key=" + token.meute + "&id=" + token.id, {responseType: "text"})
+				.map((res: any) => {
+					return CsvUtils.getJson<Gobs1Typings>(res, this.numerics, this.floats, this.dates, []);
+				});
+		} else {
+			return Observable.empty();
+		}
+	}
+
+	private get2(): Observable<Gobs2Typings[]> {
+		const token = LoginService.getToken();
+		if (token) {
+			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile2.php?key=" + token.meute + "&id=" + token.id, {responseType: "text"})
+				.map((res: any) => {
+					return CsvUtils.getJson<Gobs2Typings>(res, this.numerics2, this.floats2, this.dates2, []);
+				});
+		} else {
+			return Observable.empty();
+		}
+	}
+
+	static concat(mm1: Gobs1Typings[], mm2: Gobs2Typings[], local: GobsTypings[] = null): GobsTypings[] {
 		const gobs: GobsTypings[] = [];
 		for (let i = 0; i < mm1.length; i++) {
 			let gob = new GobsTypings();
@@ -43,6 +86,13 @@ export class TeamService extends Service {
 						} else {
 							gob.DLADuration = mm2[j].DLA;
 						}
+					}
+				}
+			}
+			if (local) {
+				for (let j = 0; j < local.length; j++) {
+					if (mm1[i].Id === local[j].Id) {
+						gob.showDetails = local[j].showDetails;
 					}
 				}
 			}
@@ -107,45 +157,5 @@ export class TeamService extends Service {
 			localStorage.setItem("meutemembres", JSON.stringify(items));
 		}
 		return items;
-	}
-
-	get(force: boolean = false): Observable<GobsTypings[]> {
-		if (localStorage.getItem("meutemembres") && !force) {
-			// console.log("get local");
-			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
-		} else {
-			// console.log("get distant");
-			return combineLatest([this.get1(), this.get2()])
-				.pipe(map(([one, two]) => {
-					const json = TeamService.concat(one, two);
-					localStorage.setItem("meutemembres", JSON.stringify(json));
-					return json;
-				}));
-		}
-	}
-
-	private get1(): Observable<Gobs1Typings[]> {
-		const token = LoginService.getToken();
-		if (token) {
-			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile.php?key=" + token.meute + "&id=" + token.id, {responseType: 'text'})
-				.map((res: any) => {
-					return CsvUtils.getJson<Gobs1Typings>(res, this.numerics, this.floats, this.dates, []);
-				});
-		}
-		else {
-			return Observable.empty();
-		}
-	}
-
-	private get2(): Observable<Gobs2Typings[]> {
-		const token = LoginService.getToken();
-		if (token) {
-			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile2.php?key=" + token.meute + "&id=" + token.id, {responseType: 'text'})
-				.map((res: any) => {
-					return CsvUtils.getJson<Gobs2Typings>(res, this.numerics2, this.floats2, this.dates2, []);
-				});
-		} else {
-			return Observable.empty();
-		}
 	}
 }

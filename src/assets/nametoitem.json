@@ -20,7 +20,7 @@
   
   
   ["Anapside", {"material": "???", "value": 4}],
-  ["Anneau Barbare", {"material": null, "value": 4}],
+  ["Anneau Barbare", {"material": null, "value": 1}],
   ["Anneau de Courage", {"material": "Argent", "value": 4}],
   ["Anneau de dureté", {"material": "Argent", "value": 4}],
   ["Anneau de Protection", {"material": "???", "value": 4}],
@@ -28,7 +28,7 @@
   ["Anneau de Savoir", {"material": "Argent", "value": 4}],
   ["Anneau de voyage", {"material": "???", "value": 4}],
   ["Anneau Spirituel", {"material": "Argent", "value": 4}],
-  ["Anneau Trollique", {"material": "???", "value": 4}],
+  ["Anneau Trollique", {"material": "???", "value": 1}],
   ["Bague de fiançailles", {"material": "???", "value": 4}],
 
   ["Cimeterre en Pierre", {"material": "Pierre", "value": 1}],
@@ -136,8 +136,8 @@
   ["Bricole d'Alowin", {"material": "Or", "value": 4}],
   ["Collier des Anciens", {"material": "Argent", "value": 4}],
   ["Diadème Nébuleux", {"material": "Argent", "value": 4}],
-  ["Fibule Champêtre", {"material": "Fer", "value": 3}],
-  ["Magatama", {"material": "Fer", "value": 3}],
+  ["Fibule Champêtre", {"material": "Fer", "value": 1}],
+  ["Magatama", {"material": "Fer", "value": 1}],
   ["Médaillon Protecteur", {"material": "Etain", "value": 4}],
   ["Menthalite", {"material": "Etain", "value": 4}],
   ["Pendentif-Chasseur", {"material": "Or", "value": 4}],
