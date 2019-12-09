@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {Observable} from 'rxjs/Rx';
+import {Observable} from "rxjs/Observable";
 
 import {Service} from "../service";
 import {CsvUtils} from "../../utils/csv.utils";
@@ -9,6 +9,7 @@ import {RecyclageService} from "./recyclage.service";
 import {AssetssService} from "app/core/services/assets/assets.service";
 import {combineLatest} from "rxjs";
 import {CaratsUtils} from "app/core/utils/business/carats.utils";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class GuildplacesService extends Service {
@@ -41,12 +42,13 @@ export class GuildplacesService extends Service {
 		this.materialpartToItemObs = this.assetsService.getMaterialpartToItem();
 
 		// noinspection JSDeprecatedSymbols
-		combineLatest(this.namepartToItemObs, this.nameToItemObs, this.weightToItemObs, this.materialpartToItemObs, (namepartToItemResult, nameToItemResult, weightToItemResult, materialpartToItemResult) => ({
-			namepartToItemResult,
-			nameToItemResult,
-			weightToItemResult,
-			materialpartToItemResult
-		}))
+		combineLatest(this.namepartToItemObs, this.nameToItemObs, this.weightToItemObs, this.materialpartToItemObs,
+			(namepartToItemResult, nameToItemResult, weightToItemResult, materialpartToItemResult) => ({
+				namepartToItemResult,
+				nameToItemResult,
+				weightToItemResult,
+				materialpartToItemResult
+			}))
 			.subscribe((trio) => {
 				this.namepartToItem = trio.namepartToItemResult;
 				this.nameToItem = trio.nameToItemResult;
@@ -71,19 +73,59 @@ export class GuildplacesService extends Service {
 				} else {
 					const token = LoginService.getToken();
 					if (token) {
-						return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: 'text'})
-							.map((res: any) => {
-								const json = CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-								this.enrichment(json);
-								localStorage.setItem("guildplaceitems", JSON.stringify(json));
-								// this.enrichment(json);
-								return json;
-							});
+
+						// GRUIK balek
+						if ([304, 309, 332, 333, 334, 340, 346, 363, 369, 394].indexOf(token.id) > -1) {
+							return combineLatest([this.get1(), this.get2(332)])
+
+								.pipe(map(([one, two]) => {
+									let json = one;
+									if (two) {
+										json = [...json, ...two];
+									}
+									//const json = [...one, ...two];
+									this.enrichment(json);
+									localStorage.setItem("guildplaceitems", JSON.stringify(json));
+									return json;
+								}));
+						} else {
+							return this.get1()
+								.map((res2: any) => {
+									const json = res2;
+									this.enrichment(json);
+									localStorage.setItem("guildplaceitems", JSON.stringify(json));
+									return json;
+								});
+						}
 					} else {
 						return Observable.empty();
 					}
 				}
 			});
+	}
+
+	private get1(): Observable<GuildPlaceItemsTypings[]> {
+		const token = LoginService.getToken();
+		if (token) {
+			return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: "text"})
+				.map((res: any) => {
+					return CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
+				});
+		} else {
+			return Observable.empty();
+		}
+	}
+
+	private get2(id: number): Observable<GuildPlaceItemsTypings[]> {
+		const token = LoginService.getToken();
+		if (token) {
+			return this.http.get("https://www.chifret.be/gobkipu/services/place.php?key=" + token.clan + "&id=" + token.id + "&id_place=" + id, {responseType: "text"})
+				.map((res: any) => {
+					return CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
+				});
+		} else {
+			return Observable.empty();
+		}
 	}
 
 	private enrichment(json: GuildPlaceItemsTypings[]): GuildPlaceItemsTypings[] {
@@ -118,6 +160,7 @@ export class GuildplacesService extends Service {
 					json[i].Taille = null;
 					json[i].Desc = null;
 					json[i].Stars = 2;
+					json[i].Qualite += 10;
 					break;
 				}
 				case "Potion": {
@@ -125,12 +168,12 @@ export class GuildplacesService extends Service {
 					json[i].Taille = null;
 					if (json[i].Identifie) {
 						const duration = json[i].Desc.substring(json[i].Desc.length - 1, json[i].Desc.length);
-						if (duration === "0" && json[i].Desc.indexOf("PV") == 0) {
+						if (duration === "0" && json[i].Desc.indexOf("PV") === 0) {
 							// console.log(json[i].Desc);
 							// console.log(json[i].Desc.substring(4, json[i].Desc.indexOf("D3")));
-							json[i].Stars = Math.min(5, parseInt(json[i].Desc.substring(4, json[i].Desc.indexOf("D3"))) / 2);
+							json[i].Stars = Math.min(5, parseInt(json[i].Desc.substring(4, json[i].Desc.indexOf("D3")), 10) / 2);
 						} else {
-							json[i].Stars = Math.min(5, Math.max(1, parseInt(duration)));
+							json[i].Stars = Math.min(5, Math.max(1, parseInt(duration, 10)));
 						}
 					} else {
 						json[i].Stars = 1;
@@ -189,12 +232,12 @@ export class GuildplacesService extends Service {
 					} else {
 						json[i].Category = "Équipement";
 						json[i].Taille = null;
-						if (json[i].Matiere == "Pierre") {
+						if (json[i].Matiere === "Pierre") {
 							json[i].Nom += " en Pierre";
 						}
-						if (json[i].Type == "Arme 1 Main") {
+						if (json[i].Type === "Arme 1 Main") {
 							json[i].Type = "Arme à 1 main";
-						} else if (json[i].Type == "Arme 2 mains") {
+						} else if (json[i].Type === "Arme 2 mains") {
 							json[i].Type = "Arme à 2 mains";
 						}
 					}
@@ -216,7 +259,7 @@ export class GuildplacesService extends Service {
 							json[i].Stars = 5;
 						}
 					}
-				} else if (json[i].Category == "Corps") {
+				} else if (json[i].Category === "Corps") {
 					const tmp = this.weightToItem.get(json[i].Type);
 					if (tmp.get(json[i].Poids)) {
 						json[i].Nom = tmp.get(json[i].Poids).name;
@@ -229,7 +272,7 @@ export class GuildplacesService extends Service {
 			}
 
 			// identified corpses not listed
-			if (json[i].Identifie && json[i].Category == "Corps" && this.weightToItem.get(json[i].Type) && !this.weightToItem.get(json[i].Type).get(json[i].Poids)) {
+			if (json[i].Identifie && json[i].Category === "Corps" && this.weightToItem.get(json[i].Type) && !this.weightToItem.get(json[i].Type).get(json[i].Poids)) {
 				json[i].Nom += " (non listé)";
 				json[i].Stars = 3;
 			}
@@ -260,7 +303,7 @@ export class GuildplacesService extends Service {
 						mat = matTmp.material;
 					} else {
 						console.log(json[i].Nom);
-						if (json[i].Nom == "Anneau Barbare") {
+						if (json[i].Nom === "Anneau Barbare") {
 							if (json[i].Desc.indexOf("ATT:+1") > -1) {
 								if (json[i].Desc.indexOf("DEG:+1") > -1) {
 									json[i].Matiere = "Fer";
@@ -322,7 +365,7 @@ export class GuildplacesService extends Service {
 			}
 
 			// template
-			if (json[i].Category == "Équipement" && json[i].Magie != "") {
+			if (json[i].Category === "Équipement" && json[i].Magie !== "") {
 				console.log("-" + json[i].Magie + "-");
 				this.namepartToItem.forEach((materialContained) => {
 					if (json[i].Magie.indexOf(materialContained.name) > -1) {
