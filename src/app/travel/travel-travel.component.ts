@@ -1,7 +1,7 @@
 import { Component, Injector } from '@angular/core';
 
-import { TravelClass } from './travel.class';
-import { PositionClass } from '../core/classes/position.class';
+import { TravelClass } from '../core/classes/travel.class';
+import { PositionClass } from '../core/objects/position.class';
 import { DistanceUtils } from '../core/utils/business/distance-utils';
 
 @Component({

@@ -6,12 +6,12 @@ import {Service} from "../service";
 import {CsvUtils} from "../../utils/csv.utils";
 import {ViewTyping} from "../../typings/view.typings";
 import {LoginService} from "../login.service";
-import {ViewableClass} from "../../classes/viewable.class";
+import {ViewableClass} from "../../objects/viewable.class";
 import {CreaturetypesUtils} from "../../utils/business/creaturetypes.utils";
-import {CreatureClass} from "../../classes/creature.class";
-import {TresorClass} from "../../classes/tresor.class";
-import {LieuxClass} from "../../classes/lieux.class";
-import {PlanteClass} from "../../classes/plante.class";
+import {CreatureClass} from "../../objects/creature.class";
+import {TresorClass} from "../../objects/tresor.class";
+import {LieuxClass} from "../../objects/lieux.class";
+import {PlanteClass} from "../../objects/plante.class";
 import {Observable} from "rxjs";
 
 @Injectable()
@@ -51,7 +51,9 @@ export class ViewService extends Service {
 			minX: null,
 			maxX: null,
 			minY: null,
-			maxY: null
+			maxY: null,
+			minN: null,
+			maxN: null
 		};
 		const creatures: Map<number, CreatureClass> = new Map();
 		const gobelins: Map<number, CreatureClass> = new Map();
@@ -76,6 +78,12 @@ export class ViewService extends Service {
 			}
 			if (!position.maxY || line.Y > position.maxY) {
 				position.maxY = line.Y;
+			}
+			if (!position.minN || line.N < position.minN) {
+				position.minN = line.N;
+			}
+			if (!position.maxN || line.N > position.maxN) {
+				position.maxN = line.N;
 			}
 			switch (line.Categorie) {
 				case "C":

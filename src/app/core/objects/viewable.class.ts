@@ -10,13 +10,17 @@ export class ViewableClass {
 		minX: number,
 		maxX: number,
 		minY: number,
-		maxY: number
+		maxY: number,
+		minN: number,
+		maxN: number
 	} = {
 		avgPosN: null,
 		minX: null,
 		maxX: null,
 		minY: null,
-		maxY: null
+		maxY: null,
+		minN: null,
+		maxN: null
 	};
 	creatures: Map<number, CreatureClass> = new Map();
 	gobelins: Map<number, CreatureClass> = new Map();
@@ -33,13 +37,17 @@ export class ViewableClass {
 			minX: number,
 			maxX: number,
 			minY: number,
-			maxY: number
+			maxY: number,
+			minN: number,
+			maxN: number
 		} = {
 			avgPosN: null,
 			minX: null,
 			maxX: null,
 			minY: null,
-			maxY: null
+			maxY: null,
+			minN: null,
+			maxN: null
 		},
 		creatures: Map<number, CreatureClass>,
 		gobelins: Map<number, CreatureClass>,

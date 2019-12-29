@@ -1,4 +1,4 @@
-import {PositionClass} from '../../classes/position.class';
+import {PositionClass} from '../../objects/position.class';
 
 export class DistanceUtils {
     static calculateTotalDistanceForElement(element: any, p1: PositionClass, p2: PositionClass, tp: boolean): void {

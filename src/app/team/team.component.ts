@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 
 import {LoginService} from "../core/services/login.service";
 import {TeamService} from "app/core/services/meute/team.service";
-import {ViewComponent} from "../view/view.component";
+import {ViewComponent} from "../core/components/view/view.component";
 import {ViewService} from "../core/services/view/view.service";
 import {ViewTyping} from "../core/typings/view.typings";
 import {GobsTypings} from "../core/typings/gobs.typings";
@@ -21,9 +21,7 @@ export class TeamComponent implements OnInit {
 	busy = false;
 	text = "Refresh";
 	gobs: GobsTypings[] = [];
-
 	lastId: number = null;
-	order: string = null;
 
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
@@ -227,9 +225,5 @@ export class TeamComponent implements OnInit {
 				this.gobs = res;
 			});
 		}
-	}
-
-	getPickOrder() {
-		this.order = this.viewComponent.getPickOrder();
 	}
 }

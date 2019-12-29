@@ -1,8 +1,8 @@
 import { Injector } from '@angular/core';
 
-import { PlacesService } from './../core/services/places/places.service';
-import { PositionClass } from '../core/classes/position.class';
-import { DistanceUtils } from '../core/utils/business/distance-utils';
+import { PlacesService } from '../services/places/places.service';
+import { PositionClass } from '../objects/position.class';
+import { DistanceUtils } from '../utils/business/distance-utils';
 
 
 export abstract class TravelClass {

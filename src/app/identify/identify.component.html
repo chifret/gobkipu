@@ -34,18 +34,19 @@
         <!--<button type="button" class="btn btn-secondary" (click)="preset('z');">testt</button>-->
     </form>
 </div>
-<qeos-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()" style="font-size:11px!important;text-shadow:none!important;">
+<qeos-grid #grid [itemsSource]="cvMain" (initialized)="initGrid()"
+           style="font-size:11px!important;text-shadow:none!important;">
     <wj-flex-grid-column header="ID" binding="Id" format="D" [width]="50"></wj-flex-grid-column>
     <wj-flex-grid-column header="IdT" binding="Identifie" [width]="45"></wj-flex-grid-column>
     <wj-flex-grid-column header="Stars" binding="Stars" [width]="40"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Nom" binding="Nom" [width]="150">
+    <wj-flex-grid-column header="Category" binding="Category" [width]="75"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Type" binding="Type" [width]="80"></wj-flex-grid-column>
+    <wj-flex-grid-column header="Nom" binding="NomComplet" [width]="150">
         <ng-template wjFlexGridCellTemplate [cellType]="'Cell'" let-item="item">
-            {{ item.Nom }} <span *ngIf="item.Type !== 'Composant' && item.Magie"><b> {{ item.Magie }} </b></span>
+            {{ item.Nom }}  <span *ngIf="item.NomComplementaire"><b> {{ item.NomComplementaire }}</b></span>
         </ng-template>
     </wj-flex-grid-column>
     <!--<wj-flex-grid-column header="Expected" binding="Expected" [width]="180"></wj-flex-grid-column>-->
-    <wj-flex-grid-column header="Category" binding="Category" [width]="75"></wj-flex-grid-column>
-    <wj-flex-grid-column header="Type" binding="Type" [width]="80"></wj-flex-grid-column>
     <wj-flex-grid-column header="Description" binding="Desc" [width]="190"></wj-flex-grid-column>
     <wj-flex-grid-column header="Pds" binding="Poids" [width]="52" [aggregate]="1">
         <ng-template wjFlexGridCellTemplate [cellType]="'Group'" let-cell="cell">

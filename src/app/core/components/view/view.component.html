@@ -1,0 +1,14 @@
+<div [ngStyle]="{'display':processed?'':'none'}">
+    <ng5-slider [(value)]="rangeMin"
+                [(highValue)]="rangeMax"
+                [options]="rangeOpt"
+                (userChange)="onUserChangeEnd($event)"></ng5-slider>
+
+    <div style="width: 100%;">
+        <div #table style="width: auto; margin: 0 auto; display: table; transform-origin: 0 0;"></div>
+    </div>
+    <div #tooltip
+         style="display: none; position: absolute; border: 1px solid white; background-color: #666; text-align: right;"></div>
+</div>
+<button type="button" class="btn btn-primary" *ngIf="processed" (click)="getPickOrder()">Ordre de ramassage</button> &nbsp;
+<textarea *ngIf="order" [(ngModel)]="order" class="form-control" id="res" rows="18"></textarea>

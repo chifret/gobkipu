@@ -292,7 +292,7 @@ export class GuildplacesService extends Service {
 				if (mat) {
 					this.namepartToItem.forEach((materialContained) => {
 						if (json[i].Matiere.indexOf(materialContained.name) > -1) {
-							json[i].Stars = materialContained.value - 1;
+							json[i].Stars = materialContained.value;
 						}
 					});
 				} else {
@@ -302,7 +302,6 @@ export class GuildplacesService extends Service {
 						json[i].Stars = matTmp.value;
 						mat = matTmp.material;
 					} else {
-						console.log(json[i].Nom);
 						if (json[i].Nom === "Anneau Barbare") {
 							if (json[i].Desc.indexOf("ATT:+1") > -1) {
 								if (json[i].Desc.indexOf("DEG:+1") > -1) {
@@ -364,14 +363,26 @@ export class GuildplacesService extends Service {
 				}
 			}
 
-			// template
-			if (json[i].Category === "Équipement" && json[i].Magie !== "") {
-				console.log("-" + json[i].Magie + "-");
-				this.namepartToItem.forEach((materialContained) => {
-					if (json[i].Magie.indexOf(materialContained.name) > -1) {
-						json[i].Stars = materialContained.value;
-					}
-				});
+			json[i].NomComplet = json[i].Nom;
+			json[i].NomComplementaire = "";
+			if (json[i].Identifie && json[i].Category === "Équipement") {
+				// matière
+				if (["Anneau", "Bijou"].indexOf(json[i].Type) === -1 &&
+					["Cuir", "Tissu", "Composant", "Bois", "Plante", "Fer", "Pierre"].indexOf(json[i].Matiere) === -1) {
+					json[i].NomComplementaire += " en " + json[i].Matiere;
+				}
+				// template
+				if (json[i].Magie !== "") {
+					json[i].NomComplementaire += " " + json[i].Magie;
+					this.namepartToItem.forEach((materialContained) => {
+						if (json[i].Magie.indexOf(materialContained.name) > -1) {
+							json[i].Stars = materialContained.value;
+						}
+					});
+				}
+			}
+			if (json[i].NomComplementaire) {
+				json[i].NomComplet += json[i].NomComplementaire;
 			}
 		}
 		return json;

@@ -1,16 +1,36 @@
 import {Component, ElementRef, OnDestroy, ViewChild} from "@angular/core";
-
-import {ViewableClass} from "../core/classes/viewable.class";
+import {ViewableClass} from "../../objects/viewable.class";
 import {AssetssService} from "app/core/services/assets/assets.service";
 import {Subscription} from "rxjs";
 import {SubscriptionUtils} from "app/core/utils/subscription.utils";
-import {ViewUtils} from "../core/utils/view.utils";
+import {ViewUtils} from "../../utils/view.utils";
+import {ChangeContext, Options, PointerType} from "ng5-slider";
 
 @Component({
 	selector: "view-component",
 	templateUrl: "./view.component.html"
 })
 export class ViewComponent implements OnDestroy {
+
+	viewable: ViewableClass;
+	processed = false;
+	order: string = null;
+	rangeMin = 0;
+	rangeMax = 0;
+	rangeOpt: Options = {
+		floor: 0,
+		ceil: 0,
+		draggableRange: true
+	};
+
+	protected readonly namepartToItemSubscription: Subscription = null;
+	protected namepartToItem: { name: string, material: string, value: number }[] = null;
+	protected readonly nameToItemSubscription: Subscription = null;
+	protected nameToItem: Map<string, { material: string, value: number }> = null;
+	protected followers: string[] = ["Créature mécanique", "Arme dansante", "Pixie", "Esprit-rôdeur", "Pierreux", "Squelette"];
+
+	@ViewChild("table", {static: true}) table: ElementRef;
+	@ViewChild("tooltip", {static: true}) tooltip: ElementRef;
 
 	constructor(protected assetsService: AssetssService) {
 		this.namepartToItemSubscription = this.assetsService.getNamepartToItem().subscribe(data => {
@@ -21,15 +41,26 @@ export class ViewComponent implements OnDestroy {
 		});
 	}
 
-	viewable: ViewableClass;
-	processed = false;
-	@ViewChild("table", {static: true}) table: ElementRef;
-	@ViewChild("tooltip", {static: true}) tooltip: ElementRef;
-	protected readonly namepartToItemSubscription: Subscription = null;
-	protected namepartToItem: { name: string, material: string, value: number }[] = null;
-	protected readonly nameToItemSubscription: Subscription = null;
-	protected nameToItem: Map<string, { material: string, value: number }> = null;
-	protected followers: string[] = ["Créature mécanique", "Arme dansante", "Pixie", "Esprit-rôdeur", "Pierreux", "Squelette"];
+	onUserChangeEnd(changeContext: ChangeContext): void {
+		console.log(`onUserChangeEnd(${this.getChangeContextString(changeContext)})\n`);
+	}
+
+	getChangeContextString(changeContext: ChangeContext): string {
+		return `{pointerType: ${changeContext.pointerType === PointerType.Min ? "Min" : "Max"}, ` +
+			`value: ${changeContext.value}, ` +
+			`highValue: ${changeContext.highValue}}`;
+	}
+
+	setNewRange(min: number, max: number): void {
+		// Due to change detection rules in Angular, we need to re-create the options object to apply the change
+		this.rangeMin = min;
+		this.rangeMax = max;
+		const options: Options = Object.assign({}, this.rangeOpt);
+		options.floor = min;
+		options.ceil = max;
+		options.draggableRange = true;
+		this.rangeOpt = options;
+	}
 
 	ngOnDestroy(): void {
 		SubscriptionUtils.unsubs(this.namepartToItemSubscription);
@@ -37,6 +68,7 @@ export class ViewComponent implements OnDestroy {
 	}
 
 	renderView(viewable: ViewableClass) {
+		console.log("begin");
 		this.viewable = viewable;
 		(this.table.nativeElement as HTMLDivElement).innerHTML = "";
 		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
@@ -356,19 +388,25 @@ export class ViewComponent implements OnDestroy {
 			}
 		}
 
+		setTimeout(() => {
+			const viewWidth = this.viewable.position.maxX - this.viewable.position.minX + 1;
+			let scale = 1;
+			if (viewWidth * 50 > (this.table.nativeElement as HTMLDivElement).clientWidth) {
+				scale = (this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50);
+			}
 
-		const viewWidth = this.viewable.position.maxX - this.viewable.position.minX + 1;
-		let scale = 1;
-		if (viewWidth * 50 > (this.table.nativeElement as HTMLDivElement).clientWidth) {
-			scale = (this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50);
-		}
-		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(" + scale + ")";
-		(this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.viewable.position.maxY - this.viewable.position.minY + 1) * 50 * scale + "px";
-		(this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
+			(this.table.nativeElement as HTMLDivElement).style.transform = "scale(" + scale + ")";
+			(this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.viewable.position.maxY - this.viewable.position.minY + 1) * 50 * scale + "px";
+			(this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
+
+			this.setNewRange(this.viewable.position.minN, this.viewable.position.maxN);
+		}, 50);
 
 		this.processed = true;
+		console.log("processed");
 	}
 
+	// noinspection DuplicatedCode
 	showGobInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.gobelins.forEach((item) => {
@@ -379,6 +417,7 @@ export class ViewComponent implements OnDestroy {
 		this.setTooltip(e, txt);
 	}
 
+	// noinspection DuplicatedCode
 	showMonsterInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.creatures.forEach((item) => {
@@ -389,6 +428,7 @@ export class ViewComponent implements OnDestroy {
 		this.setTooltip(e, txt);
 	}
 
+	// noinspection DuplicatedCode
 	showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.tresors.forEach((item) => {
@@ -399,6 +439,7 @@ export class ViewComponent implements OnDestroy {
 		this.setTooltip(e, txt);
 	}
 
+	// noinspection DuplicatedCode
 	showPlantsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.plantes.forEach((item) => {
@@ -409,6 +450,7 @@ export class ViewComponent implements OnDestroy {
 		this.setTooltip(e, txt);
 	}
 
+	// noinspection DuplicatedCode
 	showLieuxInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.lieux.forEach((item) => {
@@ -430,7 +472,7 @@ export class ViewComponent implements OnDestroy {
 		(this.tooltip.nativeElement as HTMLDivElement).style.left = (e.pageX + 25) + "px";
 	}
 
-	getPickOrder(): string {
+	getPickOrder(): void {
 		const map = new Map<number, { x: number, y: number, n: number }>();
 		this.viewable.tresors.forEach((treasure) => {
 			if (treasure.value >= 3) {
@@ -463,10 +505,13 @@ export class ViewComponent implements OnDestroy {
 					move += "move(" + pos.posal.x + ", " + pos.posal.y + ", " + pos.posal.n + ");\n";
 					ids += (ids !== "" ? ", " : "") + pos.id;
 				});
-				return "foreach(objects() as o):\nif(in(id(o), array(" + ids + "))):\npick(OBJECT, id(o));\nendif;\nendforeach;\n" + move;
+				this.order = "foreach(objects() as o):\nif(in(id(o), array(" + ids + "))):\npick(OBJECT, id(o));\nendif;\nendforeach;\n" + move;
+			} else {
+				this.order = null;
 			}
+		} else {
+			this.order = null;
 		}
-		return null;
 	}
 
 	private static setCellDist(cell: HTMLDivElement, minDist: number): number {

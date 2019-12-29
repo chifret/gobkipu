@@ -17,8 +17,7 @@
   ["Arme 2 mains", {"material": null, "value": 2}],
   ["Un tas de Canines de Trõll", {"material": null, "value": 2}],
   ["Une poignée de Canines de Trõll", {"material": null, "value": 1}],
-  
-  
+
   ["Anapside", {"material": "???", "value": 4}],
   ["Anneau Barbare", {"material": null, "value": 1}],
   ["Anneau de Courage", {"material": "Argent", "value": 4}],
@@ -26,10 +25,10 @@
   ["Anneau de Protection", {"material": "???", "value": 4}],
   ["Anneau de Sagesse", {"material": "Argent", "value": 4}],
   ["Anneau de Savoir", {"material": "Argent", "value": 4}],
-  ["Anneau de voyage", {"material": "???", "value": 4}],
+  ["Anneau de voyage", {"material": null, "value": 4}],
   ["Anneau Spirituel", {"material": "Argent", "value": 4}],
-  ["Anneau Trollique", {"material": "???", "value": 1}],
-  ["Bague de fiançailles", {"material": "???", "value": 4}],
+  ["Anneau Trollique", {"material": null, "value": 1}],
+  ["Bague de fiançailles", {"material": null, "value": 4}],
 
   ["Cimeterre en Pierre", {"material": "Pierre", "value": 1}],
   ["Coutelas en Pierre", {"material": "Pierre", "value": 1}],
@@ -209,7 +208,7 @@
   ["Torque en Pierre", {"material": "Pierre", "value": 1}],
 
   ["Aiguille", {"material": "Fer", "value": 0}],
-  ["Alambic", {"material": "???", "value": 0}],
+  ["Alambic", {"material": null, "value": 0}],
   ["Ciseau à bois", {"material": "Bois", "value": 1}],
   ["Creuset", {"material": "Fer", "value": 0}],
   ["Hache de bucheron", {"material": "Fer", "value": 0}],

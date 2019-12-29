@@ -18,4 +18,6 @@ export class GuildPlaceItemsTypings {
 	Expected: string = null;
 	ExpectedMaterial: string = null;
 	Stars = 5;
+	NomComplet: string = null;
+	NomComplementaire: string = null;
 }

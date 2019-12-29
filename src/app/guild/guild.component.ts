@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 
 import {LoginService} from "../core/services/login.service";
 import {GuildService} from "app/core/services/clan/guild.service";
-import {ViewComponent} from "../view/view.component";
+import {ViewComponent} from "../core/components/view/view.component";
 import {ViewService} from "../core/services/view/view.service";
 import {GobsTypings} from "../core/typings/gobs.typings";
 import {PastateEnum} from "../core/enums/pastate.enum";
@@ -19,9 +19,7 @@ export class GuildComponent implements OnInit {
 	busy = false;
 	text = "Refresh";
 	gobs: GobsTypings[] = [];
-
 	lastId: number = null;
-	order: string = null;
 
 	@ViewChild("viewComponent", {static: true}) viewComponent: ViewComponent;
 
@@ -184,9 +182,5 @@ export class GuildComponent implements OnInit {
 
 	showDetails(gob: GobsTypings): void {
 		gob.showDetails = !gob.showDetails;
-	}
-
-	getPickOrder() {
-		this.order = this.viewComponent.getPickOrder();
 	}
 }

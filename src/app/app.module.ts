@@ -17,7 +17,7 @@ import {TeamComponent} from "./team/team.component";
 import {GuildComponent} from "./guild/guild.component";
 import {TravelTravelComponent} from "./travel/travel-travel.component";
 import {SpotTravelComponent} from "./travel/spot-travel.component";
-import {ViewComponent} from "./view/view.component";
+import {ViewComponent} from "./core/components/view/view.component";
 import {IdentifyComponent} from "./identify/identify.component";
 import {LoginComponent} from "./login/login.component";
 
@@ -37,6 +37,7 @@ import {AssetssService} from "app/core/services/assets/assets.service";
 import {FollowersComponent} from "app/followers/followers.component";
 import {FollowersService} from "app/core/services/followers/followers.service";
 import {DatePipe} from "@angular/common";
+import {Ng5SliderModule} from "ng5-slider";
 
 @NgModule({
 	imports: [
@@ -47,6 +48,7 @@ import {DatePipe} from "@angular/common";
 		WjCoreModule,
 		WjGridFilterModule,
 		WjGridGrouppanelModule,
+		Ng5SliderModule,
 		RouterModule.forRoot(routes)
 	],
 	declarations: [
