@@ -1,9 +1,5 @@
-export class LieuxClass {
-	dist: number;
-	name: string;
-	num: number;
+import {ItemClass} from "../classes/item.class";
+
+export class LieuxClass extends ItemClass {
 	type: string;
-	posX: number;
-	posY: number;
-	posN: number;
 }

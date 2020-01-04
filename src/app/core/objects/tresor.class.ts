@@ -1,9 +1,5 @@
-export class TresorClass {
-	dist: number;
-	name: string;
-	num: number;
-	posX: number;
-	posY: number;
-	posN: number;
+import {ItemClass} from "../classes/item.class";
+
+export class TresorClass extends ItemClass {
 	value = 0;
 }

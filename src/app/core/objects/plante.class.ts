@@ -1,8 +1,4 @@
-export class PlanteClass {
-	dist: number;
-	name: string;
-	num: number;
-	posX: number;
-	posY: number;
-	posN: number;
+import {ItemClass} from "../classes/item.class";
+
+export class PlanteClass extends ItemClass {
 }

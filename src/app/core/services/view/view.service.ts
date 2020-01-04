@@ -91,35 +91,35 @@ export class ViewService extends Service {
 						posNs.push(line.N);
 						gobelins.set(line.Id, {
 							dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
-							posX: line.X, posY: line.Y, posN: line.N
+							posX: line.X, posY: line.Y, posN: line.N, visible: true
 						});
 					} else {
 						if (CreaturetypesUtils.creatureIsGob(line.Type, line.Id)) {
 							gobelins.set(line.Id, {
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
-								posX: line.X, posY: line.Y, posN: line.N
+								posX: line.X, posY: line.Y, posN: line.N, visible: true
 							});
 						} else {
 							creatures.set(line.Id, {
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
-								posX: line.X, posY: line.Y, posN: line.N
+								posX: line.X, posY: line.Y, posN: line.N, visible: true
 							});
 						}
 					}
 					break;
 				case "T":
 					tresors.set(line.Id, {
-						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N, value: null
+						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N, value: null, visible: true
 					});
 					break;
 				case "L":
 					lieux.set(line.Id, {
-						dist: line.Dist, name: line.Nom, num: line.Id, type: line.Type, posX: line.X, posY: line.Y, posN: line.N
+						dist: line.Dist, name: line.Nom, num: line.Id, type: line.Type, posX: line.X, posY: line.Y, posN: line.N, visible: true
 					});
 					break;
 				case "P":
 					plantes.set(line.Id, {
-						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N
+						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N, visible: true
 					});
 					break;
 			}

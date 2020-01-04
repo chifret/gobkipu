@@ -115,6 +115,8 @@ export class CopyPasteViewComponent {
 		this.viewable.position.avgPosN = posN;
 		this.viewComponent.renderView(this.viewable);
 		this.processed = true;
+
+		console.log(this.viewable);
 	}
 
 	// reset(): void {
@@ -140,12 +142,12 @@ export class CopyPasteViewComponent {
 				if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
 					this.viewable.gobelins.set(id.num, {
 						dist: parseInt(cols[0], 10), level: parseInt(cols[3], 10), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
-						posX: parseInt(cols[6], 10), posY: parseInt(cols[7], 10), posN: parseInt(cols[8], 10)
+						posX: parseInt(cols[6], 10), posY: parseInt(cols[7], 10), posN: parseInt(cols[8], 10), visible: true
 					});
 				} else {
 					this.viewable.creatures.set(id.num, {
 						dist: parseInt(cols[0], 10), level: parseInt(cols[3], 10), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
-						posX: parseInt(cols[6], 10), posY: parseInt(cols[7], 10), posN: parseInt(cols[8], 10)
+						posX: parseInt(cols[6], 10), posY: parseInt(cols[7], 10), posN: parseInt(cols[8], 10), visible: true
 					});
 				}
 			} else {
@@ -160,12 +162,12 @@ export class CopyPasteViewComponent {
 				if (CreaturetypesUtils.creatureIsGob(cols[3], id.num)) {
 					this.viewable.gobelins.set(id.num, {
 						dist: parseInt(cols[0], 10), level: parseInt(cols[2], 10), name: id.name, num: id.num, type: 1, race: cols[3], clan: null,
-						posX: parseInt(cols[4], 10), posY: parseInt(cols[5], 10), posN: parseInt(cols[6], 10)
+						posX: parseInt(cols[4], 10), posY: parseInt(cols[5], 10), posN: parseInt(cols[6], 10), visible: true
 					});
 				} else {
 					this.viewable.creatures.set(id.num, {
 						dist: parseInt(cols[0], 10), level: parseInt(cols[2], 10), name: id.name, num: id.num, type: 0, race: cols[3], clan: null,
-						posX: parseInt(cols[4], 10), posY: parseInt(cols[5], 10), posN: parseInt(cols[6], 10)
+						posX: parseInt(cols[4], 10), posY: parseInt(cols[5], 10), posN: parseInt(cols[6], 10), visible: true
 					});
 				}
 			}
@@ -186,7 +188,7 @@ export class CopyPasteViewComponent {
 			const n = parseInt(cols[5], 10);
 			this.viewable.tresors.set(parseInt(cols[1], 10), {
 				dist: parseInt(cols[0], 10), name: cols[2], num: parseInt(cols[1], 10),
-				posX: x, posY: y, posN: parseInt(cols[5], 10), value: null
+				posX: x, posY: y, posN: parseInt(cols[5], 10), value: null, visible: true
 			});
 			this.setPos(x, y, n);
 		} catch (e) {
@@ -205,7 +207,7 @@ export class CopyPasteViewComponent {
 			const n = parseInt(cols[5], 10);
 			this.viewable.lieux.set(parseInt(cols[1], 10), {
 				dist: parseInt(cols[0], 10), name: cols[2], num: parseInt(cols[1], 10), type: cols[3],
-				posX: x, posY: y, posN: parseInt(cols[6], 10)
+				posX: x, posY: y, posN: parseInt(cols[6], 10), visible: true
 			});
 			this.setPos(x, y, n);
 		} catch (e) {
@@ -224,7 +226,7 @@ export class CopyPasteViewComponent {
 			const n = parseInt(cols[5], 10);
 			this.viewable.plantes.set(parseInt(cols[1], 10), {
 				dist: parseInt(cols[0], 10), name: cols[2], num: parseInt(cols[1], 10),
-				posX: x, posY: y, posN: parseInt(cols[5], 10)
+				posX: x, posY: y, posN: parseInt(cols[5], 10), visible: true
 			});
 			this.setPos(x, y, n);
 		} catch (e) {
@@ -246,10 +248,10 @@ export class CopyPasteViewComponent {
 		if (!this.viewable.position.maxY || y > this.viewable.position.maxY) {
 			this.viewable.position.maxY = y;
 		}
-		if (!this.viewable.position.minN || y < this.viewable.position.minN) {
+		if (!this.viewable.position.minN || n < this.viewable.position.minN) {
 			this.viewable.position.minN = n;
 		}
-		if (!this.viewable.position.maxN || y > this.viewable.position.maxN) {
+		if (!this.viewable.position.maxN || n > this.viewable.position.maxN) {
 			this.viewable.position.maxN = n;
 		}
 	}

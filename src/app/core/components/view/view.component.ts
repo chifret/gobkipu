@@ -4,7 +4,8 @@ import {AssetssService} from "app/core/services/assets/assets.service";
 import {Subscription} from "rxjs";
 import {SubscriptionUtils} from "app/core/utils/subscription.utils";
 import {ViewUtils} from "../../utils/view.utils";
-import {ChangeContext, Options, PointerType} from "ng5-slider";
+import {ChangeContext, Options} from "ng5-slider";
+import {debounce} from "../../functions/debounce.function";
 
 @Component({
 	selector: "view-component",
@@ -15,6 +16,7 @@ export class ViewComponent implements OnDestroy {
 	viewable: ViewableClass;
 	processed = false;
 	order: string = null;
+	debouncer: any = null;
 	rangeMin = 0;
 	rangeMax = 0;
 	rangeOpt: Options = {
@@ -41,14 +43,12 @@ export class ViewComponent implements OnDestroy {
 		});
 	}
 
-	onUserChangeEnd(changeContext: ChangeContext): void {
-		console.log(`onUserChangeEnd(${this.getChangeContextString(changeContext)})\n`);
-	}
-
-	getChangeContextString(changeContext: ChangeContext): string {
-		return `{pointerType: ${changeContext.pointerType === PointerType.Min ? "Min" : "Max"}, ` +
-			`value: ${changeContext.value}, ` +
-			`highValue: ${changeContext.highValue}}`;
+	onUserChange(changeContext: ChangeContext): void {
+		this.debouncer = debounce(() => {
+			console.log(changeContext.value + " " + changeContext.highValue);
+			this.viewable.setVisibility(changeContext.value, changeContext.highValue);
+			this.renderView();
+		}, this.debouncer, 750);
 	}
 
 	setNewRange(min: number, max: number): void {
@@ -67,9 +67,11 @@ export class ViewComponent implements OnDestroy {
 		SubscriptionUtils.unsubs(this.nameToItemSubscription);
 	}
 
-	renderView(viewable: ViewableClass) {
+	renderView(viewable?: ViewableClass) {
 		console.log("begin");
-		this.viewable = viewable;
+		if (viewable) {
+			this.viewable = viewable;
+		}
 		(this.table.nativeElement as HTMLDivElement).innerHTML = "";
 		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
 		(this.table.nativeElement as HTMLDivElement).style.width = "auto";
@@ -99,7 +101,7 @@ export class ViewComponent implements OnDestroy {
 				let hasFollower = false;
 				let hasMonster = false;
 				this.viewable.creatures.forEach((creature) => {
-					if (creature.posX === x && creature.posY === y) {
+					if (creature.posX === x && creature.posY === y && creature.visible) {
 						const diffDist = Math.abs(this.viewable.position.avgPosN - creature.posN);
 						let diffLevel = null;
 						if (this.viewable.viewerLevel) {
@@ -176,10 +178,10 @@ export class ViewComponent implements OnDestroy {
 				let hasAllies = false;
 				let hasGod = false;
 				this.viewable.gobelins.forEach((gobelin) => {
-					if (gobelin.posX === x && gobelin.posY === y) {
+					if (gobelin.posX === x && gobelin.posY === y && gobelin.visible) {
 						if (gobelin.num > 0 && gobelin.num <= 14) {
 							hasGod = true;
-						} else if (viewable.viewerAllies && viewable.viewerAllies.indexOf(gobelin.num) > -1) {
+						} else if (this.viewable.viewerAllies && this.viewable.viewerAllies.indexOf(gobelin.num) > -1) {
 							hasAllies = true;
 						} else {
 							hasRegularGobs = true;
@@ -256,7 +258,7 @@ export class ViewComponent implements OnDestroy {
 				minDist = null;
 				let maxValue = 0;
 				this.viewable.tresors.forEach((tresor) => {
-					if (tresor.posX === x && tresor.posY === y) {
+					if (tresor.posX === x && tresor.posY === y && tresor.visible) {
 						const diffLevel = Math.abs(this.viewable.position.avgPosN - tresor.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
@@ -331,7 +333,7 @@ export class ViewComponent implements OnDestroy {
 				infoC = null;
 				minDist = null;
 				this.viewable.plantes.forEach((plante) => {
-					if (plante.posX === x && plante.posY === y) {
+					if (plante.posX === x && plante.posY === y && plante.visible) {
 						const diffLevel = Math.abs(this.viewable.position.avgPosN - plante.posN);
 						if (minDist === null || minDist > diffLevel) {
 							minDist = diffLevel;
@@ -361,7 +363,7 @@ export class ViewComponent implements OnDestroy {
 				let hasTree = false;
 				let hasBuilding = false;
 				this.viewable.lieux.forEach((lieu) => {
-					if (lieu.posX === x && lieu.posY === y) {
+					if (lieu.posX === x && lieu.posY === y && lieu.visible) {
 						if (lieu.name === "Arbre" && !color) {
 							hasTree = true;
 						} else {
@@ -388,6 +390,7 @@ export class ViewComponent implements OnDestroy {
 			}
 		}
 
+		console.log(this.viewable.rangeMin + " " + this.viewable.rangeMax);
 		setTimeout(() => {
 			const viewWidth = this.viewable.position.maxX - this.viewable.position.minX + 1;
 			let scale = 1;
@@ -399,7 +402,10 @@ export class ViewComponent implements OnDestroy {
 			(this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.viewable.position.maxY - this.viewable.position.minY + 1) * 50 * scale + "px";
 			(this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
 
-			this.setNewRange(this.viewable.position.minN, this.viewable.position.maxN);
+			if (viewable) {
+				// means : if new view, not current one bug with range change
+				this.setNewRange(this.viewable.position.minN, this.viewable.position.maxN);
+			}
 		}, 50);
 
 		this.processed = true;
@@ -410,7 +416,7 @@ export class ViewComponent implements OnDestroy {
 	showGobInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.gobelins.forEach((item) => {
-			if (item.posX === x && item.posY === y) {
+			if (item.posX === x && item.posY === y && item.visible) {
 				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -421,7 +427,7 @@ export class ViewComponent implements OnDestroy {
 	showMonsterInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.creatures.forEach((item) => {
-			if (item.posX === x && item.posY === y) {
+			if (item.posX === x && item.posY === y && item.visible) {
 				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -432,7 +438,7 @@ export class ViewComponent implements OnDestroy {
 	showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.tresors.forEach((item) => {
-			if (item.posX === x && item.posY === y) {
+			if (item.posX === x && item.posY === y && item.visible) {
 				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -443,7 +449,7 @@ export class ViewComponent implements OnDestroy {
 	showPlantsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.plantes.forEach((item) => {
-			if (item.posX === x && item.posY === y) {
+			if (item.posX === x && item.posY === y && item.visible) {
 				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -454,7 +460,7 @@ export class ViewComponent implements OnDestroy {
 	showLieuxInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
 		this.viewable.lieux.forEach((item) => {
-			if (item.posX === x && item.posY === y) {
+			if (item.posX === x && item.posY === y && item.visible) {
 				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
 			}
 		});
@@ -475,7 +481,7 @@ export class ViewComponent implements OnDestroy {
 	getPickOrder(): void {
 		const map = new Map<number, { x: number, y: number, n: number }>();
 		this.viewable.tresors.forEach((treasure) => {
-			if (treasure.value >= 3) {
+			if (treasure.value >= 3 && treasure.visible) {
 				map.set(treasure.num, {x: treasure.posX, y: treasure.posY, n: treasure.posN});
 			}
 		});

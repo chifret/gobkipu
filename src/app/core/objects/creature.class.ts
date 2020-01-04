@@ -1,12 +1,8 @@
-export class CreatureClass {
-	dist: number;
+import {ItemClass} from "../classes/item.class";
+
+export class CreatureClass extends ItemClass {
 	level: number;
-	name: string;
-	num: number;
 	type: number;
 	race: string;
 	clan: string;
-	posX: number;
-	posY: number;
-	posN: number;
 }
