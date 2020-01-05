@@ -6,7 +6,7 @@ import {Service} from "../service";
 import {CsvUtils} from "../../utils/csv.utils";
 import {ViewTyping} from "../../typings/view.typings";
 import {LoginService} from "../login.service";
-import {ViewableClass} from "../../objects/viewable.class";
+import {ViewableClass} from "../../classes/viewable.class";
 import {CreaturetypesUtils} from "../../utils/business/creaturetypes.utils";
 import {CreatureClass} from "../../objects/creature.class";
 import {TresorClass} from "../../objects/tresor.class";

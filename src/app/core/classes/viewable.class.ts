@@ -1,8 +1,8 @@
-import {CreatureClass} from "./creature.class";
-import {TresorClass} from "./tresor.class";
-import {LieuxClass} from "./lieux.class";
-import {PlanteClass} from "./plante.class";
-import {ItemClass} from "../classes/item.class";
+import {CreatureClass} from "../objects/creature.class";
+import {TresorClass} from "../objects/tresor.class";
+import {LieuxClass} from "../objects/lieux.class";
+import {PlanteClass} from "../objects/plante.class";
+import {ItemClass} from "./item.class";
 
 export class ViewableClass {
 

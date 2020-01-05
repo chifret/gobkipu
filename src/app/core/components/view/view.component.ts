@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnDestroy, ViewChild} from "@angular/core";
-import {ViewableClass} from "../../objects/viewable.class";
+import {ViewableClass} from "../../classes/viewable.class";
 import {AssetssService} from "app/core/services/assets/assets.service";
 import {Subscription} from "rxjs";
 import {SubscriptionUtils} from "app/core/utils/subscription.utils";

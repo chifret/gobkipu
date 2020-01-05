@@ -1,6 +1,6 @@
 import {Component, ElementRef, ViewChild} from "@angular/core";
 import {ViewComponent} from "../core/components/view/view.component";
-import {ViewableClass} from "../core/objects/viewable.class";
+import {ViewableClass} from "../core/classes/viewable.class";
 import {CreaturetypesUtils} from "../core/utils/business/creaturetypes.utils";
 import {CreatureClass} from "../core/objects/creature.class";
 
