@@ -45,10 +45,9 @@ export class ViewComponent implements OnDestroy {
 
 	onUserChange(changeContext: ChangeContext): void {
 		this.debouncer = debounce(() => {
-			console.log(changeContext.value + " " + changeContext.highValue);
 			this.viewable.setVisibility(changeContext.value, changeContext.highValue);
 			this.renderView();
-		}, this.debouncer, 750);
+		}, this.debouncer, 250);
 	}
 
 	setNewRange(min: number, max: number): void {
@@ -68,14 +67,13 @@ export class ViewComponent implements OnDestroy {
 	}
 
 	renderView(viewable?: ViewableClass) {
-		console.log("begin");
 		if (viewable) {
 			this.viewable = viewable;
+			(this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
+			(this.table.nativeElement as HTMLDivElement).style.width = "auto";
+			(this.table.nativeElement as HTMLDivElement).style.height = "auto";
 		}
 		(this.table.nativeElement as HTMLDivElement).innerHTML = "";
-		(this.table.nativeElement as HTMLDivElement).style.transform = "scale(1)";
-		(this.table.nativeElement as HTMLDivElement).style.width = "auto";
-		(this.table.nativeElement as HTMLDivElement).style.height = "auto";
 
 		for (let y = this.viewable.position.maxY; y >= this.viewable.position.minY; y--) {
 			const row = document.createElement("div") as HTMLDivElement;
@@ -100,45 +98,48 @@ export class ViewComponent implements OnDestroy {
 				let isSearched = false;
 				let hasFollower = false;
 				let hasMonster = false;
-				this.viewable.creatures.forEach((creature) => {
-					if (creature.posX === x && creature.posY === y && creature.visible) {
-						const diffDist = Math.abs(this.viewable.position.avgPosN - creature.posN);
-						let diffLevel = null;
-						if (this.viewable.viewerLevel) {
-							diffLevel = creature.level - this.viewable.viewerLevel;
-						}
-						if (this.followers.indexOf(creature.race) > -1 && creature.race !== creature.name) {
-							hasFollower = true;
-						} else {
-							hasMonster = true;
-							if (maxLevel === null || maxLevel < diffLevel) {
-								maxLevel = diffLevel;
+				const creatures = this.viewable.creatures.get(x, y);
+				if (creatures) {
+					creatures.forEach((creature) => {
+						if (creature.visible) {
+							const diffDist = Math.abs(this.viewable.position.avgPosN - creature.posN);
+							let diffLevel = null;
+							if (this.viewable.viewerLevel) {
+								diffLevel = creature.level - this.viewable.viewerLevel;
+							}
+							if (this.followers.indexOf(creature.race) > -1 && creature.race !== creature.name) {
+								hasFollower = true;
+							} else {
+								hasMonster = true;
+								if (maxLevel === null || maxLevel < diffLevel) {
+									maxLevel = diffLevel;
+								}
+							}
+							if (minDist === null || minDist > diffDist) {
+								minDist = diffDist;
+							}
+							if (this.viewable.viewerSearches && this.viewable.viewerSearches.indexOf(creature.name) > -1) {
+								isSearched = true;
+							}
+							if (creature.dist === -1) {
+								cell.style.border = "1px solid white";
+								cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
+							}
+							if (!infoC) {
+								infoC = document.createElement("div") as HTMLDivElement;
+								infoC.style.position = "absolute";
+								infoC.style.top = "0";
+								infoC.style.right = "0";
+								infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+									this.showMonsterInfo(e, x, y);
+								});
+								infoC.addEventListener("mouseleave", () => {
+									this.hideInfo();
+								});
 							}
 						}
-						if (minDist === null || minDist > diffDist) {
-							minDist = diffDist;
-						}
-						if (this.viewable.viewerSearches && this.viewable.viewerSearches.indexOf(creature.name) > -1) {
-							isSearched = true;
-						}
-						if (creature.dist === -1) {
-							cell.style.border = "1px solid white";
-							cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
-						}
-						if (!infoC) {
-							infoC = document.createElement("div") as HTMLDivElement;
-							infoC.style.position = "absolute";
-							infoC.style.top = "0";
-							infoC.style.right = "0";
-							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-								this.showMonsterInfo(e, x, y);
-							});
-							infoC.addEventListener("mouseleave", () => {
-								this.hideInfo();
-							});
-						}
-					}
-				});
+					});
+				}
 				if (infoC) {
 					let lang: number = ViewComponent.setCellDist(infoC, minDist);
 					if (hasMonster) {
@@ -177,38 +178,40 @@ export class ViewComponent implements OnDestroy {
 				let hasRegularGobs = false;
 				let hasAllies = false;
 				let hasGod = false;
-				this.viewable.gobelins.forEach((gobelin) => {
-					if (gobelin.posX === x && gobelin.posY === y && gobelin.visible) {
-						if (gobelin.num > 0 && gobelin.num <= 14) {
-							hasGod = true;
-						} else if (this.viewable.viewerAllies && this.viewable.viewerAllies.indexOf(gobelin.num) > -1) {
-							hasAllies = true;
-						} else {
-							hasRegularGobs = true;
+				const gobelins = this.viewable.gobelins.get(x, y);
+				if (gobelins) {
+					gobelins.forEach((gobelin) => {
+						if (gobelin.visible) {
+							if (gobelin.num > 0 && gobelin.num <= 14) {
+								hasGod = true;
+							} else if (this.viewable.viewerAllies && this.viewable.viewerAllies.indexOf(gobelin.num) > -1) {
+								hasAllies = true;
+							} else {
+								hasRegularGobs = true;
+							}
+							if (gobelin.dist === -1) {
+								cell.style.border = "1px solid white";
+								cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
+							}
+							const diffLevel = Math.abs(this.viewable.position.avgPosN - gobelin.posN);
+							if (minDist === null || minDist > diffLevel) {
+								minDist = diffLevel;
+							}
+							if (!infoC) {
+								infoC = document.createElement("div") as HTMLDivElement;
+								infoC.style.position = "absolute";
+								infoC.style.top = "0";
+								infoC.style.left = "0";
+								infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+									this.showGobInfo(e, x, y);
+								});
+								infoC.addEventListener("mouseleave", () => {
+									this.hideInfo();
+								});
+							}
 						}
-						if (gobelin.dist === -1) {
-							cell.style.border = "1px solid white";
-							cell.style.boxShadow = "0px 0px 15px white, 0px 0px 15px white";
-						}
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - gobelin.posN);
-						if (minDist === null || minDist > diffLevel) {
-							minDist = diffLevel;
-						}
-						if (!infoC) {
-							infoC = document.createElement("div") as HTMLDivElement;
-							infoC.style.position = "absolute";
-							infoC.style.top = "0";
-							infoC.style.left = "0";
-							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-								this.showGobInfo(e, x, y);
-							});
-							infoC.addEventListener("mouseleave", () => {
-								this.hideInfo();
-							});
-						}
-
-					}
-				});
+					});
+				}
 				if (infoC) {
 					let lang: number = ViewComponent.setCellDist(infoC, minDist);
 					if (hasGod) {
@@ -257,51 +260,54 @@ export class ViewComponent implements OnDestroy {
 				infoC = null;
 				minDist = null;
 				let maxValue = 0;
-				this.viewable.tresors.forEach((tresor) => {
-					if (tresor.posX === x && tresor.posY === y && tresor.visible) {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - tresor.posN);
-						if (minDist === null || minDist > diffLevel) {
-							minDist = diffLevel;
-						}
+				const tresors = this.viewable.tresors.get(x, y);
+				if (tresors) {
+					tresors.forEach((tresor) => {
+						if (tresor.visible) {
+							const diffLevel = Math.abs(this.viewable.position.avgPosN - tresor.posN);
+							if (minDist === null || minDist > diffLevel) {
+								minDist = diffLevel;
+							}
 
-						let found = false;
-						const tmp = this.nameToItem.get(tresor.name);
-						if (tmp) {
-							found = true;
-							tresor.value = tmp.value;
-						}
+							let found = false;
+							const tmp = this.nameToItem.get(tresor.name);
+							if (tmp) {
+								found = true;
+								tresor.value = tmp.value;
+							}
 
-						if (!found) {
-							for (let v = 0; v < this.namepartToItem.length; v++) {
-								if (tresor.name.indexOf(this.namepartToItem[v].name) > -1) {
-									found = true;
-									tresor.value = this.namepartToItem[v].value;
-									break;
+							if (!found) {
+								for (let v = 0; v < this.namepartToItem.length; v++) {
+									if (tresor.name.indexOf(this.namepartToItem[v].name) > -1) {
+										found = true;
+										tresor.value = this.namepartToItem[v].value;
+										break;
+									}
 								}
 							}
-						}
-						if (!found) {
-							tresor.value = 0;
-							console.log(tresor.name + " not listed !");
-						}
+							if (!found) {
+								tresor.value = 0;
+								console.log(tresor.name + " not listed !");
+							}
 
-						if (!maxValue || maxValue < tresor.value) {
-							maxValue = tresor.value;
+							if (!maxValue || maxValue < tresor.value) {
+								maxValue = tresor.value;
+							}
+							if (!infoC) {
+								infoC = document.createElement("div") as HTMLDivElement;
+								infoC.style.position = "absolute";
+								infoC.style.bottom = "0";
+								infoC.style.left = "0";
+								infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+									this.showTreasorsInfo(e, x, y);
+								});
+								infoC.addEventListener("mouseleave", () => {
+									this.hideInfo();
+								});
+							}
 						}
-						if (!infoC) {
-							infoC = document.createElement("div") as HTMLDivElement;
-							infoC.style.position = "absolute";
-							infoC.style.bottom = "0";
-							infoC.style.left = "0";
-							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-								this.showTreasorsInfo(e, x, y);
-							});
-							infoC.addEventListener("mouseleave", () => {
-								this.hideInfo();
-							});
-						}
-					}
-				});
+					});
+				}
 				if (infoC) {
 					ViewComponent.setCellDist(infoC, minDist);
 					switch (maxValue) {
@@ -332,27 +338,30 @@ export class ViewComponent implements OnDestroy {
 				// ------------------------------------------- plantes -------------------------------------------
 				infoC = null;
 				minDist = null;
-				this.viewable.plantes.forEach((plante) => {
-					if (plante.posX === x && plante.posY === y && plante.visible) {
-						const diffLevel = Math.abs(this.viewable.position.avgPosN - plante.posN);
-						if (minDist === null || minDist > diffLevel) {
-							minDist = diffLevel;
+				const plantes = this.viewable.plantes.get(x, y);
+				if (plantes) {
+					plantes.forEach((plante) => {
+						if (plante.posX === x && plante.posY === y && plante.visible) {
+							const diffLevel = Math.abs(this.viewable.position.avgPosN - plante.posN);
+							if (minDist === null || minDist > diffLevel) {
+								minDist = diffLevel;
+							}
+							if (!infoC) {
+								infoC = document.createElement("div") as HTMLDivElement;
+								infoC.style.position = "absolute";
+								infoC.style.bottom = "0";
+								infoC.style.backgroundColor = "#8fa245";
+								infoC.style.right = "0";
+								infoC.addEventListener("mouseenter", (e: MouseEvent) => {
+									this.showPlantsInfo(e, x, y);
+								});
+								infoC.addEventListener("mouseleave", () => {
+									this.hideInfo();
+								});
+							}
 						}
-						if (!infoC) {
-							infoC = document.createElement("div") as HTMLDivElement;
-							infoC.style.position = "absolute";
-							infoC.style.bottom = "0";
-							infoC.style.backgroundColor = "#8fa245";
-							infoC.style.right = "0";
-							infoC.addEventListener("mouseenter", (e: MouseEvent) => {
-								this.showPlantsInfo(e, x, y);
-							});
-							infoC.addEventListener("mouseleave", () => {
-								this.hideInfo();
-							});
-						}
-					}
-				});
+					});
+				}
 				if (infoC) {
 					ViewComponent.setCellDist(infoC, minDist);
 					cell.appendChild(infoC);
@@ -362,15 +371,18 @@ export class ViewComponent implements OnDestroy {
 				const color: string = null;
 				let hasTree = false;
 				let hasBuilding = false;
-				this.viewable.lieux.forEach((lieu) => {
-					if (lieu.posX === x && lieu.posY === y && lieu.visible) {
-						if (lieu.name === "Arbre" && !color) {
-							hasTree = true;
-						} else {
-							hasBuilding = true;
+				const lieux = this.viewable.lieux.get(x, y);
+				if (lieux) {
+					lieux.forEach((lieu) => {
+						if (lieu.posX === x && lieu.posY === y && lieu.visible) {
+							if (lieu.name === "Arbre" && !color) {
+								hasTree = true;
+							} else {
+								hasBuilding = true;
+							}
 						}
-					}
-				});
+					});
+				}
 				if (hasTree || hasBuilding) {
 					cell.addEventListener("mouseenter", (e: MouseEvent) => {
 						this.showLieuxInfo(e, x, y);
@@ -390,80 +402,94 @@ export class ViewComponent implements OnDestroy {
 			}
 		}
 
-		console.log(this.viewable.rangeMin + " " + this.viewable.rangeMax);
 		setTimeout(() => {
-			const viewWidth = this.viewable.position.maxX - this.viewable.position.minX + 1;
-			let scale = 1;
-			if (viewWidth * 50 > (this.table.nativeElement as HTMLDivElement).clientWidth) {
-				scale = (this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50);
-			}
-
-			(this.table.nativeElement as HTMLDivElement).style.transform = "scale(" + scale + ")";
-			(this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.viewable.position.maxY - this.viewable.position.minY + 1) * 50 * scale + "px";
-			(this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
 
 			if (viewable) {
 				// means : if new view, not current one bug with range change
+
+				const viewWidth = this.viewable.position.maxX - this.viewable.position.minX + 1;
+				let scale = 1;
+				if (viewWidth * 50 > (this.table.nativeElement as HTMLDivElement).clientWidth) {
+					scale = (this.table.nativeElement as HTMLDivElement).clientWidth / (viewWidth * 50);
+				}
+				(this.table.nativeElement as HTMLDivElement).style.transform = "scale(" + scale + ")";
+				(this.table.nativeElement as HTMLDivElement).parentElement.style.height = (this.viewable.position.maxY - this.viewable.position.minY + 1) * 50 * scale + "px";
+				(this.table.nativeElement as HTMLDivElement).style.width = viewWidth * 50 + "px";
+
 				this.setNewRange(this.viewable.position.minN, this.viewable.position.maxN);
 			}
-		}, 50);
+		}, 0);
 
 		this.processed = true;
-		console.log("processed");
 	}
 
 	// noinspection DuplicatedCode
 	showGobInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		this.viewable.gobelins.forEach((item) => {
-			if (item.posX === x && item.posY === y && item.visible) {
-				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
-			}
-		});
+		const items = this.viewable.gobelins.get(x, y);
+		if (items) {
+			items.forEach((item) => {
+				if (item.visible) {
+					txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
+				}
+			});
+		}
 		this.setTooltip(e, txt);
 	}
 
 	// noinspection DuplicatedCode
 	showMonsterInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		this.viewable.creatures.forEach((item) => {
-			if (item.posX === x && item.posY === y && item.visible) {
-				txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
-			}
-		});
+		const items = this.viewable.creatures.get(x, y);
+		if (items) {
+			items.forEach((item) => {
+				if (item.posX === x && item.posY === y && item.visible) {
+					txt += "(" + item.num + ") " + item.name + " [" + item.level + "] " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
+				}
+			});
+		}
 		this.setTooltip(e, txt);
 	}
 
 	// noinspection DuplicatedCode
 	showTreasorsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		this.viewable.tresors.forEach((item) => {
-			if (item.posX === x && item.posY === y && item.visible) {
-				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
-			}
-		});
+		const items = this.viewable.tresors.get(x, y);
+		if (items) {
+			items.forEach((item) => {
+				if (item.posX === x && item.posY === y && item.visible) {
+					txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
+				}
+			});
+		}
 		this.setTooltip(e, txt);
 	}
 
 	// noinspection DuplicatedCode
 	showPlantsInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		this.viewable.plantes.forEach((item) => {
-			if (item.posX === x && item.posY === y && item.visible) {
-				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
-			}
-		});
+		const items = this.viewable.plantes.get(x, y);
+		if (items) {
+			items.forEach((item) => {
+				if (item.posX === x && item.posY === y && item.visible) {
+					txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
+				}
+			});
+		}
 		this.setTooltip(e, txt);
 	}
 
 	// noinspection DuplicatedCode
 	showLieuxInfo(e: MouseEvent, x: number, y: number): void {
 		let txt = "";
-		this.viewable.lieux.forEach((item) => {
-			if (item.posX === x && item.posY === y && item.visible) {
-				txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
-			}
-		});
+		const items = this.viewable.lieux.get(x, y);
+		if (items) {
+			items.forEach((item) => {
+				if (item.posX === x && item.posY === y && item.visible) {
+					txt += "(" + item.num + ") " + item.name + " " + item.posX + "/" + item.posY + "/" + item.posN + "<br/>";
+				}
+			});
+		}
 		this.setTooltip(e, txt);
 	}
 

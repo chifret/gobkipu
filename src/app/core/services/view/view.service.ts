@@ -13,6 +13,7 @@ import {TresorClass} from "../../objects/tresor.class";
 import {LieuxClass} from "../../objects/lieux.class";
 import {PlanteClass} from "../../objects/plante.class";
 import {Observable} from "rxjs";
+import {Twodimmap} from "../../classes/twodimmap.class";
 
 @Injectable()
 export class ViewService extends Service {
@@ -55,11 +56,11 @@ export class ViewService extends Service {
 			minN: null,
 			maxN: null
 		};
-		const creatures: Map<number, CreatureClass> = new Map();
-		const gobelins: Map<number, CreatureClass> = new Map();
-		const tresors: Map<number, TresorClass> = new Map();
-		const lieux: Map<number, LieuxClass> = new Map();
-		const plantes: Map<number, PlanteClass> = new Map();
+		const creatures = new Twodimmap<CreatureClass>();
+		const gobelins = new Twodimmap<CreatureClass>();
+		const tresors = new Twodimmap<TresorClass>();
+		const lieux = new Twodimmap<LieuxClass>();
+		const plantes = new Twodimmap<PlanteClass>();
 
 		let maxDist = 0;
 		const posNs: number[] = [];
@@ -89,18 +90,18 @@ export class ViewService extends Service {
 				case "C":
 					if (line.Dist === -1) {
 						posNs.push(line.N);
-						gobelins.set(line.Id, {
+						gobelins.set({
 							dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
 							posX: line.X, posY: line.Y, posN: line.N, visible: true
 						});
 					} else {
 						if (CreaturetypesUtils.creatureIsGob(line.Type, line.Id)) {
-							gobelins.set(line.Id, {
+							gobelins.set({
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
 								posX: line.X, posY: line.Y, posN: line.N, visible: true
 							});
 						} else {
-							creatures.set(line.Id, {
+							creatures.set({
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
 								posX: line.X, posY: line.Y, posN: line.N, visible: true
 							});
@@ -108,17 +109,17 @@ export class ViewService extends Service {
 					}
 					break;
 				case "T":
-					tresors.set(line.Id, {
+					tresors.set({
 						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N, value: null, visible: true
 					});
 					break;
 				case "L":
-					lieux.set(line.Id, {
+					lieux.set({
 						dist: line.Dist, name: line.Nom, num: line.Id, type: line.Type, posX: line.X, posY: line.Y, posN: line.N, visible: true
 					});
 					break;
 				case "P":
-					plantes.set(line.Id, {
+					plantes.set({
 						dist: line.Dist, name: line.Nom, num: line.Id, posX: line.X, posY: line.Y, posN: line.N, visible: true
 					});
 					break;

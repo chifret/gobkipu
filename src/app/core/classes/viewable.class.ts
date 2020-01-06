@@ -3,6 +3,7 @@ import {TresorClass} from "../objects/tresor.class";
 import {LieuxClass} from "../objects/lieux.class";
 import {PlanteClass} from "../objects/plante.class";
 import {ItemClass} from "./item.class";
+import {Twodimmap} from "./twodimmap.class";
 
 export class ViewableClass {
 
@@ -27,11 +28,11 @@ export class ViewableClass {
 	rangeMin: number = null;
 	rangeMax: number = null;
 
-	creatures: Map<number, CreatureClass> = new Map();
-	gobelins: Map<number, CreatureClass> = new Map();
-	tresors: Map<number, TresorClass> = new Map();
-	lieux: Map<number, LieuxClass> = new Map();
-	plantes: Map<number, PlanteClass> = new Map();
+	creatures = new Twodimmap<CreatureClass>();
+	gobelins = new Twodimmap<CreatureClass>();
+	tresors = new Twodimmap<TresorClass>();
+	lieux = new Twodimmap<LieuxClass>();
+	plantes = new Twodimmap<PlanteClass>();
 
 	viewerLevel: number = null;
 	viewerAllies: number[] = [];
@@ -55,11 +56,11 @@ export class ViewableClass {
 			minN: null,
 			maxN: null
 		},
-		creatures: Map<number, CreatureClass>,
-		gobelins: Map<number, CreatureClass>,
-		tresors: Map<number, TresorClass>,
-		lieux: Map<number, LieuxClass>,
-		plantes: Map<number, PlanteClass>,
+		creatures: Twodimmap<CreatureClass>,
+		gobelins: Twodimmap<CreatureClass>,
+		tresors: Twodimmap<TresorClass>,
+		lieux: Twodimmap<LieuxClass>,
+		plantes: Twodimmap<PlanteClass>,
 		viewerLevel: number = null,
 		viewerAllies: number[] = null,
 		viewerSearches: string[] = null) {
@@ -92,7 +93,7 @@ export class ViewableClass {
 		this.setItemListVisibility(this.plantes, this.rangeMin, this.rangeMax);
 	}
 
-	private setItemListVisibility(items: Map<number, ItemClass>, rangeMin: number, rangeMax: number): void {
+	private setItemListVisibility(items: Twodimmap<ItemClass>, rangeMin: number, rangeMax: number): void {
 		items.forEach(item => {
 			item.visible = !(item.posN < rangeMin || item.posN > rangeMax);
 		});
