@@ -38,6 +38,7 @@ import {FollowersComponent} from "app/followers/followers.component";
 import {FollowersService} from "app/core/services/followers/followers.service";
 import {DatePipe} from "@angular/common";
 import {Ng5SliderModule} from "ng5-slider";
+import {CopypastemhViewComponent} from "./view/copypastemh-view.component";
 
 @NgModule({
 	imports: [
@@ -59,6 +60,7 @@ import {Ng5SliderModule} from "ng5-slider";
 		SpotTravelComponent,
 		ViewComponent,
 		CopyPasteViewComponent,
+		CopypastemhViewComponent,
 		IdentifyComponent,
 		LoginComponent,
 		WjFilterPanelComponent,

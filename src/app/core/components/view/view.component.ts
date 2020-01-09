@@ -47,7 +47,7 @@ export class ViewComponent implements OnDestroy {
 		this.debouncer = debounce(() => {
 			this.viewable.setVisibility(changeContext.value, changeContext.highValue);
 			this.renderView();
-		}, this.debouncer, 250);
+		}, this.debouncer, 500);
 	}
 
 	setNewRange(min: number, max: number): void {

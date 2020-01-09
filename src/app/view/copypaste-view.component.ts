@@ -146,12 +146,14 @@ export class CopyPasteViewComponent {
 				if (CreaturetypesUtils.creatureIsGob(cols[4], id.num)) {
 					this.viewable.gobelins.set({
 						dist: parseInt(cols[0], 10), level: parseInt(cols[3], 10), name: id.name, num: id.num, type: 1, race: cols[4], clan: cols[5],
-						posX: x, posY: y, posN: n, visible: true
+						posX: x, posY: y, posN: n,
+						visible: true, basename: id.name, template: null, age: null
 					});
 				} else {
 					this.viewable.creatures.set({
 						dist: parseInt(cols[0], 10), level: parseInt(cols[3], 10), name: id.name, num: id.num, type: 0, race: cols[4], clan: cols[5],
-						posX: x, posY: y, posN: n, visible: true
+						posX: x, posY: y, posN: n,
+						visible: true, basename: id.name, template: null, age: null
 					});
 				}
 			} else {
@@ -166,12 +168,14 @@ export class CopyPasteViewComponent {
 				if (CreaturetypesUtils.creatureIsGob(cols[3], id.num)) {
 					this.viewable.gobelins.set({
 						dist: parseInt(cols[0], 10), level: parseInt(cols[2], 10), name: id.name, num: id.num, type: 1, race: cols[3], clan: null,
-						posX: x, posY: y, posN: n, visible: true
+						posX: x, posY: y, posN: n,
+						visible: true, basename: id.name, template: null, age: null
 					});
 				} else {
 					this.viewable.creatures.set({
 						dist: parseInt(cols[0], 10), level: parseInt(cols[2], 10), name: id.name, num: id.num, type: 0, race: cols[3], clan: null,
-						posX: x, posY: y, posN: n, visible: true
+						posX: x, posY: y, posN: n,
+						visible: true, basename: id.name, template: null, age: null
 					});
 				}
 			}
@@ -240,22 +244,22 @@ export class CopyPasteViewComponent {
 
 	// noinspection DuplicatedCode
 	private setPos(x: number, y: number, n: number): void {
-		if (!this.viewable.position.minX || x < this.viewable.position.minX) {
+		if (this.viewable.position.minX == null || x < this.viewable.position.minX) {
 			this.viewable.position.minX = x;
 		}
-		if (!this.viewable.position.maxX || x > this.viewable.position.maxX) {
+		if (this.viewable.position.maxX == null || x > this.viewable.position.maxX) {
 			this.viewable.position.maxX = x;
 		}
-		if (!this.viewable.position.minY || y < this.viewable.position.minY) {
+		if (this.viewable.position.minY == null || y < this.viewable.position.minY) {
 			this.viewable.position.minY = y;
 		}
-		if (!this.viewable.position.maxY || y > this.viewable.position.maxY) {
+		if (this.viewable.position.maxY == null || y > this.viewable.position.maxY) {
 			this.viewable.position.maxY = y;
 		}
-		if (!this.viewable.position.minN || n < this.viewable.position.minN) {
+		if (this.viewable.position.minN == null || n < this.viewable.position.minN) {
 			this.viewable.position.minN = n;
 		}
-		if (!this.viewable.position.maxN || n > this.viewable.position.maxN) {
+		if (this.viewable.position.maxN == null || n > this.viewable.position.maxN) {
 			this.viewable.position.maxN = n;
 		}
 	}

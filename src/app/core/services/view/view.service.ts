@@ -68,22 +68,22 @@ export class ViewService extends Service {
 			if (line.Dist > maxDist) {
 				maxDist = line.Dist;
 			}
-			if (!position.minX || line.X < position.minX) {
+			if (position.minX == null || line.X < position.minX) {
 				position.minX = line.X;
 			}
-			if (!position.maxX || line.X > position.maxX) {
+			if (position.maxX == null || line.X > position.maxX) {
 				position.maxX = line.X;
 			}
-			if (!position.minY || line.Y < position.minY) {
+			if (position.minY == null || line.Y < position.minY) {
 				position.minY = line.Y;
 			}
-			if (!position.maxY || line.Y > position.maxY) {
+			if (position.maxY == null || line.Y > position.maxY) {
 				position.maxY = line.Y;
 			}
-			if (!position.minN || line.N < position.minN) {
+			if (position.minN == null || line.N < position.minN) {
 				position.minN = line.N;
 			}
-			if (!position.maxN || line.N > position.maxN) {
+			if (position.maxN == null || line.N > position.maxN) {
 				position.maxN = line.N;
 			}
 			switch (line.Categorie) {
@@ -92,18 +92,21 @@ export class ViewService extends Service {
 						posNs.push(line.N);
 						gobelins.set({
 							dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
-							posX: line.X, posY: line.Y, posN: line.N, visible: true
+							posX: line.X, posY: line.Y, posN: line.N,
+							visible: true, basename: line.Nom, template: null, age: null
 						});
 					} else {
 						if (CreaturetypesUtils.creatureIsGob(line.Type, line.Id)) {
 							gobelins.set({
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
-								posX: line.X, posY: line.Y, posN: line.N, visible: true
+								posX: line.X, posY: line.Y, posN: line.N,
+								visible: true, basename: line.Nom, template: null, age: null
 							});
 						} else {
 							creatures.set({
 								dist: line.Dist, level: line.Niveau, name: line.Nom, num: line.Id, type: 1, race: line.Type, clan: line.Clan,
-								posX: line.X, posY: line.Y, posN: line.N, visible: true
+								posX: line.X, posY: line.Y, posN: line.N,
+								visible: true, basename: line.Nom, template: null, age: null
 							});
 						}
 					}
