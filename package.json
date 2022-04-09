@@ -26,7 +26,7 @@
     "core-js": "^2.6.9",
     "expo-cli": "^3.6.0",
     "font-awesome": "^4.7.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "ng5-slider": "^1.2.4",
     "ngrx": "^2.0.1",
     "rxjs": "^6.5.2",
