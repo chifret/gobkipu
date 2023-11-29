@@ -54,6 +54,7 @@ export class GuildComponent implements OnInit {
 			viewable.viewerAllies = viewerAllies;
 			viewable.viewerSearches = viewerSearches;
 
+			debugger;
 			this.viewComponent.renderView(viewable);
 			this.processed = true;
 			this.lastId = id;

@@ -46,6 +46,7 @@ export class GuildService extends Service {
 					}
 				}
 			}
+			debugger;
 			gobs.push(GuildService.enrichment(gob));
 		}
 		return gobs;
