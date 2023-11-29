@@ -8,7 +8,6 @@ import { FilterPanel } from "./../WjFilterPanel/FilterPanel";
 import { GroupPanel } from "wijmo/wijmo.grid.grouppanel";
 
 @Component({
-    moduleId: module.id,
     selector: "qeos-gridpanels",
     templateUrl: "qeosgridpanels.component.html"
 })

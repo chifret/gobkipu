@@ -13,7 +13,6 @@ import { QeosGridPanelsComponent } from "../QeosGridPanels/qeosgridpanels.compon
 import { ComponentUtils } from "../../utils/component.utils";
 
 @Component({
-    moduleId: module.id,
     selector: "qeos-grid",
     template: `<wj-flex-grid-filter #filter
                                 [showSortButtons]="false"></wj-flex-grid-filter>
