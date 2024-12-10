@@ -1,10 +1,11 @@
 import {Injectable, Injector} from "@angular/core";
 import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Rx';
+import {Observable} from 'rxjs';
 import 'rxjs/add/operator/catch';
 import { throwError } from 'rxjs';
 
 import {Service} from "../service";
+import {catchError, map} from "rxjs/operators";
 
 @Injectable()
 export class PlacesService extends Service {
@@ -15,11 +16,11 @@ export class PlacesService extends Service {
 
 	public getJSON(): Observable<any> {
 		return this.http.get("assets/places.json")
-			.map((res: any) => {
+			.pipe(map((res: any) => {
 				return res;
-			})
-			.catch((error: any) => {
+			}))
+			.pipe(catchError((error: any) => {
 				return throwError(error.statusText);
-			});
+			}));
 	}
 }

@@ -1,6 +1,7 @@
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {Service} from "./service";
 import {Injectable, Injector} from "@angular/core";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class LoginService extends Service {
@@ -23,9 +24,9 @@ export class LoginService extends Service {
 			},
 			responseType: "text"
 		})
-			.map((res: any) => {
+			.pipe(map((res: any) => {
 				return (res === " OK");
-			});
+			}));
 	}
 
 	static getToken(): { id: number, clan: string, meute: string } {

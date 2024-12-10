@@ -6,7 +6,7 @@ import {ViewComponent} from "../core/components/view/view.component";
 import {ViewService} from "../core/services/view/view.service";
 import {ViewTyping} from "../core/typings/view.typings";
 import {GobsTypings} from "../core/typings/gobs.typings";
-import {combineLatest} from "rxjs/observable/combineLatest";
+import {combineLatest} from "rxjs";
 import {PastateEnum} from "../core/enums/pastate.enum";
 import {DlastateEnum} from "../core/enums/dlastate.enum";
 import {DatePipe} from "@angular/common";

@@ -12,8 +12,9 @@ import {CreatureClass} from "../../objects/creature.class";
 import {TresorClass} from "../../objects/tresor.class";
 import {LieuxClass} from "../../objects/lieux.class";
 import {PlanteClass} from "../../objects/plante.class";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 import {Twodimmap} from "../../classes/twodimmap.class";
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class ViewService extends Service {
@@ -29,19 +30,19 @@ export class ViewService extends Service {
 	public get(id: number, force: boolean = false): Observable<ViewTyping[]> {
 		if (localStorage.getItem("view-" + id) && !force) {
 			// console.log("get local");
-			return Observable.of(JSON.parse(localStorage.getItem("view-" + id)));
+			return of(JSON.parse(localStorage.getItem("view-" + id)));
 		} else {
 			// console.log("get distant");
 			const token = LoginService.getToken();
 			if (token) {
 				return this.http.get("https://www.chifret.be/gobkipu/services/view.php?key=" + token.clan + "&id=" + token.id + "&id_view=" + id, {responseType: "text"})
-					.map((res: any) => {
+					.pipe(map((res: any) => {
 						const json = CsvUtils.getJson<ViewTyping>(res, this.numerics, this.floats, this.dates, []);
 						localStorage.setItem("view-" + id, JSON.stringify(json));
 						return json;
-					});
+					}));
 			} else {
-				return Observable.empty();
+				return of(null);
 			}
 		}
 	}

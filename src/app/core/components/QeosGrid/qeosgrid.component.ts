@@ -15,17 +15,7 @@ import { ComponentUtils } from "../../utils/component.utils";
 @Component({
     selector: "qeos-grid",
     template: `<wj-flex-grid-filter #filter
-                                [showSortButtons]="false"></wj-flex-grid-filter>
-        <ng-template wjFlexGridCellTemplate
-                     [cellType]="'TopLeft'"
-                     let-cell="cell">
-            <div style="width: 16px;"
-                 *ngIf="((!this.hadHeaderSubrow && cell.row.index === 0) || (this.hadHeaderSubrow && cell.row.index === 1)) && this.isEditable"
-                 (click)="toggleEditMode()">
-                <i [attr.data-hidden]="!isReadOnly" class="fa fa-pencil"></i>
-                <i [attr.data-hidden]="isReadOnly" class="fa fa-unlock"></i>
-            </div>
-        </ng-template>${wjFlexGridMeta.template}`,
+                                [showSortButtons]="false"></wj-flex-grid-filter>`,
     inputs: [...wjFlexGridMeta.inputs],
     outputs: [...wjFlexGridMeta.outputs],
     providers: [
@@ -72,7 +62,7 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
         private readonly vcRef: ViewContainerRef,
         protected injector: Injector,
         @Inject("WjComponent") @SkipSelf() @Optional() parentCmp: any,
-        protected cdRef: ChangeDetectorRef,
+        cdRef: ChangeDetectorRef,
         protected appRef: ApplicationRef) {
         super(elRef, injector, elRef, cdRef);
         this.parentCmp = parentCmp;
@@ -104,6 +94,7 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
         super.ngAfterViewInit();
         setTimeout(() => {
             this.gridPanels.filter = this.filter;
+            // @ts-ignore
             this.gridPanels.grid = this;
         });
     }
@@ -131,6 +122,7 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
                 currentIndex += this.headerSubRow[i].width;
             }
             this.allowMerging = 2;
+            // @ts-ignore
             FlexGridUtils.centerHeadersItemFormatter(this);
             this.headerSubRow = null;
             this.hadHeaderSubrow = true;
@@ -167,6 +159,7 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
     private setGridPanels(): void {
         const tmp = ComponentUtils.addComponent(QeosGridPanelsComponent, this.vcRef, this.injector);
         this.gridPanels = tmp.instance;
+        // @ts-ignore
         this.gridPanels.grid = this;
         this.gridPanels.filter = this.filter;
         this.gridPanels.hasGroup = true;
@@ -177,8 +170,10 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
 
     private setDefaultSorting() {
         if (this.defaultSortDescription && (this.itemsSource as CollectionView)) {
+            // @ts-ignore
             if (FlexGridUtils.getColumnsLength(this) > 0) {
                 for (let i = 0; i < this.defaultSortDescription.length; i++) {
+                    // @ts-ignore
                     if (FlexGridUtils.getColumnWithColumnBinding(this, this.defaultSortDescription[i].field) !== null) {
                         //this.savedSortDesc.push(new SortDescription(this.defaultSortDescription[i].field, this.defaultSortDescription[i].asc));
                     }
@@ -190,8 +185,10 @@ export class QeosGridComponent extends WjFlexGrid implements OnInit, AfterViewIn
 
     private setDefaultGrouping() {
         if (this.defaultGroupDescription && (this.itemsSource as CollectionView)) {
+            // @ts-ignore
             if (FlexGridUtils.getColumnsLength(this) > 0) {
                 for (let i = 0; i < this.defaultGroupDescription.length; i++) {
+                    // @ts-ignore
                     if (FlexGridUtils.getColumnWithColumnBinding(this, this.defaultGroupDescription[i]) !== null) {
                         //this.savedGroupDesc.push(new PropertyGroupDescription(this.defaultGroupDescription[i]));
                     }

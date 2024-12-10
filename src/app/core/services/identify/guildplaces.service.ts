@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {Observable} from "rxjs/Observable";
+import {Observable, of} from "rxjs";
 
 import {Service} from "../service";
 import {CsvUtils} from "../../utils/csv.utils";
@@ -10,6 +10,7 @@ import {AssetssService} from "app/core/services/assets/assets.service";
 import {combineLatest} from "rxjs";
 import {CaratsUtils} from "app/core/utils/business/carats.utils";
 import {map} from "rxjs/operators";
+import {flatMap} from "rxjs/internal/operators";
 
 @Injectable()
 export class GuildplacesService extends Service {
@@ -65,11 +66,11 @@ export class GuildplacesService extends Service {
 				nameToItemResult,
 				weightToItemResult
 			}))
-			.switchMap(() => {
+			.pipe(flatMap(() => {
 				if (localStorage.getItem("guildplaceitems") && !force) {
 					const json = JSON.parse(localStorage.getItem("guildplaceitems"));
 					// this.enrichment(json);
-					return Observable.of(json);
+					return of(json);
 				} else {
 					const token = LoginService.getToken();
 					if (token) {
@@ -90,29 +91,29 @@ export class GuildplacesService extends Service {
 								}));
 						} else {
 							return this.get1()
-								.map((res2: any) => {
+								.pipe(map((res2: any) => {
 									const json = res2;
 									this.enrichment(json);
 									localStorage.setItem("guildplaceitems", JSON.stringify(json));
 									return json;
-								});
+								}));
 						}
 					} else {
-						return Observable.empty();
+						return of(null);
 					}
 				}
-			});
+			}));
 	}
 
 	private get1(): Observable<GuildPlaceItemsTypings[]> {
 		const token = LoginService.getToken();
 		if (token) {
 			return this.http.get("https://www.chifret.be/gobkipu/services/guildplace.php?key=" + token.clan + "&id=" + token.id, {responseType: "text"})
-				.map((res: any) => {
+				.pipe(map((res: any) => {
 					return CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-				});
+				}));
 		} else {
-			return Observable.empty();
+			return of(null);
 		}
 	}
 
@@ -120,11 +121,11 @@ export class GuildplacesService extends Service {
 		const token = LoginService.getToken();
 		if (token) {
 			return this.http.get("https://www.chifret.be/gobkipu/services/place.php?key=" + token.clan + "&id=" + token.id + "&id_place=" + id, {responseType: "text"})
-				.map((res: any) => {
+				.pipe(map((res: any) => {
 					return CsvUtils.getJson<GuildPlaceItemsTypings>(res, this.numerics, this.floats, this.dates, this.booleans);
-				});
+				}));
 		} else {
-			return Observable.empty();
+			return of(null);
 		}
 	}
 

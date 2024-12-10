@@ -2,7 +2,6 @@ import {BrowserModule} from "@angular/platform-browser";
 import {NgModule} from "@angular/core";
 import {HttpClientModule} from "@angular/common/http";
 import {RouterModule} from "@angular/router";
-import {FormsModule} from "@angular/forms";
 
 import {WjGridModule} from "wijmo/wijmo.angular2.grid";
 import {WjCoreModule} from "wijmo/wijmo.angular2.core";
@@ -37,19 +36,18 @@ import {AssetssService} from "app/core/services/assets/assets.service";
 import {FollowersComponent} from "app/followers/followers.component";
 import {FollowersService} from "app/core/services/followers/followers.service";
 import {DatePipe} from "@angular/common";
-import {Ng5SliderModule} from "ng5-slider";
 import {CopypastemhViewComponent} from "./view/copypastemh-view.component";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
 	imports: [
 		BrowserModule,
 		HttpClientModule,
-		FormsModule,
+        FormsModule,
 		WjGridModule,
 		WjCoreModule,
 		WjGridFilterModule,
 		WjGridGrouppanelModule,
-		Ng5SliderModule,
 		RouterModule.forRoot(routes)
 	],
 	declarations: [
@@ -81,9 +79,6 @@ import {CopypastemhViewComponent} from "./view/copypastemh-view.component";
 		RecyclageService,
 		AssetssService,
 		FollowersService
-	],
-	entryComponents: [
-		QeosGridPanelsComponent,
 	],
 	bootstrap: [
 		AppComponent

@@ -1,5 +1,5 @@
 import {Injectable, Injector} from "@angular/core";
-import {Observable} from "rxjs/Rx";
+import {Observable} from "rxjs";
 
 import {Service} from "../service";
 import {LoginService} from "../login.service";
@@ -7,8 +7,8 @@ import {CsvUtils} from "../../utils/csv.utils";
 import {GobsTypings} from "../../typings/gobs.typings";
 import {Gobs1Typings} from "../../typings/gobs1.typings";
 import {Gobs2Typings} from "../../typings/gobs2.typings";
-import {combineLatest} from "rxjs/observable/combineLatest";
-import {map} from "rxjs/operators/map";
+import {combineLatest, of} from "rxjs";
+import {map} from "rxjs/operators";
 import {JsonUtils} from "../../utils/json.utils";
 import {DlaUtils} from "../../utils/business/dla.utils";
 
@@ -31,7 +31,7 @@ export class TeamService extends Service {
 	get(force: boolean = false): Observable<GobsTypings[]> {
 		if (localStorage.getItem("meutemembres") && !force) {
 			// console.log("get local");
-			return Observable.of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
+			return of(JsonUtils.parse<GobsTypings>(localStorage.getItem("meutemembres"), this.dates));
 		} else {
 			let gobs: GobsTypings[] = null;
 			if (localStorage.getItem("meutemembres")) {
@@ -51,11 +51,11 @@ export class TeamService extends Service {
 		const token = LoginService.getToken();
 		if (token) {
 			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile.php?key=" + token.meute + "&id=" + token.id, {responseType: "text"})
-				.map((res: any) => {
+				.pipe(map((res: any) => {
 					return CsvUtils.getJson<Gobs1Typings>(res, this.numerics, this.floats, this.dates, []);
-				});
+				}));
 		} else {
-			return Observable.empty();
+			return of(null);
 		}
 	}
 
@@ -63,11 +63,11 @@ export class TeamService extends Service {
 		const token = LoginService.getToken();
 		if (token) {
 			return this.http.get("https://www.chifret.be/gobkipu/services/teamprofile2.php?key=" + token.meute + "&id=" + token.id, {responseType: "text"})
-				.map((res: any) => {
+				.pipe(map((res: any) => {
 					return CsvUtils.getJson<Gobs2Typings>(res, this.numerics2, this.floats2, this.dates2, []);
-				});
+				}));
 		} else {
-			return Observable.empty();
+			return of(null);
 		}
 	}
 
